@@ -54,6 +54,7 @@ private :
 	bool is_alive;
 	Vector2f direction;
 	Vector2f position;
+	Vector2f spawnPoint;
 	CircleShape shape;
 	float speed;
 	float rotationSpeed;

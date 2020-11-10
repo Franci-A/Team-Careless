@@ -95,7 +95,10 @@ void EnemySetPosition(CircleShape &shape, int width, int height) {
 	//LEFT
 	else if (rngWallSpawn == 4) {
 		shape.setPosition(0, rngHeight);
+
 	}
+
+	
 }
 
 void EnemySetColor(CircleShape &shape) {
