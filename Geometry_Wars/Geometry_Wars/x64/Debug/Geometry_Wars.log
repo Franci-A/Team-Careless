@@ -1,2 +1,18 @@
 ﻿  Geometry_Wars.cpp
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Timer.h(37,82): warning C4244: 'return': conversion from '_Rep' to 'double', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(43,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(75,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(101,13): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(109,10): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(110,44): warning C4305: 'argument': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(111,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Geometry_Wars.vcxproj -> C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\x64\Debug\Geometry_Wars.exe
