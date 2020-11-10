@@ -37,6 +37,9 @@ int main()
 		vector<CircleShape> enemyVect;
 		vector<Vector2f> enemySpawnPoint;
 		vector<float> enemySpeed;
+		vector<int> enemyDirection;
+		vector<int> enemyRotation;
+		vector<Enemy> enemy;
 	#pragma endregion
 	#pragma region RNG
 		srand(time(NULL));
@@ -49,6 +52,9 @@ int main()
 		int rngColor = rand() % 7 + 1;
 		int rngSpeedLimit = rand() % 10 + 1;
 		float rngSpeed = (float)rngSpeedLimit / 10;
+		int rngDirectionLimit = rand() % 10;
+		float rngDirection = rngDirectionLimit * 0.01f;
+		int rngRotation = rand() % 45 + 10;
 	#pragma endregion 
 	#pragma region Timer
 		float spawnTime = 1.0f;
@@ -81,11 +87,14 @@ int main()
 			rngWidth = rand() % width;
 			rngHeight = rand() % height;
 			rngShape = rand() % (shapeVect.size() - 1);
-			rngRadius = rand() % 50 + 10;
+			rngRadius = rand() % 80 + 20;
 			rngWallSpawn = rand() % 4 + 1;
 			rngColor = rand() % 7 + 1;
 			rngSpeedLimit = rand() % 10 + 1;
 			rngSpeed = (float)rngSpeedLimit / 20;
+			rngDirectionLimit = rand() % 10;
+			rngDirection = rngDirectionLimit * 0.01f;
+			rngRotation = rand() % 90 + 10;
 		#pragma endregion 
 
 		#pragma region Spawn Enemy
@@ -100,6 +109,8 @@ int main()
 				enemySpeed.push_back(rngSpeed);
 				enemySpawnPoint.push_back(shape.getPosition());
 				enemyVect.push_back(shape);
+				enemyDirection.push_back(rngDirection);
+				enemyRotation.push_back(rngRotation);
 				clock.restart();
 			}
 		#pragma endregion
@@ -113,23 +124,26 @@ int main()
 			Vector2f r1 = enemyVect[i].getPosition();
 			int r2 = enemyVect[i].getRotation();
 			
+			//UP
 			if (enemySpawnPoint[i].x == 0) {
-				enemyVect[i].setPosition(r1 + Vector2f(enemySpeed[i], 0));
+				enemyVect[i].setPosition(r1 + Vector2f(enemySpeed[i], enemyDirection[i]));
 			}
+			//LEFT
 			else if (enemySpawnPoint[i].y == 0) {
-				enemyVect[i].setPosition(r1 + Vector2f(0, enemySpeed[i]));
+				enemyVect[i].setPosition(r1 + Vector2f(enemyDirection[i], enemySpeed[i]));
 			}
+			//RIGHT
 			else if (enemySpawnPoint[i].x == width) {
-				enemyVect[i].setPosition(r1 + Vector2f(-enemySpeed[i], 0));
+				enemyVect[i].setPosition(r1 + Vector2f(-enemySpeed[i], enemyDirection[i]));
 			}
+			//DOWN
 			else if (enemySpawnPoint[i].y == height) {
-				enemyVect[i].setPosition(r1 + Vector2f(0, -enemySpeed[i]));
+				enemyVect[i].setPosition(r1 + Vector2f(enemyDirection[i], -enemySpeed[i]));
 			}
 			if (elapsedTime.asSeconds() > rotateTime) {
-				enemyVect[i].setRotation(r2 + 30);
+				enemyVect[i].setRotation(r2 + enemyRotation[i]);
 				clock2.restart();
 			}
-
 			window.draw(enemyVect[i]);
 		}
 	#pragma endregion
