@@ -57,3 +57,5 @@ ipch/
 *.cachefile
 *.VC.db
 *.VC.VC.opendb
+GeometryWars/.vs/GeometryWars/v16/Browse.VC.db-wal
+GeometryWars/.vs/GeometryWars/v16/Browse.VC.db-shm
