@@ -37,3 +37,5 @@
 *.ipch
 *.json
 *.sqlite
+
+*.VC
