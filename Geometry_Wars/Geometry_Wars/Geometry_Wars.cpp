@@ -1,5 +1,7 @@
 // Geometry_Wars.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+
+#pragma region Lib
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -7,11 +9,27 @@
 #include <string>
 #include <chrono>
 
-#include "Enemy.h"
-#include "ScreenResolution.h"
+#pragma endregion
 
+#pragma region Header Files
+#include "ScreenResolution.h"
+#include "Enemy.h"
+#include "PlayerController.h"
+#include "Bullet.h"
+#include "DeltaTime.h"
+
+#pragma endregion
+
+#pragma region Namespace
 using namespace std;
 using namespace sf;
+
+#pragma endregion
+
+#pragma region Global Variable
+Timer TIMER;
+
+#pragma endregion
 
 int main()
 {
@@ -23,7 +41,6 @@ int main()
 	#pragma region Shape
 		vector<string> shapeVect{
 			"Circle",
-			"Triangle",
 			"Square",
 			"Pentagon",
 			"Hexagon",
@@ -61,17 +78,41 @@ int main()
 		float rotateTime = 1.0f;
 		Clock clock;
 		Clock clock2;
+		Clock clockPlayer;
 		Time elapsedTime;
 		Time elapsedTime2;
 	#pragma endregion
+
+	#pragma region Player
+		Player player;
+		player.triangle.setPointCount(3);
+		player.triangle.setRadius(20);
+		player.triangle.setPosition(390, 290);
+		player.triangle.setFillColor(sf::Color::Cyan);
+		player.triangle.setOrigin(20, 20);
+	#pragma endregion
+
 
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen);
 	// Initialise everything below
+	for (int i = 0; i < 10; i++)
+	{
+		std::cout << "Time : " << TIMER.time << ".\n";
+	}
 	// Game loop
 	while (window.isOpen()) {
 		sf::Event event;
+
+		float deltaTime = clockPlayer.getElapsedTime().asSeconds();
+		sf::Vector2f localPosition = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && (player.triangle.getPosition().x + 20 != localPosition.x || player.triangle.getPosition().y + 20 != localPosition.y))
+		{
+			PlayerMove(player, localPosition, deltaTime);
+		}
+		PlayerRotation(player, localPosition);
+
 		while (window.pollEvent(event)) {
 			// Process any input event here
 			if (event.type == sf::Event::Closed || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
@@ -148,6 +189,7 @@ int main()
 		}
 	#pragma endregion
 		// Whatever I want to draw goes here
+		window.draw(player.triangle);
 		window.display();
 	}
 

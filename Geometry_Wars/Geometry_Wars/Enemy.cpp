@@ -31,10 +31,6 @@ CircleShape DrawShape(string enemy, int rng) {
 		CircleShape shape(rng);
 		return shape;
 	}
-	else if (enemy == "Triangle") {
-		CircleShape triangle(rng, 3);
-		return triangle;
-	}
 	else if (enemy == "Square") {
 		CircleShape square(rng, 4);
 		return square;

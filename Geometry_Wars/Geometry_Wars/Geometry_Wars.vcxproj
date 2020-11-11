@@ -162,9 +162,15 @@
     <ClCompile Include="Geometry_Wars.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ScreenResolution.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="DeltaTime.cpp" />
+    <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="DeltaTime.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="ScreenResolution.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
