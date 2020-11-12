@@ -142,6 +142,7 @@ Color EnemySetColor();
 float EnemySetSpeed();
 float EnemySetRotationSpeed();
 float EnemySetAngle();
+int EnemySetRadius();
 Enemy EnemyCreate(int width, int height);
 CircleShape CreateEnemyShape(Enemy enemy);
 void EnemyUpdatePosition();

@@ -59,6 +59,7 @@ int main()
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
+		vector<CircleShape> enemyShapeList;
 	#pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
@@ -91,13 +92,18 @@ int main()
 			if (elapsedTime.asSeconds() > spawnTime)
 			{
 				Enemy enemy = EnemyCreate(width, height);
+				CircleShape shape = CreateEnemyShape(enemy);
 				enemyList.push_back(enemy);
+				enemyShapeList.push_back(shape);
 				clock.restart();
 			}
 		#pragma endregion
 		#pragma region Update Enemy
 		elapsedTime2 = clock2.getElapsedTime();
 		
+		for (unsigned i = 0; i < enemyList.size(); i++) {
+
+		}
 		//for (unsigned i = 0; i < enemyVect.size(); i++) {	
 	
 		//	Vector2f r1 = enemyVect[i].getPosition();
@@ -130,9 +136,8 @@ int main()
 
 		// Whatever I want to draw goes here
 		#pragma region Display Enemy
-		for (int i = 0; i < enemyList.size(); i++) {
-			CircleShape shape = CreateEnemyShape(enemyList.at(i));
-			window.draw(shape);
+		for (int i = 0; i < enemyShapeList.size(); i++) {
+			window.draw(enemyShapeList.at(i));
 		}
 		#pragma endregion
 		window.draw(player.triangle);

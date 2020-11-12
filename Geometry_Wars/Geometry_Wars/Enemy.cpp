@@ -21,11 +21,6 @@ string EnemySetShape() {
 	return shapeVect[rngShape];
 }
 
-int EnemySetRadius() {
-	int rngRadius = rand() % 50 + 10;
-	return rngRadius;
-}
-
 Vector2f EnemySetSpawnPoint(int width, int height) {
 
 	int rngWidth = rand() % width;
@@ -98,6 +93,11 @@ float EnemySetRotationSpeed() {
 float EnemySetAngle() {
 	float rngAngle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2.0f * M_PI)));
 	return rngAngle;
+}
+
+int EnemySetRadius() {
+	int rngRadius = rand() % 50 + 10;
+	return rngRadius;
 }
 
 Enemy EnemyCreate(int width, int height) {
