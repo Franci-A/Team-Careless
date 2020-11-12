@@ -107,12 +107,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../external/SFML-2.5.1/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\external\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories> ../external/SFML-2.5.1/lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\external\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -147,19 +147,31 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../external/SFML-2.5.1/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\external\SFML-2.5.1\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories> ../external/SFML-2.5.1/lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\external\SFML-2.5.1\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Geometry_Wars.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="ScreenResolution.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="DeltaTime.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="DeltaTime.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="ScreenResolution.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
