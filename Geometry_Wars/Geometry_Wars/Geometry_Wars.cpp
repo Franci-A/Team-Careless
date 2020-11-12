@@ -59,15 +59,7 @@ int main()
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
-		Enemy enemy = EnemyCreate(width, height);
-		enemyList.push_back(enemy);
-
-		//enemyList.at(0).shape.setRadius(50);
-		//cout << "Main radius " << enemyList.at(0).shape.getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
-		//enemyList.at(0).GetShape.setRadius(50);
-		//cout << "Main radius " << enemyList.at(0).GetShape().getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
 	#pragma endregion
-
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
@@ -84,7 +76,6 @@ int main()
 			PlayerMove(player, localPosition, deltaTime);
 		}
 		PlayerRotation(player, localPosition);
-		// 
 
 		while (window.pollEvent(event)) {
 			// Process any input event here
@@ -104,8 +95,7 @@ int main()
 				clock.restart();
 			}
 		#pragma endregion
-
-	#pragma region Display Enemy
+		#pragma region Update Enemy
 		elapsedTime2 = clock2.getElapsedTime();
 		
 		//for (unsigned i = 0; i < enemyVect.size(); i++) {	
@@ -136,17 +126,15 @@ int main()
 		//	window.draw(enemyVect[i]);
 		//}
 
-	#pragma endregion
-		// Whatever I want to draw goes here
+		#pragma endregion
 
-		//for (int i = 0; i < enemyList.size(); i++) {
-		//	window.draw(enemyList.at(i).GetShape());
-		//}
+		// Whatever I want to draw goes here
+		#pragma region Display Enemy
 		for (int i = 0; i < enemyList.size(); i++) {
 			CircleShape shape = CreateEnemyShape(enemyList.at(i));
 			window.draw(shape);
 		}
-	
+		#pragma endregion
 		window.draw(player.triangle);
 		window.display();
 	}
