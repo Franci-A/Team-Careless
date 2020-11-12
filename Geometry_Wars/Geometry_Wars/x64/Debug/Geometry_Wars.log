@@ -1,24 +1,16 @@
-﻿  Geometry_Wars.cpp
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(44,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(59,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(59,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(82,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(82,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
+﻿  Bullet.cpp
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(10,16): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(10,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(12,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(12,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(12,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,52): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,71): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,40): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(29,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(30,34): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(32,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(32,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   Geometry_Wars.vcxproj -> C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\x64\Debug\Geometry_Wars.exe

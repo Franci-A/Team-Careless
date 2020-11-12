@@ -133,7 +133,7 @@ struct Enemy {
 	float radius = 50.0f;
 	float size;
 	int life = 1;
-	bool isAlive;
+	bool isAlive = true;
 	bool hasSpawn = false;
 };
 

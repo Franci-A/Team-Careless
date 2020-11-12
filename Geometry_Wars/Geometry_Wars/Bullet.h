@@ -14,8 +14,8 @@ struct Bullet
 	int posX;
 	int posY;
 
-	int X_offset;
-	int Y_offset;
+	int X_offset = 0;
+	int Y_offset = 0;
 	float speed;
 
 	sf::CircleShape visual;

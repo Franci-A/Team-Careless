@@ -18,6 +18,7 @@
 #include "PlayerController.h"
 #include "Bullet.h"
 #include "DeltaTime.h"
+#include "Collision.h"
 
 #pragma endregion
 
@@ -60,10 +61,14 @@ int main()
 		player.triangle.setFillColor(Color::Cyan);
 		player.triangle.setOrigin(20, 20);
 		player.triangle.setScale(1.0f, 1.5f);
+		bool defeat = false;
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
 		vector<CircleShape> enemyShapeList;
+		int maxEnemy = 10;
+		int countEnemy = 0;
+		Transform t;
 	#pragma endregion
 	#pragma region Bullet
 		bool drawBullet = false;
@@ -89,6 +94,12 @@ int main()
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
 			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
 		}
+		if (drawBullet) {
+			bool hascolid = HasCollidedBullet((*bullet), player.triangle.getPosition().x, player.triangle.getPosition().y, player.triangle.getRadius());
+				if (hascolid) {
+					drawBullet = false;
+				}
+		}
 
 		if (drawBullet) {
 			Check_Wall_Collision(bullet, width, height);
@@ -101,39 +112,83 @@ int main()
 				window.close();
 			}
 		}
-
-		window.clear();
 		#pragma region Create Enemy
-			elapsedTime = clock3.getElapsedTime();
-			if (elapsedTime.asSeconds() > spawnTime)
-			{
-				Enemy enemy = EnemyCreate(width, height);
-				CircleShape shape = CreateEnemyShape(enemy);
-				enemyList.push_back(enemy);
-				enemyShapeList.push_back(shape);
-				clock3.restart();
-			}
+		elapsedTime = clock3.getElapsedTime();
+		if (elapsedTime.asSeconds() > spawnTime && countEnemy < maxEnemy)
+		{
+			Enemy enemy = EnemyCreate(width, height);
+			CircleShape shape = CreateEnemyShape(enemy);
+			enemyList.push_back(enemy);
+			enemyShapeList.push_back(shape);
+			clock3.restart();
+			countEnemy++;
+		}
 		#pragma endregion
 		#pragma region Update Enemy
 		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-			if (enemyList.at(u).hasSpawn) {
-				enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition() + enemyList.at(u).velocity);
-			}
-		}
-		#pragma endregion
-		#pragma region Display Enemy
-		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-			Transform t;
-			t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
-			//t.rotate(enemyList.at(u).angle);
-			if (!enemyList.at(u).hasSpawn) {
-				enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
-				enemyList.at(u).hasSpawn = true;
-			}
-			window.draw(enemyShapeList.at(u), t);
+			//if (enemyList.at(u).hasSpawn) {
+				enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x + enemyList.at(u).velocity.x, enemyShapeList.at(u).getPosition().y + enemyList.at(u).velocity.y);
 
+				if (enemyShapeList.at(u).getPosition().x > width)	enemyShapeList.at(u).setPosition(0, enemyShapeList.at(u).getPosition().y);
+				if (enemyShapeList.at(u).getPosition().x < 0) enemyShapeList.at(u).setPosition(width, enemyShapeList.at(u).getPosition().y);
+				if (enemyShapeList.at(u).getPosition().y > height)	enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x, 0);
+				if (enemyShapeList.at(u).getPosition().y < 0) enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x, height);
+
+				bool hascolidWithplayer = HasCollided(player, enemyShapeList.at(u).getPosition().x , enemyShapeList.at(u).getPosition().y, enemyShapeList.at(u).getRadius());
+				if (hascolidWithplayer) {
+					//Defaite----------------------
+					defeat = true;
+					cout << "defait";
+				}
+				bool hascolidWithBullet = HasCollidedBullet((*bullet), enemyShapeList.at(u).getPosition().x, enemyShapeList.at(u).getPosition().y, enemyShapeList.at(u).getRadius());
+				if (hascolidWithBullet && drawBullet) {
+					//destroy ennemis---------------
+					enemyList.at(u).isAlive = false;
+				}
+			//}
 		}
+
+		//Destroy Enemy (and immediatly create one just after)
+		if(!enemyList.empty()){
+			unsigned tempCount = enemyList.size();
+			unsigned u = 0;
+			while(u < tempCount){
+				if (!enemyList.at(u).isAlive) {
+					enemyList.erase(enemyList.begin() + u);
+					enemyShapeList.erase(enemyShapeList.begin() + u);
+
+					//Create new Enemy
+					//Enemy enemy = EnemyCreate(width, height);
+					//CircleShape shape = CreateEnemyShape(enemy);
+					//enemyList.push_back(enemy);
+					//enemyShapeList.push_back(shape);
+					u--;
+					tempCount--;
+				}
+				u++;
+			}
+		}
+
+
+		//BONUS
+		//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+		//	t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
+
+		//	if (!enemyList.at(u).hasSpawn) {
+		//		enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
+		//		enemyList.at(u).hasSpawn = true;
+		//	}
+			
+
+		//}
 		#pragma endregion
+
+
+
+		window.clear();
+		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+			window.draw(enemyShapeList.at(u), t);
+		}
 		// Whatever I want to draw goes here
 		window.draw(player.triangle);
 		if (drawBullet) {

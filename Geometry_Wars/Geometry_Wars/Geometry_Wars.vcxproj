@@ -159,6 +159,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Geometry_Wars.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ScreenResolution.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="DeltaTime.h" />
     <ClInclude Include="Bullet.h" />

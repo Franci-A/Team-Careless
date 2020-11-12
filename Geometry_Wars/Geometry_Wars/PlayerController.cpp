@@ -42,7 +42,7 @@ void PlayerRotation(Player& player, sf::Vector2f localPosition) {
 
 Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player, Bullet* bullet) {
 	bullet = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, BALL_TYPE::DEFAULT, bullet);
-	bullet->visual.setPosition(player.triangle.getPosition());
+	bullet->visual.setPosition(player.triangle.getPosition().x + bullet->X_offset, player.triangle.getPosition().y + bullet->Y_offset );
 	bullet->visual.setRadius(10);
 	bullet->visual.setOrigin(10, 10);
 	drawBullet = true;

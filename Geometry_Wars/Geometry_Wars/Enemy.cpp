@@ -49,12 +49,12 @@ Vector2f EnemySetSpawnPoint(int width, int height) {
 
 Color EnemySetColor() {
 
-	int rngColor = rand() % 7 + 1;
+	int rngColor = rand() % 5 + 1;
 	Color color;
-	color = Color::White;
+	color = Color::Red;
 
 	if (rngColor == 1) {
-		color = Color::White;
+		color = Color::Yellow;
 	}
 	else if (rngColor == 2) {
 		color = Color::Red;
@@ -68,18 +68,12 @@ Color EnemySetColor() {
 	else if (rngColor == 5) {
 		color = Color::Magenta;
 	}
-	else if (rngColor == 6) {
-		color = Color::Cyan;
-	}
-	else if (rngColor == 7) {
-		color = Color::Yellow;
-	}
 
 	return color;
 }
 
 float EnemySetSpeed() {
-	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX));
+	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX/0.5f));
 
 	return rngSpeed;
 }
@@ -125,7 +119,8 @@ int EnemySetRadius() {
 
 
 Enemy EnemyCreate(int width, int height) {
-
+	
+//
 	Enemy enemy;
 	enemy.shape = EnemySetShape();
 	enemy.spawnPoint = EnemySetSpawnPoint(width, height);
@@ -212,6 +207,11 @@ CircleShape CreateEnemyShape(Enemy enemy) {
 	shape.setFillColor(enemy.color);
 	return shape;
 }
+
 void EnemyUpdatePosition() {
 
+}
+
+void EnemyDestroy(Enemy* pEnemy){
+	delete pEnemy;
 }
