@@ -3,7 +3,10 @@
 
 float M_PI = 3.141592653;
 
-CircleShape ShapeDraw() {
+// BUG : RADIUS
+// par reference change le radius
+// par return radius = 0
+void ShapeDraw(CircleShape &shape) {
 	#pragma region Shape
 	vector<string> shapeVect{
 		"Circle",
@@ -20,37 +23,44 @@ CircleShape ShapeDraw() {
 	int rngRadius = rand() % 50 + 10;
 	int rngShape = rand() % (shapeVect.size() - 1);
 	int rngVertex = rand() % 20 + 10;
-	CircleShape shape;
+	//CircleShape shape;
 
 	if (shapeVect[rngShape] == "Circle") {
-		CircleShape shape(rngRadius);
+		//CircleShape shape(rngRadius);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Square") {
-		CircleShape shape(rngRadius, 4);
+		//CircleShape shape(rngRadius, 4);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Pentagon") {
-		CircleShape shape(rngRadius, 5);
+		//CircleShape shape(rngRadius, 5);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Hexagon") {
-		CircleShape shape(rngRadius, 6);
+		//CircleShape shape(rngRadius, 6);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Heptagon") {
-		CircleShape shape(rngRadius, 7);
+		//CircleShape shape(rngRadius, 7);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Octagon") {
-		CircleShape shape(rngRadius, 8);
+		//CircleShape shape(rngRadius, 8);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Enneagone") {
-		CircleShape shape(rngRadius, 9);
+		//CircleShape shape(rngRadius, 9);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Decagone") {
-		CircleShape shape(rngRadius, 10);
+		//CircleShape shape(rngRadius, 10);
+		shape.setRadius(500);
 	}
 	else if (shapeVect[rngShape] == "Polygone") {
-		CircleShape shape(rngRadius, rngVertex);
+		//CircleShape shape(rngRadius, rngVertex);
+		shape.setRadius(500);
 	}
-
-	return shape;
 }
 
 Vector2f ShapeSetSpawnPoint(int width, int height) {
@@ -112,14 +122,10 @@ Color ShapeSetColor() {
 
 CircleShape ShapeCreate(int width, int height) {
 	CircleShape shape;
-	shape = ShapeDraw();
+	ShapeDraw(shape);
 	shape.setPosition(ShapeSetSpawnPoint(width, height));
 	shape.setFillColor(ShapeSetColor());
 	return shape;
-}
-
-void EnemySetPosition() {
-
 }
 
 void EnemySetSpeed() {
@@ -139,10 +145,15 @@ Enemy EnemyCreate(int width, int height) {
 
 	Enemy enemy;
 	CircleShape shape = ShapeCreate(width, height);
-	enemy.SetShape(shape);
+	enemy.shape = shape;
 	EnemySetSpeed();
 	EnemySetRotationSpeed();
 	EnemySetAngle();
-
+	cout << "Shape create radius " << shape.getRadius() << endl;
 	return enemy;
+}
+
+
+void EnemyUpdatePosition() {
+
 }

@@ -39,9 +39,6 @@ int main()
 		int width = 0;
 		int height = 0;
 		GetDesktopResolution(width, height);
-	#pragma endregion 
-	#pragma region Enemy
-		vector<Enemy> enemyList;
 	#pragma endregion
 	#pragma region Timer
 		float spawnTime = 1.0f;
@@ -52,20 +49,28 @@ int main()
 		Time elapsedTime;
 		Time elapsedTime2;
 	#pragma endregion
-
 	#pragma region Player
 		Player player;
 		player.triangle.setPointCount(3);
 		player.triangle.setRadius(20);
 		player.triangle.setPosition(390, 290);
-		player.triangle.setFillColor(sf::Color::Cyan);
+		player.triangle.setFillColor(Color::Cyan);
 		player.triangle.setOrigin(20, 20);
+	#pragma endregion
+	#pragma region Enemy
+		vector<Enemy> enemyList;
+		Enemy enemy = EnemyCreate(width, height);
+		enemyList.push_back(enemy);
+
+		enemyList.at(0).shape.setRadius(50);
+		cout << "Main radius " << enemyList.at(0).shape.getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
+		//enemyList.at(0).GetShape.setRadius(50);
+		//cout << "Main radius " << enemyList.at(0).GetShape().getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
 	#pragma endregion
 
 
-
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
 	// Initialise everything below
 	// Game loop
 	while (window.isOpen()) {
@@ -94,19 +99,8 @@ int main()
 			elapsedTime = clock.getElapsedTime();
 			if (elapsedTime.asSeconds() > spawnTime)
 			{
-				Enemy enemy;
-				enemy = EnemyCreate(width, height);
+				Enemy enemy = EnemyCreate(width, height);
 				enemyList.push_back(enemy);
-				//CircleShape shape = DrawShape();
-				//EnemySetPosition(shape, width, height);
-				//EnemySetColor(shape);
-				//shape.setOrigin(shape.getRadius(), shape.getRadius());
-				////CircleShape shape = EnemyCreate(width, height); // bug when return shape
-				//enemySpeed.push_back(rngSpeed);
-				//enemySpawnPoint.push_back(shape.getPosition());
-				//enemyVect.push_back(shape);
-				//enemyDirection.push_back(rngDirection);
-				//enemyRotation.push_back(rngRotation);
 				clock.restart();
 			}
 		#pragma endregion
@@ -141,8 +135,17 @@ int main()
 		//	}
 		//	window.draw(enemyVect[i]);
 		//}
+
 	#pragma endregion
 		// Whatever I want to draw goes here
+
+		//for (int i = 0; i < enemyList.size(); i++) {
+		//	window.draw(enemyList.at(i).GetShape());
+		//}
+		if (enemyList.size() > 0) {
+			
+			//window.draw(enemyList.at(0).GetShape());
+		}
 		window.draw(player.triangle);
 		window.display();
 	}
