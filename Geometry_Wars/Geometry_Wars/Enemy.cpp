@@ -3,9 +3,6 @@
 
 float M_PI = 3.141592653;
 
-// BUG : RADIUS
-// par reference change le radius
-// par return radius = 0
 string EnemySetShape() {
 	#pragma region Shape
 	vector<string> shapeVect{
