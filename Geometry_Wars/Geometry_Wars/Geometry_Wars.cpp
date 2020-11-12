@@ -89,7 +89,6 @@ int main()
 		}
 
 		window.clear();
-		
 		#pragma region Create Enemy
 			elapsedTime = clock3.getElapsedTime();
 			if (elapsedTime.asSeconds() > spawnTime)
@@ -102,29 +101,23 @@ int main()
 			}
 		#pragma endregion
 		#pragma region Update Enemy
-		elapsedTime2 = clock2.getElapsedTime();
 		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 			if (enemyList.at(u).hasSpawn) {
 				enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition() + enemyList.at(u).velocity);
 			}
 		}
 		#pragma endregion
-
-		// Whatever I want to draw goes here
 		#pragma region Display Enemy
 		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 			Transform t;
 			t.rotate(enemyList.at(u).angle);
-			
-			//cout << enemyList.at(u).angle << endl;
 			window.draw(enemyShapeList.at(u), t);
-
 			if (!enemyList.at(u).hasSpawn) {
 				enemyList.at(u).hasSpawn = true;
 			}
 		}
-		//if rotate transform, axis rotate too
 		#pragma endregion
+		// Whatever I want to draw goes here
 		window.draw(player.triangle);
 		window.display();
 	}
