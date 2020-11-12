@@ -27,10 +27,10 @@ struct Bullet
 };
 
 
-Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type);
+Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall);
 
 void UpdatePosition(Bullet* ball);
 
 
-
+void Check_Wall_Collision(Bullet* ball, int width, int height);
 

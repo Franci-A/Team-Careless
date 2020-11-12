@@ -56,13 +56,17 @@ int main()
 		Player player;
 		player.triangle.setPointCount(3);
 		player.triangle.setRadius(20);
-		player.triangle.setPosition(390, 290);
+		player.triangle.setPosition(width/2, height/2);
 		player.triangle.setFillColor(Color::Cyan);
 		player.triangle.setOrigin(20, 20);
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
 		vector<CircleShape> enemyShapeList;
+	#pragma endregion
+	#pragma region Bullet
+		bool drawBullet = false;
+		Bullet* bullet = new Bullet;
 	#pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
@@ -80,6 +84,17 @@ int main()
 			PlayerMove(player, localPosition, deltaTime);
 		}
 		PlayerRotation(player, localPosition);
+
+		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
+			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
+		}
+
+		if (drawBullet) {
+			std::cout << bullet->visual.getPosition().x << " x " << width << std::endl;
+			std::cout << bullet->visual.getPosition().y << " y " << height << std::endl;
+			Check_Wall_Collision(bullet, width, height);
+			UpdatePosition(bullet);
+		}
 
 		while (window.pollEvent(event)) {
 			// Process any input event here
@@ -112,8 +127,6 @@ int main()
 			Transform t;
 			t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
 			//t.rotate(enemyList.at(u).angle);
-			cout << enemyShapeList.at(u).getPosition().x << endl;
-			cout << enemyShapeList.at(u).getPosition().y << endl;
 			if (!enemyList.at(u).hasSpawn) {
 				enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
 				enemyList.at(u).hasSpawn = true;
@@ -124,6 +137,9 @@ int main()
 		#pragma endregion
 		// Whatever I want to draw goes here
 		window.draw(player.triangle);
+		if (drawBullet) {
+			window.draw(bullet->visual) ;
+		}
 		window.display();
 	}
 
