@@ -62,6 +62,12 @@ int main()
 		player.triangle.setOrigin(20, 20);
 		player.triangle.setScale(1.0f, 1.5f);
 		bool defeat = false;
+		sf::Text gameover;
+		gameover.setString("Game Over");
+		gameover.setCharacterSize(50);
+		gameover.setFillColor(sf::Color::Red);
+		gameover.setPosition(width / 2, height / 2);
+
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
@@ -92,14 +98,17 @@ int main()
 		PlayerRotation(player, localPosition);
 
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
+			cout << localPosition.x <<  " " << localPosition.y << endl;
+			cout << player.triangle.getPosition().x << " " << player.triangle.getPosition().y << endl;
 			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
+			cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
-		if (drawBullet) {
-			bool hascolid = HasCollidedBullet((*bullet), player.triangle.getPosition().x, player.triangle.getPosition().y, player.triangle.getRadius());
-				if (hascolid) {
-					drawBullet = false;
-				}
-		}
+		//if (drawBullet) {
+		//	bool hascolid = HasCollidedBullet((*bullet), player.triangle.getPosition().x, player.triangle.getPosition().y, player.triangle.getRadius());
+		//		if (hascolid) {
+		//			drawBullet = false;
+		//		}
+		//}
 
 		if (drawBullet) {
 			Check_Wall_Collision(bullet, width, height);
@@ -138,7 +147,6 @@ int main()
 				if (hascolidWithplayer) {
 					//Defaite----------------------
 					defeat = true;
-					cout << "defait";
 				}
 				bool hascolidWithBullet = HasCollidedBullet((*bullet), enemyShapeList.at(u).getPosition().x, enemyShapeList.at(u).getPosition().y, enemyShapeList.at(u).getRadius());
 				if (hascolidWithBullet && drawBullet) {
@@ -186,13 +194,18 @@ int main()
 
 
 		window.clear();
-		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-			window.draw(enemyShapeList.at(u), t);
+		if (!defeat) {
+			for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+				window.draw(enemyShapeList.at(u), t);
+			}
+			// Whatever I want to draw goes here
+			window.draw(player.triangle);
+			if (drawBullet) {
+				window.draw(bullet->visual);
+			}
 		}
-		// Whatever I want to draw goes here
-		window.draw(player.triangle);
-		if (drawBullet) {
-			window.draw(bullet->visual) ;
+		else {
+			window.draw(gameover);
 		}
 		window.display();
 	}
