@@ -90,46 +90,12 @@ float EnemySetRotationSpeed() {
 }
 
 float EnemySetAngle(float w, float h, float width, float height) {
-	//float rngAngle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2.0f * M_PI)));
-	//float rngAngle = 0;
-	//float offsetX = width / 6;
-	//float offsetY = height / 4;
-
-	////Spawn MIDDLE UP or Middle Down
-	//if (w >= width/2 - offsetX && w <= width/2 + offsetX) {
-	//	rngAngle = rand() % 180;
-	//}
-	////Spawn MIDDLE LEFT or Middle Right
-	//else if (h > height / 2 - offsetY && h < height / 2 + offsetY) {
-	//	rngAngle = rand() % 90 + 180;
-	//}
-	////Spawn LEFT UP or Right Down
-	//else if ((w < width/2 - offsetX && h < height/2 - offsetY) || (w > width / 2 + offsetX && h > height / 2 + offsetY)) {
-	//	rngAngle = rand() % 90;
-	//}
-	////Spawn RIGHT UP or LEFT DOWN 
-	//else if ((w > width / 2 + offsetX && h < height / 2 - offsetY) || (w < width / 2 - offsetX && h > height / 2 + offsetY)) {
-	//	rngAngle = rand() % 90 + 90;
-	//}
 	float rngAngle = rand() % 45;
 	return rngAngle;
 }
 
 Vector2f EnemySetVelocity(float w, float h, float width, float height, float speed) {
 	Vector2f velocity;
-	float offsetX = width / 6;
-	float offsetY = height / 4;
-	
-	//reverse velocity
-	//if ( (h == height && w >= width / 2 - offsetX && w <= width / 2 + offsetX)  //middle down
-	//	|| (w == width && h > height / 2 - offsetY && h < height / 2 + offsetY) // middle right
-	//	|| (w > width / 2 + offsetX && h > height / 2 + offsetY)				// right down
-	//	|| (w < width / 2 - offsetX && h > height / 2 + offsetY) ) {			// left down
-	//	velocity = Vector2f(-speed, 0);
-	//}
-	//else {
-	//	velocity = Vector2f(speed, 0);
-	//}
 
 	//up wall
 	if (h == 0) {
