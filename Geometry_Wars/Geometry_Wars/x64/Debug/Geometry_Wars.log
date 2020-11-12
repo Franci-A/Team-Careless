@@ -3,7 +3,7 @@ C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wa
 C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(44,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(59,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(59,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(81,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(82,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -12,7 +12,7 @@ C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wa
           [
               T=float
           ]
-C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(81,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\alger\Documents\IIM_2020-2021\ProjectGeometry\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(82,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int

@@ -59,6 +59,7 @@ int main()
 		player.triangle.setPosition(width/2, height/2);
 		player.triangle.setFillColor(Color::Cyan);
 		player.triangle.setOrigin(20, 20);
+		player.triangle.setScale(1.0f, 1.5f);
 	#pragma endregion
 	#pragma region Enemy
 		vector<Enemy> enemyList;
@@ -90,8 +91,6 @@ int main()
 		}
 
 		if (drawBullet) {
-			std::cout << bullet->visual.getPosition().x << " x " << width << std::endl;
-			std::cout << bullet->visual.getPosition().y << " y " << height << std::endl;
 			Check_Wall_Collision(bullet, width, height);
 			UpdatePosition(bullet);
 		}
