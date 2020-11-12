@@ -44,7 +44,7 @@ int main()
 		srand(time(NULL));
 	#pragma endregion
 	#pragma region Timer
-		float spawnTime = 0.1f;
+		float spawnTime = 1.0f;
 		float rotateTime = 1.0f;
 		Clock clock3;
 		Clock clock2;
@@ -110,11 +110,16 @@ int main()
 		#pragma region Display Enemy
 		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 			Transform t;
-			t.rotate(enemyList.at(u).angle);
-			window.draw(enemyShapeList.at(u), t);
+			t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
+			//t.rotate(enemyList.at(u).angle);
+			cout << enemyShapeList.at(u).getPosition().x << endl;
+			cout << enemyShapeList.at(u).getPosition().y << endl;
 			if (!enemyList.at(u).hasSpawn) {
+				enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
 				enemyList.at(u).hasSpawn = true;
 			}
+			window.draw(enemyShapeList.at(u), t);
+
 		}
 		#pragma endregion
 		// Whatever I want to draw goes here
