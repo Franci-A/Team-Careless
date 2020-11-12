@@ -134,6 +134,7 @@ struct Enemy {
 	float size;
 	int life = 1;
 	bool isAlive;
+	bool hasSpawn = false;
 };
 
 string EnemySetShape();
@@ -141,7 +142,8 @@ Vector2f EnemySetSpawnPoint(int width, int height);
 Color EnemySetColor();
 float EnemySetSpeed();
 float EnemySetRotationSpeed();
-float EnemySetAngle();
+float EnemySetAngle(float w, float h, float width, float height);
+Vector2f EnemySetVelocity(float w, float h, float width, float height, float speed);
 int EnemySetRadius();
 Enemy EnemyCreate(int width, int height);
 CircleShape CreateEnemyShape(Enemy enemy);

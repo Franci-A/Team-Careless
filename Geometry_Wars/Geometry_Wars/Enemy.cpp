@@ -17,7 +17,7 @@ string EnemySetShape() {
 		"Polygon"
 	};
 	#pragma endregion
-	int rngShape = rand() % (shapeVect.size() - 1);
+	int rngShape = rand() % shapeVect.size();
 	return shapeVect[rngShape];
 }
 
@@ -79,26 +79,84 @@ Color EnemySetColor() {
 }
 
 float EnemySetSpeed() {
-	int rngSpeedLimit = rand() % 10 + 1;
-	float rngSpeed = (float)rngSpeedLimit * 0.1;
+	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX));
 
 	return rngSpeed;
 }
 
 float EnemySetRotationSpeed() {
-	int rngRotation = rand() % 45 + 10;
+	float rngRotation = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX));
 	return rngRotation;
 }
 
-float EnemySetAngle() {
-	float rngAngle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2.0f * M_PI)));
+float EnemySetAngle(float w, float h, float width, float height) {
+	//float rngAngle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2.0f * M_PI)));
+	//float rngAngle = 0;
+	//float offsetX = width / 6;
+	//float offsetY = height / 4;
+
+	////Spawn MIDDLE UP or Middle Down
+	//if (w >= width/2 - offsetX && w <= width/2 + offsetX) {
+	//	rngAngle = rand() % 180;
+	//}
+	////Spawn MIDDLE LEFT or Middle Right
+	//else if (h > height / 2 - offsetY && h < height / 2 + offsetY) {
+	//	rngAngle = rand() % 90 + 180;
+	//}
+	////Spawn LEFT UP or Right Down
+	//else if ((w < width/2 - offsetX && h < height/2 - offsetY) || (w > width / 2 + offsetX && h > height / 2 + offsetY)) {
+	//	rngAngle = rand() % 90;
+	//}
+	////Spawn RIGHT UP or LEFT DOWN 
+	//else if ((w > width / 2 + offsetX && h < height / 2 - offsetY) || (w < width / 2 - offsetX && h > height / 2 + offsetY)) {
+	//	rngAngle = rand() % 90 + 90;
+	//}
+	float rngAngle = rand() % 45;
 	return rngAngle;
+}
+
+Vector2f EnemySetVelocity(float w, float h, float width, float height, float speed) {
+	Vector2f velocity;
+	float offsetX = width / 6;
+	float offsetY = height / 4;
+	
+	//reverse velocity
+	//if ( (h == height && w >= width / 2 - offsetX && w <= width / 2 + offsetX)  //middle down
+	//	|| (w == width && h > height / 2 - offsetY && h < height / 2 + offsetY) // middle right
+	//	|| (w > width / 2 + offsetX && h > height / 2 + offsetY)				// right down
+	//	|| (w < width / 2 - offsetX && h > height / 2 + offsetY) ) {			// left down
+	//	velocity = Vector2f(-speed, 0);
+	//}
+	//else {
+	//	velocity = Vector2f(speed, 0);
+	//}
+
+	//up wall
+	if (h == 0) {
+		velocity = Vector2f(0, speed);
+	}
+	// down wall
+	else if (h == height) {
+		velocity = Vector2f(0, -speed);
+	}
+	//left wall
+	else if (w == 0) {
+		velocity = Vector2f(speed, 0);
+	}
+	//right wall
+	else if (w == width) {
+		velocity = Vector2f(-speed, 0);
+	}
+
+	return velocity;
 }
 
 int EnemySetRadius() {
 	int rngRadius = rand() % 50 + 10;
 	return rngRadius;
 }
+
+
 
 Enemy EnemyCreate(int width, int height) {
 
@@ -108,8 +166,10 @@ Enemy EnemyCreate(int width, int height) {
 	enemy.color = EnemySetColor();
 	enemy.speed = EnemySetSpeed();
 	enemy.rotationSpeed = EnemySetRotationSpeed();
-	enemy.angle = EnemySetAngle();
+	enemy.angle = EnemySetAngle(enemy.spawnPoint.x, enemy.spawnPoint.y, width, height);
 	enemy.radius = EnemySetRadius();
+	enemy.velocity = EnemySetVelocity(enemy.spawnPoint.x, enemy.spawnPoint.y, width, height, enemy.speed);
+	enemy.hasSpawn = false;
 	return enemy;
 }
 
@@ -120,35 +180,70 @@ CircleShape CreateEnemyShape(Enemy enemy) {
 
 	if (enemy.shape == "Circle") {
 		CircleShape shape(enemy.radius);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Square") {
 		CircleShape shape(enemy.radius, 4);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Pentagon") {
 		CircleShape shape(enemy.radius, 5);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Hexagon") {
 		CircleShape shape(enemy.radius, 6);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Heptagon") {
 		CircleShape shape(enemy.radius, 7);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Octagon") {
 		CircleShape shape(enemy.radius, 8);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Enneagone") {
 		CircleShape shape(enemy.radius, 9);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
 	else if (enemy.shape == "Decagone") {
 		CircleShape shape(enemy.radius, 10);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
-	else if (enemy.shape == "Polygone") {
+	else if (enemy.shape == "Polygon") {
 		CircleShape shape(enemy.radius, rngVertex);
+		shape.setOrigin(enemy.radius, enemy.radius);
+		shape.setPosition(enemy.spawnPoint);
+		shape.setFillColor(enemy.color);
+		return shape;
 	}
-
+	shape.setOrigin(enemy.radius, enemy.radius);
 	shape.setPosition(enemy.spawnPoint);
 	shape.setFillColor(enemy.color);
-	shape.setOrigin(enemy.radius, enemy.radius);
 	return shape;
 }
 void EnemyUpdatePosition() {

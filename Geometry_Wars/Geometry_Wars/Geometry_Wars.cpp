@@ -40,10 +40,13 @@ int main()
 		int height = 0;
 		GetDesktopResolution(width, height);
 	#pragma endregion
+	#pragma region RNG
+		srand(time(NULL));
+	#pragma endregion
 	#pragma region Timer
-		float spawnTime = 1.0f;
+		float spawnTime = 0.1f;
 		float rotateTime = 1.0f;
-		Clock clock;
+		Clock clock3;
 		Clock clock2;
 		Clock clockPlayer;
 		Time elapsedTime;
@@ -88,57 +91,39 @@ int main()
 		window.clear();
 		
 		#pragma region Create Enemy
-			elapsedTime = clock.getElapsedTime();
+			elapsedTime = clock3.getElapsedTime();
 			if (elapsedTime.asSeconds() > spawnTime)
 			{
 				Enemy enemy = EnemyCreate(width, height);
 				CircleShape shape = CreateEnemyShape(enemy);
 				enemyList.push_back(enemy);
 				enemyShapeList.push_back(shape);
-				clock.restart();
+				clock3.restart();
 			}
 		#pragma endregion
 		#pragma region Update Enemy
 		elapsedTime2 = clock2.getElapsedTime();
-		
-		for (unsigned i = 0; i < enemyList.size(); i++) {
-
+		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+			if (enemyList.at(u).hasSpawn) {
+				enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition() + enemyList.at(u).velocity);
+			}
 		}
-		//for (unsigned i = 0; i < enemyVect.size(); i++) {	
-	
-		//	Vector2f r1 = enemyVect[i].getPosition();
-		//	int r2 = enemyVect[i].getRotation();
-		//	
-		//	//UP
-		//	if (enemySpawnPoint[i].x == 0) {
-		//		enemyVect[i].setPosition(r1 + Vector2f(enemySpeed[i] * deltaTime, enemyDirection[i]));
-		//	}
-		//	//LEFT
-		//	else if (enemySpawnPoint[i].y == 0) {
-		//		enemyVect[i].setPosition(r1 + Vector2f(enemyDirection[i], enemySpeed[i] * deltaTime));
-		//	}
-		//	//RIGHT
-		//	else if (enemySpawnPoint[i].x == width) {
-		//		enemyVect[i].setPosition(r1 + Vector2f(-enemySpeed[i] * deltaTime, enemyDirection[i]));
-		//	}
-		//	//DOWN
-		//	else if (enemySpawnPoint[i].y == height) {
-		//		enemyVect[i].setPosition(r1 + Vector2f(enemyDirection[i], -enemySpeed[i] * deltaTime));
-		//	}
-		//	if (elapsedTime.asSeconds() > rotateTime) {
-		//		enemyVect[i].setRotation(r2 + enemyRotation[i]);
-		//		clock2.restart();
-		//	}
-		//	window.draw(enemyVect[i]);
-		//}
-
 		#pragma endregion
 
 		// Whatever I want to draw goes here
 		#pragma region Display Enemy
-		for (int i = 0; i < enemyShapeList.size(); i++) {
-			window.draw(enemyShapeList.at(i));
+		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+			Transform t;
+			t.rotate(enemyList.at(u).angle);
+			
+			//cout << enemyList.at(u).angle << endl;
+			window.draw(enemyShapeList.at(u), t);
+
+			if (!enemyList.at(u).hasSpawn) {
+				enemyList.at(u).hasSpawn = true;
+			}
 		}
+		//if rotate transform, axis rotate too
 		#pragma endregion
 		window.draw(player.triangle);
 		window.display();
