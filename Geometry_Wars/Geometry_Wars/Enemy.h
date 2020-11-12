@@ -121,7 +121,7 @@ using namespace sf;
 //};
 
 struct Enemy {
-	CircleShape shape;
+	string shape;
 	Color color;
 	Vector2f spawnPoint;
 	Vector2f position;
@@ -130,17 +130,18 @@ struct Enemy {
 	float speed;
 	float rotationSpeed;
 	float angle;	
-	float radius = 10.0f; // radius of circle shape
+	float radius = 50.0f;
 	float size;
 	int life = 1;
 	bool isAlive;
 };
 
-void ShapeDraw(CircleShape &shape);
-Vector2f ShapeSetSpawnPoint(int width, int height);
-Color ShapeSetColor();
-void EnemySetSpeed();
-void EnemySetRotationSpeed();
-void EnemySetAngle();
+string EnemySetShape();
+Vector2f EnemySetSpawnPoint(int width, int height);
+Color EnemySetColor();
+float EnemySetSpeed();
+float EnemySetRotationSpeed();
+float EnemySetAngle();
 Enemy EnemyCreate(int width, int height);
+CircleShape CreateEnemyShape(Enemy enemy);
 void EnemyUpdatePosition();

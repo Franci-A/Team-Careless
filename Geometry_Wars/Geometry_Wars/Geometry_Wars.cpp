@@ -62,8 +62,8 @@ int main()
 		Enemy enemy = EnemyCreate(width, height);
 		enemyList.push_back(enemy);
 
-		enemyList.at(0).shape.setRadius(50);
-		cout << "Main radius " << enemyList.at(0).shape.getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
+		//enemyList.at(0).shape.setRadius(50);
+		//cout << "Main radius " << enemyList.at(0).shape.getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
 		//enemyList.at(0).GetShape.setRadius(50);
 		//cout << "Main radius " << enemyList.at(0).GetShape().getRadius() << endl; //WHYYYY CANT SET RADIUSSSS
 	#pragma endregion
@@ -142,10 +142,11 @@ int main()
 		//for (int i = 0; i < enemyList.size(); i++) {
 		//	window.draw(enemyList.at(i).GetShape());
 		//}
-		if (enemyList.size() > 0) {
-			
-			//window.draw(enemyList.at(0).GetShape());
+		for (int i = 0; i < enemyList.size(); i++) {
+			CircleShape shape = CreateEnemyShape(enemyList.at(i));
+			window.draw(shape);
 		}
+	
 		window.draw(player.triangle);
 		window.display();
 	}
