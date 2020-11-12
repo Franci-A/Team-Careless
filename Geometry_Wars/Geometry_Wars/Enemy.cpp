@@ -1,150 +1,148 @@
 #include "Enemy.h"
 #include "ScreenResolution.h"
-//
-//CircleShape DrawShape(Enemy enemy) {
-//	if (enemy.GetShape() == "Circle") {
-//		cout << "Circle" << endl;
-//		CircleShape shape(50);
-//		return shape;
-//	}
-//	else if (enemy.GetShape() == "Rectangle") {
-//		cout << "Rectangle" << endl;
-//	}
-//	else if (enemy.GetShape() == "Square") {
-//		cout << "Square" << endl;
-//	}
-//	else if (enemy.GetShape() == "Triangle") {
-//		cout << "Triangle" << endl;
-//	}
-//	else if (enemy.GetShape() == "Octagon") {
-//		cout << "Octagon" << endl;
-//	}
-//	else if (enemy.GetShape() == "Convex") {
-//		cout << "Convex" << endl;
-//	}
-//}
 
+float M_PI = 3.141592653;
 
-CircleShape DrawShape(string enemy, int rng) {
-	
-	if (enemy == "Circle") {
-		CircleShape shape(rng);
-		return shape;
+CircleShape ShapeDraw() {
+	#pragma region Shape
+	vector<string> shapeVect{
+		"Circle",
+		"Square",
+		"Pentagon",
+		"Hexagon",
+		"Heptagon",
+		"Octagon",
+		"Enneagone",
+		"Decagone",
+		"Polygon"
+	};
+	#pragma endregion
+	int rngRadius = rand() % 50 + 10;
+	int rngShape = rand() % (shapeVect.size() - 1);
+	int rngVertex = rand() % 20 + 10;
+	CircleShape shape;
+
+	if (shapeVect[rngShape] == "Circle") {
+		CircleShape shape(rngRadius);
 	}
-	else if (enemy == "Square") {
-		CircleShape square(rng, 4);
-		return square;
+	else if (shapeVect[rngShape] == "Square") {
+		CircleShape shape(rngRadius, 4);
 	}
-	else if (enemy == "Pentagon") {
-		CircleShape pentagon(rng, 5);
+	else if (shapeVect[rngShape] == "Pentagon") {
+		CircleShape shape(rngRadius, 5);
 	}
-	else if (enemy == "Hexagon") {
-		CircleShape hexagon(rng, 6);
-		return hexagon;
+	else if (shapeVect[rngShape] == "Hexagon") {
+		CircleShape shape(rngRadius, 6);
 	}
-	else if (enemy == "Heptagon") {
-		CircleShape octagon(rng, 7);
-		return octagon;
+	else if (shapeVect[rngShape] == "Heptagon") {
+		CircleShape shape(rngRadius, 7);
 	}
-	else if (enemy == "Octagon") {
-		CircleShape octagon(rng, 8);
-		return octagon;
+	else if (shapeVect[rngShape] == "Octagon") {
+		CircleShape shape(rngRadius, 8);
 	}
-	else if (enemy == "Enneagone") {
-		CircleShape octagon(rng, 9);
-		return octagon;
+	else if (shapeVect[rngShape] == "Enneagone") {
+		CircleShape shape(rngRadius, 9);
 	}
-	else if (enemy == "Decagone") {
-		CircleShape octagon(rng, 10);
-		return octagon;
+	else if (shapeVect[rngShape] == "Decagone") {
+		CircleShape shape(rngRadius, 10);
 	}
-	//else if (enemy == "Rectangle") {
-	//	RectangleShape shape(50);
-	//	return  shape;
-	//}
-	//else if (enemy == "Convex") {
-	//	cout << "Convex" << endl;
-	//}
-	//CircleShape shape(100);
-	//return shape;
+	else if (shapeVect[rngShape] == "Polygone") {
+		CircleShape shape(rngRadius, rngVertex);
+	}
+
+	return shape;
 }
 
-void EnemySetPosition(CircleShape &shape, int width, int height) {
+Vector2f ShapeSetSpawnPoint(int width, int height) {
 
-	srand(time(NULL));
-	int rngWidth = rand() % width + 1;
-	int rngHeight = rand() % height + 1;
+	int rngWidth = rand() % width;
+	int rngHeight = rand() % height;
 	int rngWallSpawn = rand() % 4 + 1;
-
+	Vector2f spawnPoint = Vector2f(0, 0);
+		
 	//UP
 	if (rngWallSpawn == 1) {
-		shape.setPosition(rngWidth, 0);
+		spawnPoint = Vector2f(rngWidth, 0);
 	}
 	//RIGHT
 	else if (rngWallSpawn == 2) {
-		shape.setPosition(width, rngHeight);
+		spawnPoint = Vector2f(width, rngHeight);
 	}
 	//DOWN
 	else if (rngWallSpawn == 3) {
-		shape.setPosition(rngWidth, height);
+		spawnPoint = Vector2f(rngWidth, height);
 	}
 	//LEFT
 	else if (rngWallSpawn == 4) {
-		shape.setPosition(0, rngHeight);
-
+		spawnPoint = Vector2f(0, rngHeight);
 	}
-
-	
+	return spawnPoint;
 }
 
-void EnemySetColor(CircleShape &shape) {
+Color ShapeSetColor() {
 
-	srand(time(NULL));
 	int rngColor = rand() % 7 + 1;
+	Color color;
+	color.White;
 
 	if (rngColor == 1) {
-		shape.setFillColor(Color::White);
+		color.White;
 	}
 	else if (rngColor == 2) {
-		shape.setFillColor(Color::Red);
+		color.Red;
 	}
 	else if (rngColor == 3) {
-		shape.setFillColor(Color::Green);
+		color.Green;
 	}
 	else if (rngColor == 4) {
-		shape.setFillColor(Color::Blue);
+		color.Blue;
 	}
 	else if (rngColor == 5) {
-		shape.setFillColor(Color::Yellow);
+		color.Yellow;
 	}
 	else if (rngColor == 6) {
-		shape.setFillColor(Color::Cyan);
+		color.Cyan;
 	}
 	else if (rngColor == 7) {
-		shape.setFillColor(Color::Magenta);
+		color.Magenta;
 	}
+
+	return color;
 }
 
-CircleShape EnemyCreate(int widht, int height) {
-
-	#pragma region Shape
-		vector<string> shapeVect{
-			"Circle",
-			"Triangle",
-			"Square",
-			"Pentagon",
-			"Hexagon",
-			"Heptagon",
-			"Octagon",
-			"Enneagone",
-			"Decagone",
-		};
-	#pragma endregion
-	srand(time(NULL));
-	int rngRadius = rand() % 50 + 10;
-	int rngShape = rand() % shapeVect.size();
-	CircleShape shape = DrawShape(shapeVect.at(rngShape), rngRadius);
-	EnemySetPosition(shape, widht - 100, height - 100);
-	EnemySetColor(shape);
+CircleShape ShapeCreate(int width, int height) {
+	CircleShape shape;
+	shape = ShapeDraw();
+	shape.setPosition(ShapeSetSpawnPoint(width, height));
+	shape.setFillColor(ShapeSetColor());
 	return shape;
+}
+
+void EnemySetPosition() {
+
+}
+
+void EnemySetSpeed() {
+	int rngSpeedLimit = rand() % 10 + 1;
+	float rngSpeed = (float)rngSpeedLimit * 0.1;
+}
+
+void EnemySetRotationSpeed() {
+	int rngRotation = rand() % 45 + 10;
+}
+
+void EnemySetAngle() {
+	float rngAngle = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (2.0f * M_PI)));
+}
+
+Enemy EnemyCreate(int width, int height) {
+
+	Enemy enemy;
+	CircleShape shape = ShapeCreate(width, height);
+	enemy.SetShape(shape);
+	EnemySetSpeed();
+	EnemySetRotationSpeed();
+	EnemySetAngle();
+
+	return enemy;
 }

@@ -10,22 +10,30 @@ using namespace sf;
 class Enemy : public Transformable {
 
 public :
-	bool GetBool() {
-		return is_alive;
+
+	CircleShape GetShape() {
+		return shape;
 	}
 
-	Vector2f GetDirection() {
-		return direction;
+	Color GetColor() {
+		return shape.getFillColor();
+	}
+
+	Vector2f GetSpawnPoint() {
+		return spawnPoint;
 	}
 
 	Vector2f GetPosition() {
 		return position;
 	}
 
-	CircleShape GetShape() {
-		return shape;
+	Vector2f GetVelocity() {
+		return velocity;
 	}
 
+	FloatRect GetHitBox() {
+		return hitBox;
+	}
 	float GetSpeed() {
 		return speed;
 	}
@@ -49,25 +57,74 @@ public :
 	int GetLife() {
 		return life;
 	}
-private :
 
-	bool is_alive;
-	Vector2f direction;
-	Vector2f position;
-	Vector2f spawnPoint;
+	bool GetBool() {
+		return isAlive;
+	}
+
+	
+	void SetShape(CircleShape s) {
+		shape = s;
+	};
+
+	void SetColor(Color c) {
+		color = c;
+	}
+
+	void SetPosition(Vector2f p) {
+		position = p;
+	}
+
+	void SetVelocity(Vector2f v) {
+		velocity = v;
+	}
+
+	void SetSpeed(float s) {
+		speed = s;
+	}
+
+	void SetRotationSpeed(float s) {
+		rotationSpeed = s;
+	}
+
+	void SetAngle(float a) {
+		angle = a;
+	}
+
+	void SetRadius() {
+		radius = shape.getRadius();
+	}
+
+	void SetLife(int l) {
+		life = l;
+	}
+
+	void SetisAlive(bool b) {
+		isAlive = b;
+	}
+
+private:
 	CircleShape shape;
+	Color color;
+	Vector2f spawnPoint;
+	Vector2f position;
+	Vector2f velocity;
+	FloatRect hitBox;
 	float speed;
 	float rotationSpeed;
 	float angle;	
-	float radius; //for circle shape
+	float radius; // radius of circle shape
 	float size;
 	int life = 1;
+	bool isAlive;
 
-	
 };
 
-//CircleShape DrawShape(Enemy enemy);
-CircleShape DrawShape(string enemy, int rng);
-void EnemySetPosition(CircleShape &shape, int width, int height);
-void EnemySetColor(CircleShape &shape);
-CircleShape EnemyCreate(int width, int height);
+CircleShape ShapeDraw();
+Vector2f ShapeSetSpawnPoint(int width, int height);
+Color ShapeSetColor();
+void EnemySetPosition();
+void EnemySetSpeed();
+void EnemySetRotationSpeed();
+void EnemySetAngle();
+Enemy EnemyCreate(int width, int height);
