@@ -12,6 +12,7 @@
 #pragma region Header Files
 #include "ScreenResolution.h"
 #include "AssetsUtils.h"
+#include "MathUtils.h"
 #include "Enemy.h"
 #include "PlayerController.h"
 #include "Bullet.h"
@@ -41,10 +42,12 @@ int main()
 #pragma region RNG
 	srand(time(NULL));
 #pragma endregion
-#pragma region Timer
+#pragma region Timer & Delta
 	float spawnTime = 1.f;
 	float rotateTime = 1.f;
 	float deltaTime = 0.f;
+	float deltaAngle = 0.f;
+	float turnPerSecond = 90.0f;
 	Clock clockSpawn;
 	Clock clock2;
 	Clock clockPlayer;
@@ -107,8 +110,10 @@ int main()
 	// Game loop
 	while (window.isOpen()) {
 		Event event;
-		//Delta Time
-		deltaTime = clockPlayer.getElapsedTime().asSeconds();
+
+		//Delta
+		deltaTime = clockDelta.getElapsedTime().asSeconds();
+		clockDelta.restart();
 
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
@@ -158,14 +163,11 @@ int main()
 #pragma endregion
 #pragma region Update Enemy
 		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-			EnemyUpdate(*it, width, height);
-			
+			EnemyUpdate(*it, width, height, deltaTime);
+			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->angle;
+			(*it)->shape.rotate(deltaAngle);
+
 			//Direction Enemy
-			t.rotate((*it)->angle, (*it)->spawnPoint.x, (*it)->spawnPoint.y);
-			
-			if (!(*it)->hasSpawn) {
-				(*it)->shape.setPosition((*it)->spawnPoint);
-			}
 
 			//collision 
 			bool hascolidWithplayer = HasCollided(player, (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
@@ -197,17 +199,14 @@ int main()
 #pragma endregion
 
 		window.clear();
-
+		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+			t.rotate(45);
+			window.draw((*it)->shape);
+		}
 		if (!defeat) {
 			// Whatever I want to draw goes here
 			//Enemy
-			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-				if (!(*it)->hasSpawn) {
-					window.draw((*it)->shape, t);
-					(*it)->hasSpawn = true;
-				}
-				window.draw((*it)->shape);
-			}
+
 			//Player
 			window.draw(player.triangle);
 			//Bullet

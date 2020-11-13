@@ -38,4 +38,4 @@ int EnemySetLife();
 int EnemySetSize(float radius);
 int EnemySetScoreValue();
 Enemy* EnemyCreate(int width, int height);
-void EnemyUpdate(Enemy* pEnemy, int width, int height);
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime);

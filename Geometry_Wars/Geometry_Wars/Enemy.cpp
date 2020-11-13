@@ -69,7 +69,7 @@ Color EnemySetColor() {
 }
 
 int EnemySetAngle() {
-	int rngAngle = rand() % 30;
+	int rngAngle = rand() % 60 + 10;
 	return rngAngle;
 }
 
@@ -114,7 +114,7 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 }
 
 float EnemySetSpeed() {
-	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX/0.5f));
+	float rngSpeed = static_cast <float> (rand() % 300 + 100);
 
 	return rngSpeed;
 }
@@ -201,9 +201,9 @@ Enemy* EnemyCreate(int width, int height) {
 	return enemy;
 }
 
-void EnemyUpdate(Enemy* pEnemy, int width, int height) {
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime) {
 	//Move Enemy
-	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity);
+	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
 	//loop map
 	//down
 	if (pEnemy->shape.getPosition().x > width) pEnemy->shape.setPosition(0.0f, pEnemy->shape.getPosition().y);
