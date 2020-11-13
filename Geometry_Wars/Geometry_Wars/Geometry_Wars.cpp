@@ -12,6 +12,7 @@
 #pragma region Header Files
 #include "ScreenResolution.h"
 #include "AssetsUtils.h"
+#include "MathUtils.h"
 #include "Enemy.h"
 #include "PlayerController.h"
 #include "Bullet.h"
@@ -43,14 +44,12 @@ int main()
 #pragma endregion
 #pragma region Timer
 	float spawnTime = 1.f;
-	float rotateTime = 1.f;
 	float deltaTime = 0.f;
+	float deltaAngle = 0.f;
 	Clock clockSpawn;
-	Clock clock2;
 	Clock clockPlayer;
 	Clock clockDelta;
-	Time elapsedTime;
-	Time elapsedTime2;
+	Time elapsedTimeSpawn;
 #pragma endregion
 #pragma region Player
 	Player* player = new Player;
@@ -66,7 +65,6 @@ int main()
 	vector<Enemy*> enemyVect;
 	int maxEnemy = 30;
 	int countEnemy = 0;
-	Transform t;
 #pragma endregion
 #pragma region Bullet
 	bool drawBullet = false;
@@ -140,16 +138,14 @@ int main()
 		while (window.pollEvent(event)) {
 			// Process any input event here
 			if (event.type == sf::Event::Closed || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-				delete player;
-				delete bullet;
 				window.close();
 			}
 		}
 
 		//ENEMY
 #pragma region Create Enemy
-		elapsedTime = clockSpawn.getElapsedTime();
-		if (elapsedTime.asSeconds() > spawnTime && countEnemy < maxEnemy)
+		elapsedTimeSpawn = clockSpawn.getElapsedTime();
+		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy)
 		{
 			Enemy* enemi = new Enemy;
 			enemi = EnemyCreate(width, height);
@@ -161,14 +157,8 @@ int main()
 #pragma endregion
 #pragma region Update Enemy
 		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-			EnemyUpdate(*it, width, height);
-			
-			//Direction Enemy
-			t.rotate((*it)->angle, (*it)->spawnPoint.x, (*it)->spawnPoint.y);
-			
-			if (!(*it)->hasSpawn) {
-				(*it)->shape.setPosition((*it)->spawnPoint);
-			}
+			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
+			EnemyUpdate(*it, width, height, deltaTime, deltaAngle);
 
 			//collision 
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
@@ -205,10 +195,6 @@ int main()
 			// Whatever I want to draw goes here
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-				if (!(*it)->hasSpawn) {
-					window.draw((*it)->shape, t);
-					(*it)->hasSpawn = true;
-				}
 				window.draw((*it)->shape);
 			}
 			// Whatever I want to draw goes here
@@ -235,4 +221,9 @@ int main()
 		count++;
 		
 	}
+
+	delete player;
+	cout << "player delete" << endl;
+	delete bullet;
+	cout << "bullet delete" << endl;
 }

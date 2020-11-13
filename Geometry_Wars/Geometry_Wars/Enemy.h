@@ -13,8 +13,8 @@ struct Enemy {
 	float radius = 0.0f;
 	int angle = 0;
 
-	float speed = 0.0f;
-	float rotationSpeed = 0.0f;
+	int speed = 0;
+	int rotation = 0;
 	Vector2f velocity = Vector2f(0.0f ,0.0f);	
 
 	bool isAlive = true;
@@ -28,8 +28,8 @@ struct Enemy {
 string EnemySetShapeType();
 Vector2f EnemySetSpawnPoint(int width, int height);
 Color EnemySetColor();
-float EnemySetSpeed();
-float EnemySetRotationSpeed();
+int EnemySetSpeed();
+int EnemySetRotation();
 Vector2f EnemySetVelocity(float w, float h, int width, int height, float speed);
 int EnemySetAngle();
 float EnemySetRadius();
@@ -38,4 +38,4 @@ int EnemySetLife();
 int EnemySetSize(float radius);
 int EnemySetScoreValue();
 Enemy* EnemyCreate(int width, int height);
-void EnemyUpdate(Enemy* pEnemy, int width, int height);
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle);
