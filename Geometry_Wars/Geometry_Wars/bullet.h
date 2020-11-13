@@ -1,7 +1,8 @@
 #pragma once
+#include "deltatime.h";
 #include <SFML/Graphics.hpp>
 
-
+extern TIME T;
 
 enum BALL_TYPE
 {
@@ -29,8 +30,7 @@ struct Bullet
 
 Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type);
 
-void UpdatePosition(Bullet* ball);
+void MoveBall(Bullet* ball);
 
 
-
-
+void DisplayBall(sf::RenderWindow* window, Bullet* ball);
