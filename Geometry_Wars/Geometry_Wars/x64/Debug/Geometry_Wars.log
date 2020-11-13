@@ -1,7 +1,7 @@
 ﻿  Geometry_Wars.cpp
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(44,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(131,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(46,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(141,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -10,7 +10,7 @@ F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(1
           [
               T=float
           ]
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(131,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(141,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
