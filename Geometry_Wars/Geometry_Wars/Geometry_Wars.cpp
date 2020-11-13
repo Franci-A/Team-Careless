@@ -87,20 +87,45 @@ int main()
 	string fontPath = getAssetsPath() + "Homework.otf";
 	if (!font.loadFromFile(fontPath))
 	{
-		cout << "Error Load font" << endl;
-		cout << "AppPATH " << endl << getAppPath << endl;
-		cout << "AssetPATH " << endl << getAssetsPath() << endl;
+		std::cout << "Error Load font" << endl;
+		std::cout << "AppPATH " << endl << getAppPath << endl;
+		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
 	}
 	gameover.setFont(font);
 
 	Texture texture;
-	texture.loadFromFile(getAssetsPath() + "bg_space_seamless.png");
+	Texture textureStars1;
+	Texture textureStars2;
+	if (!texture.loadFromFile(getAssetsPath() + "bg_space_seamless.png")) {
+		std::cout << "Error load space " << endl;
+	}
+	if (!textureStars1.loadFromFile(getAssetsPath() + "bg_space_seamless_fl1.png")) {
+		std::cout << "Error load stars 1 " << endl;
+	}
+	if (!textureStars2.loadFromFile(getAssetsPath() + "bg_space_seamless_fl2.png")) {
+		std::cout << "Error load stars 2 " << endl;
+	}
 	Sprite background;
-	background.setTexture(texture);
-	background.scale(Vector2f(2, 2));
-	//background.setScale(width / texture.getSize().x, height / texture.getSize().y);
+	Sprite stars1;
+	Sprite stars2;
 
-	
+	background.setTexture(texture);
+	stars1.setTexture(textureStars1);
+	stars2.setTexture(textureStars2);
+
+	background.scale(2, 2);
+	stars1.scale(2, 2);
+	stars2.scale(2, 2);
+
+	int offsetStars1 = textureStars1.getSize().x * -2;
+	int offsetStars2 = textureStars2.getSize().x * -2;
+	stars2.setPosition(offsetStars2, 0);
+	stars1.setColor(Color(255, 255, 255, 200));
+	stars2.setColor(Color(255, 255, 255, 200));
+
+	bool hasMove1 = false;
+	bool hasMove2 = true;
+
 #pragma endregion
 #pragma region Sound
 	sf::Music music;
@@ -221,11 +246,30 @@ int main()
 		}
 #pragma endregion
 
+#pragma region Update Canvas
+
+		if (stars2.getPosition().x >= 0 && !hasMove1) {
+			stars1.setPosition(offsetStars1, 0);
+			hasMove1 = true;
+			hasMove2 = false;
+		}
+
+		if (stars1.getPosition().x >= 0 && !hasMove2) {
+			stars2.setPosition(offsetStars2, 0);
+			hasMove1 = false;
+			hasMove2 = true;
+		}
+		stars1.move(100 * deltaTime, 0);
+		stars2.move(100 * deltaTime, 0);
+#pragma endregion
+
 		window.clear();
 
 		if (!defeat) {
 			// Whatever I want to draw goes here
 			window.draw(background);
+			window.draw(stars1);
+			window.draw(stars2);
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 					window.draw((*it)->shape);
@@ -248,7 +292,7 @@ int main()
 
 	int count = 1;
 	while (!enemyVect.empty()) {
-		cout << "delete " << count << endl;
+		std::cout << "delete " << count << endl;
 		delete enemyVect.at(0);
 		enemyVect.erase(enemyVect.begin());
 		count++;
@@ -256,7 +300,7 @@ int main()
 	}
 
 	delete player;
-	cout << "player delete" << endl;
+	std::cout << "player delete" << endl;
 	delete bullet;
-	cout << "bullet delete" << endl;
+	std::cout << "bullet delete" << endl;
 }
