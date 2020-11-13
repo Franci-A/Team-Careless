@@ -88,6 +88,12 @@ int main()
 		cout << "AssetPATH " << endl << getAssetsPath() << endl;
 	}
 	gameover.setFont(font);
+
+	Texture texture;
+	texture.loadFromFile(getAssetsPath() + "background.jpg");
+	Sprite background;
+	background.setTexture(texture);
+	//background.setScale(width / texture.getSize().x, height / texture.getSize().y);
 #pragma endregion
 
 #pragma region TEST CREATE AT START ENEMY
@@ -199,6 +205,7 @@ int main()
 
 		if (!defeat) {
 			// Whatever I want to draw goes here
+			window.draw(background);
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 				window.draw((*it)->shape);
