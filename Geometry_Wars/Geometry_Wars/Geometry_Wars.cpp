@@ -185,6 +185,7 @@ int main()
 				if (!(*it)->isAlive) {
 					delete (*it);
 					it = enemyVect.erase(it);
+					countEnemy--;
 				}
 				else {
 					it++;
