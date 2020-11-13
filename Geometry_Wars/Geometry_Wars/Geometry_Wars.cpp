@@ -95,36 +95,26 @@ int main()
 
 	Texture texture;
 	Texture textureStars1;
-	Texture textureStars2;
 	if (!texture.loadFromFile(getAssetsPath() + "bg_space_seamless.png")) {
 		std::cout << "Error load space " << endl;
 	}
 	if (!textureStars1.loadFromFile(getAssetsPath() + "bg_space_seamless_fl1.png")) {
 		std::cout << "Error load stars 1 " << endl;
 	}
-	if (!textureStars2.loadFromFile(getAssetsPath() + "bg_space_seamless_fl2.png")) {
-		std::cout << "Error load stars 2 " << endl;
-	}
 	Sprite background;
 	Sprite stars1;
-	Sprite stars2;
 
 	background.setTexture(texture);
 	stars1.setTexture(textureStars1);
-	stars2.setTexture(textureStars2);
 
-	background.scale(2, 2);
-	stars1.scale(2, 2);
-	stars2.scale(2, 2);
+	background.scale(3, 3);
+	background.setOrigin(texture.getSize().x/2, texture.getSize().y/2);
+	background.setPosition(width/2, height/2);
+	stars1.scale(3, 3);
+	stars1.setOrigin(textureStars1.getSize().x/2 , textureStars1.getSize().y/2);
+	stars1.setPosition(width/2, height/2 );
 
-	int offsetStars1 = textureStars1.getSize().x * -2;
-	int offsetStars2 = textureStars2.getSize().x * -2;
-	stars2.setPosition(offsetStars2, 0);
 	stars1.setColor(Color(255, 255, 255, 200));
-	stars2.setColor(Color(255, 255, 255, 200));
-
-	bool hasMove1 = false;
-	bool hasMove2 = true;
 
 #pragma endregion
 #pragma region Sound
@@ -164,10 +154,14 @@ int main()
 		clockDelta.restart();
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
+		Vector2f starsMove;
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y))
 		{
-			PlayerMove((*player), localPosition, deltaTime);
+			starsMove = PlayerMove((*player), localPosition, deltaTime);
+			stars1.move(- starsMove.x /2 , - starsMove.y /2);
+			background.move(- starsMove.x /5 , - starsMove.y /5);
 		}
+
 		PlayerRotation((*player), localPosition);
 
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
@@ -247,20 +241,6 @@ int main()
 #pragma endregion
 
 #pragma region Update Canvas
-
-		if (stars2.getPosition().x >= 0 && !hasMove1) {
-			stars1.setPosition(offsetStars1, 0);
-			hasMove1 = true;
-			hasMove2 = false;
-		}
-
-		if (stars1.getPosition().x >= 0 && !hasMove2) {
-			stars2.setPosition(offsetStars2, 0);
-			hasMove1 = false;
-			hasMove2 = true;
-		}
-		stars1.move(100 * deltaTime, 0);
-		stars2.move(100 * deltaTime, 0);
 #pragma endregion
 
 		window.clear();
@@ -269,7 +249,6 @@ int main()
 			// Whatever I want to draw goes here
 			window.draw(background);
 			window.draw(stars1);
-			window.draw(stars2);
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 					window.draw((*it)->shape);
