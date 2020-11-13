@@ -42,11 +42,13 @@ int main()
 	srand(time(NULL));
 #pragma endregion
 #pragma region Timer
-	float spawnTime = 1.0f;
-	float rotateTime = 1.0f;
+	float spawnTime = 1.f;
+	float rotateTime = 1.f;
+	float deltaTime = 0.f;
 	Clock clockSpawn;
 	Clock clock2;
 	Clock clockPlayer;
+	Clock clockDelta;
 	Time elapsedTime;
 	Time elapsedTime2;
 #pragma endregion
@@ -105,9 +107,10 @@ int main()
 	// Game loop
 	while (window.isOpen()) {
 		Event event;
+		//Delta Time
+		deltaTime = clockPlayer.getElapsedTime().asSeconds();
 
 		//Player Movement
-		float deltaTime = clockPlayer.getElapsedTime().asSeconds();
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		if (Mouse::isButtonPressed(Mouse::Right) && (player.triangle.getPosition().x + 20 != localPosition.x || player.triangle.getPosition().y + 20 != localPosition.y))
 		{
@@ -159,6 +162,7 @@ int main()
 			
 			//Direction Enemy
 			t.rotate((*it)->angle, (*it)->spawnPoint.x, (*it)->spawnPoint.y);
+			
 			if (!(*it)->hasSpawn) {
 				(*it)->shape.setPosition((*it)->spawnPoint);
 			}
