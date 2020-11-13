@@ -72,13 +72,44 @@ int main()
 	#pragma region Enemy
 		vector<Enemy> enemyList;
 		vector<CircleShape> enemyShapeList;
-		int maxEnemy = 10;
+		int maxEnemy = 30;
 		int countEnemy = 0;
 		Transform t;
 	#pragma endregion
 	#pragma region Bullet
 		bool drawBullet = false;
 		Bullet* bullet = new Bullet;
+	#pragma endregion
+	
+	#pragma region TEST
+		//for (auto it = myvector.begin(); it != myvector.end(); ++it) 
+		//cout << ' ' << *it;
+		vector<Enemy*> enemyVect;
+		Enemy* enemi = new Enemy;
+		enemyVect.push_back(enemi);
+		cout << "enemi isAlive = " << enemi->isAlive << endl;
+		cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
+		delete enemyVect.at(0);
+		enemyVect.erase(enemyVect.begin() + 0);
+		cout << "enemyVect delete" << endl;
+		if (!enemyVect.empty()) {
+			cout << "enemi isAlive = " << enemi->isAlive << endl;
+			cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
+		}
+		//it = pointer to the element inside the container
+
+		//CREATE
+		for (int i = 0; i < maxEnemy; i++) {
+			Enemy* enemi = new Enemy;
+			enemi = EnemyDCreate(width, height);
+			enemyVect.push_back(enemi);
+		}
+
+		//DRAW
+		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+			cout << (*it)->shape.getRadius() << endl;
+		}
+
 	#pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
@@ -98,10 +129,10 @@ int main()
 		PlayerRotation(player, localPosition);
 
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
-			cout << localPosition.x <<  " " << localPosition.y << endl;
-			cout << player.triangle.getPosition().x << " " << player.triangle.getPosition().y << endl;
+			//cout << localPosition.x <<  " " << localPosition.y << endl;
+			//cout << player.triangle.getPosition().x << " " << player.triangle.getPosition().y << endl;
 			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
-			cout << bullet->X_offset << " " << bullet->Y_offset << endl;
+			//cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
 		//if (drawBullet) {
 		//	bool hascolid = HasCollidedBullet((*bullet), player.triangle.getPosition().x, player.triangle.getPosition().y, player.triangle.getRadius());
@@ -178,7 +209,7 @@ int main()
 		}
 
 
-		//BONUS
+		//Direction of enemy
 		//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 		//	t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
 
@@ -194,6 +225,11 @@ int main()
 
 
 		window.clear();
+		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+			(*it)->shape.setFillColor((*it)->color);
+			(*it)->shape.setPosition((*it)->spawnPoint);
+			window.draw((*it)->shape);
+		}
 		if (!defeat) {
 			for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 				window.draw(enemyShapeList.at(u), t);
@@ -210,4 +246,12 @@ int main()
 		window.display();
 	}
 
+	//DESTROY
+	while (!enemyVect.empty()) {
+		cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
+		delete enemyVect.at(0);
+		enemyVect.erase(enemyVect.begin());
+	}
+
+	delete bullet;
 }
