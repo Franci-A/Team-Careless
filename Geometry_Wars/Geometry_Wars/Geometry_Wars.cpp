@@ -77,23 +77,38 @@ int main()
 
 
 #pragma region CANVAS
-	Text gameover;
-	gameover.setString("Game Over");
-	gameover.setCharacterSize(100);
-	gameover.setOrigin(150, 100);
-	gameover.setFillColor(Color::Red);
-	//float offsetX = gameover.getCharacterSize() * 8 / 2;
-	gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height / 2.0f);
 	Font font;
-	string fontPath = getAssetsPath() + "Homework.otf";
+	string fontPath = getAssetsPath() + "mago2.ttf";
 	if (!font.loadFromFile(fontPath))
 	{
 		std::cout << "Error Load font" << endl;
 		std::cout << "AppPATH " << endl << getAppPath << endl;
 		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
 	}
-	gameover.setFont(font);
 
+
+#pragma region Score
+	int score = 0;
+	int charSizeScore = 100;
+	Text scoreText;
+	scoreText.setString("0");
+	scoreText.setCharacterSize(charSizeScore);
+	scoreText.setPosition(10, -charSizeScore/2);
+	scoreText.setFont(font);
+#pragma endregion
+#pragma region GameOver
+	Text gameover;
+	int charSizeGO = 100;
+	gameover.setString("Game Over");
+	gameover.setCharacterSize(charSizeGO);
+	//gameover.setOrigin(150, 100);
+	gameover.setFillColor(Color::Red);
+	//float offsetX = gameover.getCharacterSize() * 8 / 2;
+	//gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height / 2.0f);
+	gameover.setPosition(width/2 - charSizeGO * 2, height/2 - charSizeGO); //-charSizeGo/2 get it to approxi height
+	gameover.setFont(font);
+#pragma endregion
+#pragma region Sprite
 	Texture texture;
 	Texture textureStars1;
 	if (!texture.loadFromFile(getAssetsPath() + "bg_space_seamless.png")) {
@@ -116,7 +131,7 @@ int main()
 	stars1.setPosition(width/2, height/2 );
 
 	stars1.setColor(Color(255, 255, 255, 200));
-
+#pragma endregion
 #pragma endregion
 #pragma region Sound
 	sf::Music music;
@@ -218,7 +233,9 @@ int main()
 			if (hascolidWithBullet && drawBullet) {
 				//destroy ennemis---------------
 				(*it)->isAlive = false;
-				//Score++;
+				//Update score
+				score += (*it)->scoreValue;
+				scoreText.setString(to_string(score));
 			}
 		}
 #pragma endregion
@@ -251,6 +268,7 @@ int main()
 			// Whatever I want to draw goes here
 			window.draw(background);
 			window.draw(stars1);
+			
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 					window.draw((*it)->shape);
@@ -260,10 +278,12 @@ int main()
 			if (drawBullet) {
 				window.draw(bullet->visual);
 			}
+			window.draw(scoreText);
 		}
 		else {
 			//Game Over
 			window.draw(gameover);
+			window.draw(scoreText);
 		}
 
 		window.display();
