@@ -186,7 +186,10 @@ int main()
 					delete (*it);
 					it = enemyVect.erase(it);
 				}
-				it++;
+				else {
+					it++;
+				}
+				
 			}
 		}
 #pragma endregion
