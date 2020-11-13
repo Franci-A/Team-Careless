@@ -20,6 +20,7 @@
 #include "Collision.h"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 
 #pragma endregion
 
@@ -105,10 +106,14 @@ int main()
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
 	music.setLoop(true);
-	music.setVolume(30);
+	music.setVolume(20);
 	music.play();
 
-	//sf::Sound sound;
+	sf::SoundBuffer hit;
+	hit.loadFromFile(getAssetsPath() + "hit.wav");
+	sf::Sound sound;
+	sound.setBuffer(hit);
+	sound.setVolume(20);
 
 #pragma endregion
 #pragma region TEST CREATE AT START ENEMY
@@ -146,14 +151,14 @@ int main()
 			bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
 			//cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
-		if (drawBullet) {
+		if (drawBullet && !defeat) {
 			bool hascolid = HasCollidedBullet((*bullet), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
 			if (hascolid) {
 				drawBullet = false;
 			}
 		}
 
-		if (drawBullet) {
+		if (drawBullet && !defeat) {
 			Check_Wall_Collision(bullet, width, height);
 			UpdatePosition(bullet, deltaTime);
 		}
@@ -204,6 +209,7 @@ int main()
 			while (it != enemyVect.end()) {
 
 				if (!(*it)->isAlive) {
+					sound.play();
 					delete (*it);
 					it = enemyVect.erase(it);
 					countEnemy--;
