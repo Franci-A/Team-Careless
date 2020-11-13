@@ -18,6 +18,7 @@
 #include "Bullet.h"
 #include "DeltaTime.h"
 #include "Collision.h"
+#include "Score.h"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -230,10 +231,11 @@ int main()
 			if (hascolidWithBullet && drawBullet) {
 				//destroy ennemis---------------
 				(*it)->isAlive = false;
+				//Score++;
 			}
 		}
 #pragma endregion
-#pragma region DESTROY ENEMY
+#pragma region Destroy ENEMY
 		
 		if (!enemyVect.empty()) {
 			auto it = enemyVect.begin();

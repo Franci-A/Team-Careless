@@ -36,6 +36,6 @@ float EnemySetRadius();
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape);
 int EnemySetLife();
 int EnemySetSize(float radius);
-int EnemySetScoreValue();
+int EnemySetScoreValue(float radius);
 Enemy* EnemyCreate(int width, int height);
 void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle);

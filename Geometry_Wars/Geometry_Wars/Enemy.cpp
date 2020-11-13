@@ -270,9 +270,9 @@ int EnemySetSize(float radius) {
 	return size;
 }
 
-int EnemySetScoreValue() {
-	int rngScoreValue = rand() % 100 + 1;
-	return rngScoreValue;
+int EnemySetScoreValue(float radius) {
+	int scoreVal = (int)radius * 10;
+	return scoreVal;
 }
 
 Enemy* EnemyCreate(int width, int height) {
@@ -300,7 +300,7 @@ Enemy* EnemyCreate(int width, int height) {
 	//Gameplay & UI
 	enemy->life = EnemySetLife();
 	enemy->size = EnemySetSize(enemy->radius);
-	enemy->scoreValue = EnemySetScoreValue();
+	enemy->scoreValue = EnemySetScoreValue(enemy->radius);
 	return enemy;
 }
 
