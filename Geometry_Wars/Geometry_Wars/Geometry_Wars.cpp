@@ -37,7 +37,7 @@ int main()
 #pragma region Screen Resolution
 	int width = 800;
 	int height = 600;
-	//GetDesktopResolution(width, height);
+	GetDesktopResolution(width, height);
 #pragma endregion
 #pragma region RNG
 	srand(time(NULL));
@@ -67,7 +67,7 @@ int main()
 #pragma endregion
 #pragma region Enemy
 	vector<Enemy*> enemyVect;
-	int maxEnemy = 30;
+	int maxEnemy = 50;
 	int countEnemy = 0;
 #pragma endregion
 
