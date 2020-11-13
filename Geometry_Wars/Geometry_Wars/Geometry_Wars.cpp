@@ -18,6 +18,7 @@
 #include "Bullet.h"
 #include "DeltaTime.h"
 #include "Collision.h"
+#include "Score.h"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
@@ -120,7 +121,7 @@ int main()
 	stars1.setPosition(width/2, height/2 );
 
 	stars1.setColor(Color(255, 255, 255, 200));
-
+#pragma endregion
 #pragma endregion
 #pragma region Sound
 	sf::Music music;
@@ -222,10 +223,13 @@ int main()
 			if (hascolidWithBullet && drawBullet) {
 				//destroy ennemis---------------
 				(*it)->isAlive = false;
+				//Update score
+				score += (*it)->scoreValue;
+				scoreText.setString(to_string(score));
 			}
 		}
 #pragma endregion
-#pragma region DESTROY ENEMY
+#pragma region Destroy ENEMY
 		
 		if (!enemyVect.empty()) {
 			auto it = enemyVect.begin();
@@ -254,6 +258,7 @@ int main()
 			// Whatever I want to draw goes here
 			window.draw(background);
 			window.draw(stars1);
+			
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 					window.draw((*it)->shape);
@@ -263,12 +268,13 @@ int main()
 			if (drawBullet) {
 				window.draw(bullet->visual);
 			}
+			window.draw(scoreText);
 		}
 		else {
 			//Game Over
 			window.draw(background);
 			window.draw(gameover);
-
+			window.draw(scoreText);
 		}
 
 		window.display();
