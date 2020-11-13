@@ -18,6 +18,8 @@
 #include "Bullet.h"
 #include "DeltaTime.h"
 #include "Collision.h"
+#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 #pragma endregion
 
@@ -95,8 +97,19 @@ int main()
 	Sprite background;
 	background.setTexture(texture);
 	//background.setScale(width / texture.getSize().x, height / texture.getSize().y);
-#pragma endregion
 
+	
+#pragma endregion
+#pragma region Sound
+	sf::Music music;
+	music.openFromFile(getAssetsPath() + "battle.wav");
+	music.setLoop(true);
+	music.setVolume(30);
+	music.play();
+
+	//sf::Sound sound;
+
+#pragma endregion
 #pragma region TEST CREATE AT START ENEMY
 
 	//CREATE AT START
