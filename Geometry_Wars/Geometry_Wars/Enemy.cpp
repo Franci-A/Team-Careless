@@ -125,7 +125,7 @@ int EnemySetRotation() {
 Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) {
 	Vector2f velocity;
 	int rngSpeed = rand() % 100 + 100;
-	int rngDirection = rand() % 2 + 1;
+	int rngDirection = rand() % 2;
 	// + x decale droite
 	// - x decale gauche
 	//height 0 UP WALL
@@ -144,85 +144,106 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 	//up wall
 	if (y == 0.0f) {
 		//left
-		if (x < width/2) {
-			velocity = Vector2f(rngSpeed, speed);
-		}
-		//middle
-		else if (x == width / 2) {
-			if (rngDirection == 1) {
+		if (rngDirection != 0) {
+			if (x < width / 2) {
 				velocity = Vector2f(rngSpeed, speed);
 			}
-			else {
+			//middle
+			else if (x == width / 2) {
+				if (rngDirection == 1) {
+					velocity = Vector2f(rngSpeed, speed);
+				}
+				else{
+					velocity = Vector2f(-rngSpeed, speed);
+				}
+			}
+			//right
+			else if (x > width / 2) {
 				velocity = Vector2f(-rngSpeed, speed);
 			}
 		}
-		//right
-		else if (x > width / 2) {
-			velocity = Vector2f(-rngSpeed, speed);
+		else {
+			velocity = Vector2f(0.0f, speed);
 		}
-		//velocity = Vector2f(0.0f, speed);
+
+		
 	}
 	// down wall
 	else if (y == height) {
-		if (x < width / 2) {
-			velocity = Vector2f(rngSpeed, -speed);
-		}
-		//middle
-		else if (x == width / 2) {
-			if (rngDirection == 1) {
+		if (rngDirection != 0) {
+			if (x < width / 2) {
 				velocity = Vector2f(rngSpeed, -speed);
 			}
-			else {
+			//middle
+			else if (x == width / 2) {
+				if (rngDirection == 1) {
+					velocity = Vector2f(rngSpeed, -speed);
+				}
+				else {
+					velocity = Vector2f(-rngSpeed, -speed);
+				}
+			}
+			//right
+			else if (x > width / 2) {
 				velocity = Vector2f(-rngSpeed, -speed);
 			}
 		}
-		//right
-		else if (x > width / 2) {
-			velocity = Vector2f(-rngSpeed, -speed);
+		else {
+			velocity = Vector2f(0.0f, -speed);
 		}
-		//velocity = Vector2f(0.0f, -speed);
+		
 	}
 	//left wall
 	else if (x == 0.0f) {
 		//up
-		if (y < height / 2) {
-			velocity = Vector2f(speed, rngSpeed);
-		}
-		//middle
-		else if (y == height / 2) {
-			if (rngDirection == 1) {
+		if (rngDirection != 0) {
+			if (y < height / 2) {
 				velocity = Vector2f(speed, rngSpeed);
 			}
-			else {
+			//middle
+			else if (y == height / 2) {
+				if (rngDirection == 1) {
+					velocity = Vector2f(speed, rngSpeed);
+				}
+				else {
+					velocity = Vector2f(speed, -rngSpeed);
+				}
+			}
+			//downs
+			else if (y > height / 2) {
 				velocity = Vector2f(speed, -rngSpeed);
 			}
 		}
-		//downs
-		else if (y > height / 2) {
-			velocity = Vector2f(speed, -rngSpeed);
+		else {
+			velocity = Vector2f(speed, 0.0f);
 		}
-		//velocity = Vector2f(speed, 0.0f);
+		
 	}
 	//right wall
 	else if (x == width) {
-		//up
-		if (y < height / 2) {
-			velocity = Vector2f(-speed, rngSpeed);
-		}
-		//middle
-		else if (y == height / 2) {
-			if (rngDirection == 1) {
+		if (rngDirection != 0) {
+			//up
+			if (y < height / 2) {
 				velocity = Vector2f(-speed, rngSpeed);
 			}
-			else {
+			//middle
+			else if (y == height / 2) {
+				if (rngDirection == 1) {
+					velocity = Vector2f(-speed, rngSpeed);
+				}
+				else {
+					velocity = Vector2f(-speed, -rngSpeed);
+				}
+			}
+			//downs
+			else if (y > height / 2) {
 				velocity = Vector2f(-speed, -rngSpeed);
 			}
+
 		}
-		//downs
-		else if (y > height / 2) {
-			velocity = Vector2f(-speed, -rngSpeed);
+		else {
+			velocity = Vector2f(-speed, 0.0f);
 		}
-		//velocity = Vector2f(-speed, 0.0f);
 	}
 
 	return velocity;

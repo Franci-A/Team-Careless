@@ -93,9 +93,10 @@ int main()
 	gameover.setFont(font);
 
 	Texture texture;
-	texture.loadFromFile(getAssetsPath() + "background.jpg");
+	texture.loadFromFile(getAssetsPath() + "bg_space_seamless.png");
 	Sprite background;
 	background.setTexture(texture);
+	background.scale(Vector2f(2, 2));
 	//background.setScale(width / texture.getSize().x, height / texture.getSize().y);
 
 	
