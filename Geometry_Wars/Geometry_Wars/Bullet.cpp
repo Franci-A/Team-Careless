@@ -1,21 +1,17 @@
 #include "Bullet.h";
-#include "DeltaTime.h";
-
 
 
 Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall) //Remplacer player X et Y par ptr -> Player
 {
 
 	(*newBall).type = type;
-	//(*newBall).X_offset = cursorX - playerX;
-	//(*newBall).Y_offset = cursorY - playerY;
 	if (sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2)) != 0) {
 		(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 		(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 	}
 	(*newBall).speed = 100.0f;
 
-	(*newBall).timer_StartPoint = GetTime();
+	//(*newBall).timer_StartPoint = GetTime();
 	(*newBall).timer = 0.0f;
 
 	return newBall;
@@ -24,7 +20,7 @@ Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE 
 // Mvmt - Update Position
 void UpdatePosition(Bullet* ball, float deltaTime)
 {
-	(*ball).timer = GetTime() - (*ball).timer_StartPoint;
+	//(*ball).timer = GetTime() - (*ball).timer_StartPoint;
 
 	(*ball).posX = (*ball).X_offset * (*ball).speed *deltaTime;
 	(*ball).posY = (*ball).Y_offset * (*ball).speed * deltaTime;

@@ -23,7 +23,7 @@ Vector2f EnemySetSpawnPoint(int width, int height) {
 	float rngHeight = static_cast<float>(rand() % height);
 	int rngWallSpawn = rand() % 4 + 1;
 	Vector2f spawnPoint = Vector2f(0, 0);
-		
+
 	//UP
 	if (rngWallSpawn == 1) {
 		spawnPoint = Vector2f(rngWidth, 0);
@@ -50,25 +50,6 @@ Color EnemySetColor() {
 		rand() % 75,
 		rand() % 75,
 		255);
-	//Color color;
-	//color = Color::Red;
-
-	//if (rngColor == 1) {
-	//	color = Color::Yellow;
-	//}
-	//else if (rngColor == 2) {
-	//	color = Color::Red;
-	//}
-	//else if (rngColor == 3) {
-	//	color = Color::Green;
-	//}
-	//else if (rngColor == 4) {
-	//	color = Color::Blue;
-	//}
-	//else if (rngColor == 5) {
-	//	color = Color::Magenta;
-	//}
-
 	return color;
 }
 
@@ -130,20 +111,6 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 	Vector2f velocity;
 	int rngSpeed = rand() % 100 + 100;
 	int rngDirection = rand() % 2;
-	// + x decale droite
-	// - x decale gauche
-	//height 0 UP WALL
-	//x < width / 2 == full left
-	//x == width/2 == middle
-	//x > width / 2 == full right
-	//
-	// + y descend
-	// - y monte
-	//y < height / 2 == full up
-	//y == height / 2 == middle 
-	//y > height / 2 == full down
-	//height /2 
-	//width /2
 
 	//up wall
 	if (y == 0.0f) {
@@ -157,7 +124,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 				if (rngDirection == 1) {
 					velocity = Vector2f(rngSpeed, speed);
 				}
-				else{
+				else {
 					velocity = Vector2f(-rngSpeed, speed);
 				}
 			}
@@ -170,7 +137,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 			velocity = Vector2f(0.0f, speed);
 		}
 
-		
+
 	}
 	// down wall
 	else if (y == height) {
@@ -195,7 +162,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 		else {
 			velocity = Vector2f(0.0f, -speed);
 		}
-		
+
 	}
 	//left wall
 	else if (x == 0.0f) {
@@ -221,7 +188,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 		else {
 			velocity = Vector2f(speed, 0.0f);
 		}
-		
+
 	}
 	//right wall
 	else if (x == width) {
@@ -254,7 +221,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) 
 }
 
 int EnemySetLife() {
-	int rngLife = rand()%3 +1;
+	int rngLife = rand() % 3 + 1;
 	return rngLife;
 }
 
@@ -317,8 +284,4 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 	if (pEnemy->shape.getPosition().y > height) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, 0.0f);
 	//left
 	if (pEnemy->shape.getPosition().y < 0) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, (float)height);
-}
-
-void EnemyDestroy(Enemy* pEnemy){
-	delete pEnemy;
 }

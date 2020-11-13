@@ -1,12 +1,8 @@
-// Geometry_Wars.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #pragma region Lib
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
-
 #pragma endregion
 
 #pragma region Header Files
@@ -16,24 +12,15 @@
 #include "Enemy.h"
 #include "PlayerController.h"
 #include "Bullet.h"
-#include "DeltaTime.h"
 #include "Collision.h"
-#include "Score.h"
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-
 #pragma endregion
 
 #pragma region Namespace
 using namespace std;
 using namespace sf;
-
-#pragma endregion
-
-#pragma region Global Variable
-Timer TIMER;
-
 #pragma endregion
 
 int main()
@@ -43,9 +30,11 @@ int main()
 	int height = 600;
 	GetDesktopResolution(width, height);
 #pragma endregion
+
 #pragma region RNG
 	srand(time(NULL));
 #pragma endregion
+
 #pragma region Timer
 	float spawnTime = 1.f;
 	float deltaTime = 0.f;
@@ -55,6 +44,7 @@ int main()
 	Clock clockDelta;
 	Time elapsedTimeSpawn;
 #pragma endregion
+
 #pragma region Player
 	Player* player = new Player;
 	player->triangle.setPointCount(3);
@@ -65,16 +55,17 @@ int main()
 	player->triangle.setScale(1.0f, 1.5f);
 	bool defeat = false;
 #pragma endregion
+
 #pragma region Bullet
 	bool drawBullet = false;
 	Bullet* bullet = new Bullet;
 #pragma endregion
+
 #pragma region Enemy
 	vector<Enemy*> enemyVect;
 	int maxEnemy = 30;
 	int countEnemy = 0;
 #pragma endregion
-
 
 #pragma region CANVAS
 	Font font;
@@ -94,10 +85,8 @@ int main()
 	gameover.setFillColor(Color::Red);
 	gameover.setOutlineColor(Color::White);
 	gameover.setOutlineThickness(.5f);
-	//float offsetX = gameover.getCharacterSize() * 8 / 2;
-	gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height/3);
+	gameover.setPosition((float)width / 2.0f , (float)height/3);
 	
-
 
 	Texture texture;
 	Texture textureStars1;
@@ -122,7 +111,17 @@ int main()
 
 	stars1.setColor(Color(255, 255, 255, 200));
 #pragma endregion
+
+#pragma region Score
+	int score = 0;
+	int charSizeScore = 100;
+	Text scoreText;
+	scoreText.setString("0");
+	scoreText.setCharacterSize(charSizeScore);
+	scoreText.setPosition(10, -charSizeScore / 2);
+	scoreText.setFont(font);
 #pragma endregion
+
 #pragma region Sound
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
@@ -135,23 +134,11 @@ int main()
 	sf::Sound sound;
 	sound.setBuffer(hit);
 	sound.setVolume(5);
-
-#pragma endregion
-#pragma region TEST CREATE AT START ENEMY
-
-	//CREATE AT START
-	//for (int i = 0; i < maxEnemy; i++) {
-	//	Enemy* enemi = new Enemy;
-	//	enemi = EnemyCreate(width, height);
-	//	enemyVect.push_back(enemi);
-	//}
-
 #pragma endregion
 
-	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen); //Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen);
 	window.setFramerateLimit(60);
-	// Initialise everything below
+
 	// Game loop
 	while (window.isOpen()) {
 		Event event;
@@ -167,15 +154,15 @@ int main()
 			stars1.move(- starsMove.x /2 , - starsMove.y /2);
 			background.move(- starsMove.x /5 , - starsMove.y /5);
 		}
+		//Player face cursor
+		PlayerRotation((*player), localPosition); 
 
-		PlayerRotation((*player), localPosition);
-
+		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
-			//cout << localPosition.x <<  " " << localPosition.y << endl;
-			//cout << player.triangle.getPosition().x << " " << player.triangle.getPosition().y << endl;
 			bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
-			//cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
+
+		//Collision bullet -> player : Pickup bullet
 		if (drawBullet && !defeat) {
 			bool hascolid = HasCollidedBullet((*bullet), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
 			if (hascolid) {
@@ -183,6 +170,7 @@ int main()
 			}
 		}
 
+		//Update bullet
 		if (drawBullet && !defeat) {
 			Check_Wall_Collision(bullet, width, height);
 			UpdatePosition(bullet, deltaTime);
@@ -195,7 +183,7 @@ int main()
 			}
 		}
 
-		//ENEMY
+		//ENEMY Functions
 #pragma region Create Enemy
 		elapsedTimeSpawn = clockSpawn.getElapsedTime();
 		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy)
@@ -213,21 +201,23 @@ int main()
 			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
 			EnemyUpdate(*it, width, height, deltaTime, deltaAngle);
 
-			//collision 
+			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
-				//Defaite----------------------
 				defeat = true;
+				drawBullet = false;
 			}
+
+			//collision bullet -> enemy
 			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithBullet && drawBullet) {
-				//destroy ennemis---------------
 				(*it)->isAlive = false;
 				//Update score
 				score += (*it)->scoreValue;
 				scoreText.setString(to_string(score));
 			}
 		}
+
 #pragma endregion
 #pragma region Destroy ENEMY
 		
@@ -249,13 +239,10 @@ int main()
 		}
 #pragma endregion
 
-#pragma region Update Canvas
-#pragma endregion
-
 		window.clear();
 
 		if (!defeat) {
-			// Whatever I want to draw goes here
+
 			window.draw(background);
 			window.draw(stars1);
 			
@@ -263,7 +250,7 @@ int main()
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 					window.draw((*it)->shape);
 			}
-			// Whatever I want to draw goes here
+
 			window.draw(player->triangle);
 			if (drawBullet) {
 				window.draw(bullet->visual);
@@ -280,19 +267,14 @@ int main()
 		window.display();
 	}
 
-	//DESTROY
+	//DESTROY end game
 
-	int count = 1;
 	while (!enemyVect.empty()) {
-		std::cout << "delete " << count << endl;
 		delete enemyVect.at(0);
 		enemyVect.erase(enemyVect.begin());
-		count++;
 
 	}
 
 	delete player;
-	std::cout << "player delete" << endl;
 	delete bullet;
-	std::cout << "bullet delete" << endl;
 }
