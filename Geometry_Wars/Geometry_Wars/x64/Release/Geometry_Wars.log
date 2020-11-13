@@ -1,55 +1,10 @@
-﻿  Enemy.cpp
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(4,25): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(33,25): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(37,32): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(37,25): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(41,35): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(41,25): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(45,28): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(87,17): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(130,77): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(130,70): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(131,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(132,83): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(132,76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(259,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(259,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(260,32): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(261,86): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.cpp(261,79): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Collision.cpp
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Enemy.cpp
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
   Geometry_Wars.cpp
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(45,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(60,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(60,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(69,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(69,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(129,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(103,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -58,7 +13,7 @@ C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_W
           [
               T=float
           ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(129,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(103,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -67,34 +22,9 @@ C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_W
           [
               T=float
           ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(178,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(180,122): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(182,158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(182,124): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(182,85): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(187,166): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(187,132): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(187,94): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(197,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
   Generating code
-  9 of 371 functions ( 2.4%) were compiled, the rest were copied from previous compilation.
+  0 of 238 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Geometry_Wars.vcxproj -> C:\Users\nguye\source\repos\Team-Careless\Geometry_Wars\x64\Release\Geometry_Wars.exe

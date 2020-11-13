@@ -1,10 +1,7 @@
 #include "Enemy.h"
 #include "ScreenResolution.h"
 
-float M_PI = 3.141592653;
-
 string EnemySetShapeType() {
-	#pragma region Shape
 	vector<string> shapeVect{
 		"Circle",
 		"Square",
@@ -16,15 +13,14 @@ string EnemySetShapeType() {
 		"Decagone",
 		"Polygon"
 	};
-	#pragma endregion
 	int rngShape = rand() % shapeVect.size();
 	return shapeVect[rngShape];
 }
 
 Vector2f EnemySetSpawnPoint(int width, int height) {
 
-	int rngWidth = rand() % width;
-	int rngHeight = rand() % height;
+	float rngWidth = static_cast<float>(rand() % width);
+	float rngHeight = static_cast<float>(rand() % height);
 	int rngWallSpawn = rand() % 4 + 1;
 	Vector2f spawnPoint = Vector2f(0, 0);
 		
@@ -34,11 +30,11 @@ Vector2f EnemySetSpawnPoint(int width, int height) {
 	}
 	//RIGHT
 	else if (rngWallSpawn == 2) {
-		spawnPoint = Vector2f(width, rngHeight);
+		spawnPoint = Vector2f((float)width, rngHeight);
 	}
 	//DOWN
 	else if (rngWallSpawn == 3) {
-		spawnPoint = Vector2f(rngWidth, height);
+		spawnPoint = Vector2f(rngWidth, (float)height);
 	}
 	//LEFT
 	else if (rngWallSpawn == 4) {
@@ -72,6 +68,51 @@ Color EnemySetColor() {
 	return color;
 }
 
+int EnemySetAngle() {
+	int rngAngle = rand() % 30;
+	return rngAngle;
+}
+
+float EnemySetRadius() {
+	float rngRadius = static_cast<float>(rand() % 50 + 10);
+	return rngRadius;
+}
+
+void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
+
+	int rngPointCount = rand() % 10 + 10;
+
+	if (pEnemy->shapeType == "Square") {
+		pShape->setPointCount(4);
+	}
+	else if (pEnemy->shapeType == "Pentagon") {
+		pShape->setPointCount(5);
+	}
+	else if (pEnemy->shapeType == "Hexagon") {
+		pShape->setPointCount(6);
+	}
+	else if (pEnemy->shapeType == "Heptagon") {
+		pShape->setPointCount(7);
+	}
+	else if (pEnemy->shapeType == "Octagon") {
+		pShape->setPointCount(8);
+	}
+	else if (pEnemy->shapeType == "Enneagone") {
+		pShape->setPointCount(9);
+	}
+	else if (pEnemy->shapeType == "Decagone") {
+		pShape->setPointCount(10);
+	}
+	else if (pEnemy->shapeType == "Polygon") {
+		pShape->setPointCount(rngPointCount);
+	}
+
+	pShape->setRadius(pEnemy->radius);
+	pShape->setOrigin(pEnemy->radius, pEnemy->radius);
+	pShape->setPosition(pEnemy->spawnPoint);
+	pShape->setFillColor(pEnemy->color);
+}
+
 float EnemySetSpeed() {
 	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX/0.5f));
 
@@ -83,187 +124,95 @@ float EnemySetRotationSpeed() {
 	return rngRotation;
 }
 
-float EnemySetAngle(float w, float h, float width, float height) {
-	float rngAngle = rand() % 45;
-	return rngAngle;
-}
-
-Vector2f EnemySetVelocity(float w, float h, float width, float height, float speed) {
+Vector2f EnemySetVelocity(float w, float h, int width, int height, float speed) {
 	Vector2f velocity;
 
 	//up wall
-	if (h == 0) {
-		velocity = Vector2f(0, speed);
+	if (h == 0.0f) {
+		velocity = Vector2f(0.0f, speed);
 	}
 	// down wall
 	else if (h == height) {
-		velocity = Vector2f(0, -speed);
+		velocity = Vector2f(0.0f, -speed);
 	}
 	//left wall
-	else if (w == 0) {
-		velocity = Vector2f(speed, 0);
+	else if (w == 0.0f) {
+		velocity = Vector2f(speed, 0.0f);
 	}
 	//right wall
 	else if (w == width) {
-		velocity = Vector2f(-speed, 0);
+		velocity = Vector2f(-speed, 0.0f);
 	}
 
 	return velocity;
 }
 
-int EnemySetRadius() {
-	int rngRadius = rand() % 50 + 10;
-	return rngRadius;
+int EnemySetLife() {
+	int rngLife = rand() % 3 + 1;
+	return rngLife;
 }
 
+int EnemySetSize(float radius) {
+	int size = 1;
 
-
-Enemy EnemyCreate(int width, int height) {
-	
-//
-	Enemy enemy;
-	enemy.shapeType = EnemySetShapeType();
-	enemy.spawnPoint = EnemySetSpawnPoint(width, height);
-	enemy.color = EnemySetColor();
-	enemy.speed = EnemySetSpeed();
-	enemy.rotationSpeed = EnemySetRotationSpeed();
-	enemy.angle = EnemySetAngle(enemy.spawnPoint.x, enemy.spawnPoint.y, width, height);
-	enemy.radius = EnemySetRadius();
-	enemy.velocity = EnemySetVelocity(enemy.spawnPoint.x, enemy.spawnPoint.y, width, height, enemy.speed);
-	enemy.hasSpawn = false;
-	return enemy;
+	if (radius > 50) {
+		size = 3;
+	}
+	else if (radius > 30) {
+		size = 2;
+	}
+	//else if (radius > 10) {
+	//	size = 1;
+	//}
+	return size;
 }
 
-CircleShape CreateEnemyShape(Enemy enemy) {
-
-	int rngVertex = rand() % 20 + 10;
-	CircleShape shape(enemy.radius);
-
-	if (enemy.shapeType == "Circle") {
-		CircleShape shape(enemy.radius);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Square") {
-		CircleShape shape(enemy.radius, 4);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Pentagon") {
-		CircleShape shape(enemy.radius, 5);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Hexagon") {
-		CircleShape shape(enemy.radius, 6);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Heptagon") {
-		CircleShape shape(enemy.radius, 7);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Octagon") {
-		CircleShape shape(enemy.radius, 8);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Enneagone") {
-		CircleShape shape(enemy.radius, 9);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Decagone") {
-		CircleShape shape(enemy.radius, 10);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	else if (enemy.shapeType == "Polygon") {
-		CircleShape shape(enemy.radius, rngVertex);
-		shape.setOrigin(enemy.radius, enemy.radius);
-		shape.setPosition(enemy.spawnPoint);
-		shape.setFillColor(enemy.color);
-		return shape;
-	}
-	shape.setOrigin(enemy.radius, enemy.radius);
-	shape.setPosition(enemy.spawnPoint);
-	shape.setFillColor(enemy.color);
-	return shape;
+int EnemySetScoreValue() {
+	int rngScoreValue = rand() % 100 + 1;
+	return rngScoreValue;
 }
 
-void EnemyUpdatePosition() {
-
-}
-
-void EnemySetForme(Enemy* enemy, CircleShape* shape) {
-
-	int rngPointCount = rand() % 10 + 10;
-
-	if (enemy->shapeType == "Square") {
-		shape->setPointCount(4);
-	}
-	else if (enemy->shapeType == "Pentagon") {
-		shape->setPointCount(5);
-	}
-	else if (enemy->shapeType == "Hexagon") {
-		shape->setPointCount(6);
-	}
-	else if (enemy->shapeType == "Heptagon") {
-		shape->setPointCount(7);
-	}
-	else if (enemy->shapeType == "Octagon") {
-		shape->setPointCount(8);
-	}
-	else if (enemy->shapeType == "Enneagone") {
-		shape->setPointCount(9);
-	}
-	else if (enemy->shapeType == "Decagone") {
-		shape->setPointCount(10);
-	}
-	else if (enemy->shapeType == "Polygon") {
-		shape->setPointCount(rngPointCount);
-	}
-
-	shape->setRadius(enemy->radius);
-	shape->setOrigin(enemy->radius, enemy->radius);
-	shape->setPosition(enemy->spawnPoint);
-	shape->setFillColor(enemy->color);
-}
-
-Enemy* EnemyDCreate(int width, int height) {
+Enemy* EnemyCreate(int width, int height) {
 	Enemy* enemy = new Enemy;
-	CircleShape forme;
+	CircleShape shape;
 
+	//Shape
 	enemy->shapeType = EnemySetShapeType();
 	enemy->spawnPoint = EnemySetSpawnPoint(width, height);
 	enemy->color = EnemySetColor();
+	enemy->angle = EnemySetAngle();
+	enemy->radius = EnemySetRadius();
+	EnemySetShape(enemy, &shape);
+	enemy->shape = shape;
+
+	//Speed
 	enemy->speed = EnemySetSpeed();
 	enemy->rotationSpeed = EnemySetRotationSpeed();
-	enemy->angle = EnemySetAngle(enemy->spawnPoint.x, enemy->spawnPoint.y, width, height);
-	enemy->radius = EnemySetRadius();
 	enemy->velocity = EnemySetVelocity(enemy->spawnPoint.x, enemy->spawnPoint.y, width, height, enemy->speed);
-	enemy->hasSpawn = false;
-	EnemySetForme(enemy, &forme);
-	enemy->shape = forme;
 
+	//bool
+	enemy->isAlive = true;
+	enemy->hasSpawn = false;
+
+	//Gameplay & UI
+	enemy->life = EnemySetLife();
+	enemy->size = EnemySetSize(enemy->radius);
+	enemy->scoreValue = EnemySetScoreValue();
 	return enemy;
+}
+
+void EnemyUpdate(Enemy* pEnemy, int width, int height) {
+	//Move Enemy
+	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity);
+	//loop map
+	//down
+	if (pEnemy->shape.getPosition().x > width) pEnemy->shape.setPosition(0.0f, pEnemy->shape.getPosition().y);
+	//up
+	if (pEnemy->shape.getPosition().x < 0) pEnemy->shape.setPosition((float)width, pEnemy->shape.getPosition().y);
+	//right
+	if (pEnemy->shape.getPosition().y > height) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, 0.0f);
+	//left
+	if (pEnemy->shape.getPosition().y < 0) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, (float)height);
 }
 
 void EnemyDestroy(Enemy* pEnemy){

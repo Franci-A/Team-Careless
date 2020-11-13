@@ -36,81 +36,60 @@ Timer TIMER;
 
 int main()
 {
-	#pragma region Screen Resolution
-		int width = 0;
-		int height = 0;
-		GetDesktopResolution(width, height);
-	#pragma endregion
-	#pragma region RNG
-		srand(time(NULL));
-	#pragma endregion
-	#pragma region Timer
-		float spawnTime = 1.0f;
-		float rotateTime = 1.0f;
-		Clock clock3;
-		Clock clock2;
-		Clock clockPlayer;
-		Time elapsedTime;
-		Time elapsedTime2;
-	#pragma endregion
-	#pragma region Player
-		Player player;
-		player.triangle.setPointCount(3);
-		player.triangle.setRadius(20);
-		player.triangle.setPosition(width/2, height/2);
-		player.triangle.setFillColor(Color::Cyan);
-		player.triangle.setOrigin(20, 20);
-		player.triangle.setScale(1.0f, 1.5f);
-		bool defeat = false;
-		sf::Text gameover;
-		gameover.setString("Game Over");
-		gameover.setCharacterSize(50);
-		gameover.setFillColor(sf::Color::Red);
-		gameover.setPosition(width / 2, height / 2);
+#pragma region Screen Resolution
+	int width = 0;
+	int height = 0;
+	GetDesktopResolution(width, height);
+#pragma endregion
+#pragma region RNG
+	srand(time(NULL));
+#pragma endregion
+#pragma region Timer
+	float spawnTime = 1.0f;
+	float rotateTime = 1.0f;
+	Clock clockSpawn;
+	Clock clock2;
+	Clock clockPlayer;
+	Time elapsedTime;
+	Time elapsedTime2;
+#pragma endregion
+#pragma region Player
+	Player player;
+	player.triangle.setPointCount(3);
+	player.triangle.setRadius(20);
+	player.triangle.setPosition((float)width / 2, (float)height / 2);
+	player.triangle.setFillColor(Color::Cyan);
+	player.triangle.setOrigin(20, 20);
+	player.triangle.setScale(1.0f, 1.5f);
+	bool defeat = false;
+	sf::Text gameover;
+	gameover.setString("Game Over");
+	gameover.setCharacterSize(50);
+	gameover.setFillColor(sf::Color::Red);
+	gameover.setPosition((float)width / 2, (float)height / 2);
 
-	#pragma endregion
-	#pragma region Enemy
-		vector<Enemy> enemyList;
-		vector<CircleShape> enemyShapeList;
-		int maxEnemy = 30;
-		int countEnemy = 0;
-		Transform t;
-	#pragma endregion
-	#pragma region Bullet
-		bool drawBullet = false;
-		Bullet* bullet = new Bullet;
-	#pragma endregion
-	
-	#pragma region TEST
-		//for (auto it = myvector.begin(); it != myvector.end(); ++it) 
-		//cout << ' ' << *it;
-		vector<Enemy*> enemyVect;
-		Enemy* enemi = new Enemy;
-		enemyVect.push_back(enemi);
-		cout << "enemi isAlive = " << enemi->isAlive << endl;
-		cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
-		delete enemyVect.at(0);
-		enemyVect.erase(enemyVect.begin() + 0);
-		cout << "enemyVect delete" << endl;
-		if (!enemyVect.empty()) {
-			cout << "enemi isAlive = " << enemi->isAlive << endl;
-			cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
-		}
-		//it = pointer to the element inside the container
+#pragma endregion
+#pragma region Enemy
+	vector<Enemy*> enemyVect;
+	int maxEnemy = 30;
+	int countEnemy = 0;
+	Transform t;
+#pragma endregion
+#pragma region Bullet
+	bool drawBullet = false;
+	Bullet* bullet = new Bullet;
+#pragma endregion
 
-		//CREATE
-		for (int i = 0; i < maxEnemy; i++) {
-			Enemy* enemi = new Enemy;
-			enemi = EnemyDCreate(width, height);
-			enemyVect.push_back(enemi);
-		}
+#pragma region CREATE AT START ENEMY
 
-		//DRAW
-		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-			cout << (*it)->shape.getRadius() << endl;
-		}
+	//CREATE AT START
+	//for (int i = 0; i < maxEnemy; i++) {
+	//	Enemy* enemi = new Enemy;
+	//	enemi = EnemyCreate(width, height);
+	//	enemyVect.push_back(enemi);
+	//}
 
-	#pragma endregion
+#pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
@@ -152,88 +131,74 @@ int main()
 				window.close();
 			}
 		}
-		#pragma region Create Enemy
-		elapsedTime = clock3.getElapsedTime();
+
+		//ENEMY
+#pragma region Create Enemy
+		elapsedTime = clockSpawn.getElapsedTime();
 		if (elapsedTime.asSeconds() > spawnTime && countEnemy < maxEnemy)
 		{
-			Enemy enemy = EnemyCreate(width, height);
-			CircleShape shape = CreateEnemyShape(enemy);
-			enemyList.push_back(enemy);
-			enemyShapeList.push_back(shape);
-			clock3.restart();
+			Enemy* enemi = new Enemy;
+			enemi = EnemyCreate(width, height);
+			enemyVect.push_back(enemi);
+
+			clockSpawn.restart();
 			countEnemy++;
 		}
-		#pragma endregion
-		#pragma region Update Enemy
-		for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-			//if (enemyList.at(u).hasSpawn) {
-				enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x + enemyList.at(u).velocity.x, enemyShapeList.at(u).getPosition().y + enemyList.at(u).velocity.y);
-
-				if (enemyShapeList.at(u).getPosition().x > width)	enemyShapeList.at(u).setPosition(0, enemyShapeList.at(u).getPosition().y);
-				if (enemyShapeList.at(u).getPosition().x < 0) enemyShapeList.at(u).setPosition(width, enemyShapeList.at(u).getPosition().y);
-				if (enemyShapeList.at(u).getPosition().y > height)	enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x, 0);
-				if (enemyShapeList.at(u).getPosition().y < 0) enemyShapeList.at(u).setPosition(enemyShapeList.at(u).getPosition().x, height);
-
-				bool hascolidWithplayer = HasCollided(player, enemyShapeList.at(u).getPosition().x , enemyShapeList.at(u).getPosition().y, enemyShapeList.at(u).getRadius());
-				if (hascolidWithplayer) {
-					//Defaite----------------------
-					defeat = true;
-				}
-				bool hascolidWithBullet = HasCollidedBullet((*bullet), enemyShapeList.at(u).getPosition().x, enemyShapeList.at(u).getPosition().y, enemyShapeList.at(u).getRadius());
-				if (hascolidWithBullet && drawBullet) {
-					//destroy ennemis---------------
-					enemyList.at(u).isAlive = false;
-				}
-			//}
-		}
-
-		//Destroy Enemy (and immediatly create one just after)
-		if(!enemyList.empty()){
-			unsigned tempCount = enemyList.size();
-			unsigned u = 0;
-			while(u < tempCount){
-				if (!enemyList.at(u).isAlive) {
-					enemyList.erase(enemyList.begin() + u);
-					enemyShapeList.erase(enemyShapeList.begin() + u);
-
-					//Create new Enemy
-					//Enemy enemy = EnemyCreate(width, height);
-					//CircleShape shape = CreateEnemyShape(enemy);
-					//enemyList.push_back(enemy);
-					//enemyShapeList.push_back(shape);
-					u--;
-					tempCount--;
-				}
-				u++;
+#pragma endregion
+#pragma region Update Enemy
+		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+			EnemyUpdate(*it, width, height);
+			
+			//collision 
+			bool hascolidWithplayer = HasCollided(player, (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+			if (hascolidWithplayer) {
+				//Defaite----------------------
+				defeat = true;
+			}
+			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+			if (hascolidWithBullet && drawBullet) {
+				//destroy ennemis---------------
+				(*it)->isAlive = false;
 			}
 		}
-
 
 		//Direction of enemy
 		//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
 		//	t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
-
 		//	if (!enemyList.at(u).hasSpawn) {
 		//		enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
 		//		enemyList.at(u).hasSpawn = true;
 		//	}
-			
-
 		//}
-		#pragma endregion
+#pragma endregion
+#pragma region DESTROY ENEMY
+		//NEED LONG TEST
+		if(!enemyVect.empty()){
+			auto it = enemyVect.begin();
+
+			while (it != enemyVect.end()) {
+
+				if (!(*it)->isAlive) {
+					delete (*it);
+					it = enemyVect.erase(it);
+				}
+				it++;
+			}
+		}
+#pragma endregion
 
 
 
 		window.clear();
+		//NEW ENEMY
 		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-			(*it)->shape.setFillColor((*it)->color);
-			(*it)->shape.setPosition((*it)->spawnPoint);
 			window.draw((*it)->shape);
 		}
+
 		if (!defeat) {
-			for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-				window.draw(enemyShapeList.at(u), t);
-			}
+			//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
+			//	window.draw(enemyShapeList.at(u), t);
+			//}
 			// Whatever I want to draw goes here
 			window.draw(player.triangle);
 			if (drawBullet) {
@@ -247,11 +212,14 @@ int main()
 	}
 
 	//DESTROY
+
+	int count = 1;
 	while (!enemyVect.empty()) {
-		cout << "enemyVect isAlive = " << enemyVect.at(0)->isAlive << endl;
+		cout << "delete " << count << endl;
 		delete enemyVect.at(0);
 		enemyVect.erase(enemyVect.begin());
+		count++;
+		
 	}
-
 	delete bullet;
 }

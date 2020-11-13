@@ -1,7 +1,7 @@
 #include "Collision.h"
 
-bool HasCollided(Player player, int x, int y, int rayon) {
-	int distanceAB = sqrt(powf(x - player.triangle.getPosition().x, 2) + powf(y - player.triangle.getPosition().y, 2));
+bool HasCollided(Player player, float x, float y, float rayon) {
+	float distanceAB = sqrt(powf(x - player.triangle.getPosition().x, 2) + powf(y - player.triangle.getPosition().y, 2));
 	
 	if( distanceAB <= rayon + player.triangle.getRadius()){
 		return true;
@@ -11,8 +11,8 @@ bool HasCollided(Player player, int x, int y, int rayon) {
 }
 
 
-bool HasCollidedBullet(Bullet bullet, int x, int y, int rayon) {
-	int distanceAB = sqrt(powf(x - bullet.visual.getPosition().x, 2) + powf(y - bullet.visual.getPosition().y, 2));
+bool HasCollidedBullet(Bullet bullet, float x, float y, float rayon) {
+	float distanceAB = sqrt(powf(x - bullet.visual.getPosition().x, 2) + powf(y - bullet.visual.getPosition().y, 2));
 
 	if( distanceAB <= rayon + bullet.visual.getRadius()){
 		return true;
