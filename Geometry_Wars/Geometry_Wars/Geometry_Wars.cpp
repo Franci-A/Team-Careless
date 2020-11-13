@@ -184,7 +184,7 @@ int main()
 		}
 #pragma endregion
 #pragma region DESTROY ENEMY
-		//NEED LONG TEST
+		
 		if (!enemyVect.empty()) {
 			auto it = enemyVect.begin();
 
@@ -198,7 +198,6 @@ int main()
 				else {
 					it++;
 				}
-				
 			}
 		}
 #pragma endregion
