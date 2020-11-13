@@ -113,14 +113,14 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 	pShape->setFillColor(pEnemy->color);
 }
 
-float EnemySetSpeed() {
-	float rngSpeed = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX/0.5f));
+int EnemySetSpeed() {
+	int rngSpeed = rand() % 200 + 100;
 
 	return rngSpeed;
 }
 
-float EnemySetRotationSpeed() {
-	float rngRotation = static_cast <float> (rand()) / (static_cast<float> (RAND_MAX));
+int EnemySetRotation() {
+	int rngRotation = rand() % 45;
 	return rngRotation;
 }
 
@@ -187,7 +187,7 @@ Enemy* EnemyCreate(int width, int height) {
 
 	//Speed
 	enemy->speed = EnemySetSpeed();
-	enemy->rotationSpeed = EnemySetRotationSpeed();
+	enemy->rotation = EnemySetRotation();
 	enemy->velocity = EnemySetVelocity(enemy->spawnPoint.x, enemy->spawnPoint.y, width, height, enemy->speed);
 
 	//bool
@@ -201,9 +201,10 @@ Enemy* EnemyCreate(int width, int height) {
 	return enemy;
 }
 
-void EnemyUpdate(Enemy* pEnemy, int width, int height) {
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle) {
 	//Move Enemy
-	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity);
+	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
+	pEnemy->shape.rotate(deltaAngle);
 	//loop map
 	//down
 	if (pEnemy->shape.getPosition().x > width) pEnemy->shape.setPosition(0.0f, pEnemy->shape.getPosition().y);
