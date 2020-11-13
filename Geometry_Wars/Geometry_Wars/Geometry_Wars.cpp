@@ -102,7 +102,8 @@ int main()
 #pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen); //Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
+	window.setFramerateLimit(60);
 	// Initialise everything below
 	// Game loop
 	while (window.isOpen()) {
@@ -112,11 +113,11 @@ int main()
 
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
-		if (Mouse::isButtonPressed(Mouse::Right) && (player.triangle.getPosition().x + 20 != localPosition.x || player.triangle.getPosition().y + 20 != localPosition.y))
+		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y))
 		{
-			PlayerMove(player, localPosition, deltaTime);
+			PlayerMove((*player), localPosition, deltaTime);
 		}
-		PlayerRotation(player, localPosition);
+		PlayerRotation((*player), localPosition);
 
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
 			//cout << localPosition.x <<  " " << localPosition.y << endl;
@@ -124,12 +125,12 @@ int main()
 			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
 			//cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
-		//if (drawBullet) {
-		//	bool hascolid = HasCollidedBullet((*bullet), player.triangle.getPosition().x, player.triangle.getPosition().y, player.triangle.getRadius());
-		//		if (hascolid) {
-		//			drawBullet = false;
-		//		}
-		//}
+		if (drawBullet) {
+			bool hascolid = HasCollidedBullet((*bullet), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
+				if (hascolid) {
+					drawBullet = false;
+				}
+		}
 
 		if (drawBullet) {
 			Check_Wall_Collision(bullet, width, height);
@@ -139,6 +140,8 @@ int main()
 		while (window.pollEvent(event)) {
 			// Process any input event here
 			if (event.type == sf::Event::Closed || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+				delete player;
+				delete bullet;
 				window.close();
 			}
 		}
@@ -208,9 +211,8 @@ int main()
 				}
 				window.draw((*it)->shape);
 			}
-			//Player
-			window.draw(player.triangle);
-			//Bullet
+			// Whatever I want to draw goes here
+			window.draw(player->triangle);
 			if (drawBullet) {
 				window.draw(bullet->visual);
 			}

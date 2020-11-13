@@ -1,9 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Bullet.h"
+#include"DeltaTime.h"
 
 struct Player {
-	float speed = .5f;
+	float speed = 1.0f;
 	sf::CircleShape triangle;
 	bool hasBullet = true;
 };
