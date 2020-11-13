@@ -9,6 +9,6 @@ struct Player {
 	bool hasBullet = true;
 };
 
-void PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime);
+sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime);
 void PlayerRotation(Player& player, sf::Vector2f localPosition);
 Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player,  Bullet* bullet);

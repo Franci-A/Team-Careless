@@ -2,7 +2,7 @@
 
 
 
-void PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
+sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
 	float x = 0;
 	float y = 0;
 	if (player.triangle.getPosition().x + 20 <= localPosition.x) {
@@ -26,6 +26,7 @@ void PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
 		y = 0;
 	}
 	player.triangle.move(x, y);
+	return sf::Vector2f(x, y);
 }
 
 void PlayerRotation(Player& player, sf::Vector2f localPosition) {
