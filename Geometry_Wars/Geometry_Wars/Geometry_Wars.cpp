@@ -76,12 +76,14 @@ int main()
 #pragma region CANVAS
 	Text gameover;
 	gameover.setString("Game Over");
-	gameover.setCharacterSize(50);
+	gameover.setCharacterSize(100);
+	gameover.setOrigin(150, 100);
 	gameover.setFillColor(Color::Red);
-	float offsetX = gameover.getCharacterSize() * 8 / 2;
-	gameover.setPosition((float)width / 2.0f - offsetX, (float)height / 2.0f);
+	//float offsetX = gameover.getCharacterSize() * 8 / 2;
+	gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height / 2.0f);
 	Font font;
-	if (!font.loadFromFile(getAssetsPath() + "arial.ttf"))
+	string fontPath = getAssetsPath() + "Homework.otf";
+	if (!font.loadFromFile(fontPath))
 	{
 		cout << "Error Load font" << endl;
 		cout << "AppPATH " << endl << getAppPath << endl;
@@ -102,7 +104,7 @@ int main()
 #pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen); //Style::Fullscreen
 	window.setFramerateLimit(60);
 	// Initialise everything below
 	// Game loop
@@ -127,9 +129,9 @@ int main()
 		}
 		if (drawBullet) {
 			bool hascolid = HasCollidedBullet((*bullet), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
-				if (hascolid) {
-					drawBullet = false;
-				}
+			if (hascolid) {
+				drawBullet = false;
+			}
 		}
 
 		if (drawBullet) {
@@ -162,10 +164,10 @@ int main()
 #pragma region Update Enemy
 		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 			EnemyUpdate(*it, width, height);
-			
+
 			//Direction Enemy
 			t.rotate((*it)->angle, (*it)->spawnPoint.x, (*it)->spawnPoint.y);
-			
+
 			if (!(*it)->hasSpawn) {
 				(*it)->shape.setPosition((*it)->spawnPoint);
 			}
@@ -185,7 +187,7 @@ int main()
 #pragma endregion
 #pragma region DESTROY ENEMY
 		//NEED LONG TEST
-		if(!enemyVect.empty()){
+		if (!enemyVect.empty()) {
 			auto it = enemyVect.begin();
 
 			while (it != enemyVect.end()) {
@@ -233,6 +235,6 @@ int main()
 		delete enemyVect.at(0);
 		enemyVect.erase(enemyVect.begin());
 		count++;
-		
+
 	}
 }
