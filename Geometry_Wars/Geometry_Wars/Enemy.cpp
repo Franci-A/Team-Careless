@@ -114,7 +114,7 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 }
 
 int EnemySetSpeed() {
-	int rngSpeed = rand() % 300 + 100;
+	int rngSpeed = rand() % 200 + 100;
 
 	return rngSpeed;
 }
