@@ -70,7 +70,7 @@ int main()
 #pragma endregion
 #pragma region Enemy
 	vector<Enemy*> enemyVect;
-	int maxEnemy = 50;
+	int maxEnemy = 30;
 	int countEnemy = 0;
 #pragma endregion
 
@@ -106,14 +106,14 @@ int main()
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
 	music.setLoop(true);
-	music.setVolume(20);
+	music.setVolume(1);
 	music.play();
 
 	sf::SoundBuffer hit;
 	hit.loadFromFile(getAssetsPath() + "hit.wav");
 	sf::Sound sound;
 	sound.setBuffer(hit);
-	sound.setVolume(20);
+	sound.setVolume(1);
 
 #pragma endregion
 #pragma region TEST CREATE AT START ENEMY

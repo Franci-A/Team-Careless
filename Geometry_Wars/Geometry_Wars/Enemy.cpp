@@ -46,24 +46,28 @@ Vector2f EnemySetSpawnPoint(int width, int height) {
 Color EnemySetColor() {
 
 	int rngColor = rand() % 5 + 1;
-	Color color;
-	color = Color::Red;
+	Color color(rand() % 155 + 100,
+		rand() % 75,
+		rand() % 75,
+		255);
+	//Color color;
+	//color = Color::Red;
 
-	if (rngColor == 1) {
-		color = Color::Yellow;
-	}
-	else if (rngColor == 2) {
-		color = Color::Red;
-	}
-	else if (rngColor == 3) {
-		color = Color::Green;
-	}
-	else if (rngColor == 4) {
-		color = Color::Blue;
-	}
-	else if (rngColor == 5) {
-		color = Color::Magenta;
-	}
+	//if (rngColor == 1) {
+	//	color = Color::Yellow;
+	//}
+	//else if (rngColor == 2) {
+	//	color = Color::Red;
+	//}
+	//else if (rngColor == 3) {
+	//	color = Color::Green;
+	//}
+	//else if (rngColor == 4) {
+	//	color = Color::Blue;
+	//}
+	//else if (rngColor == 5) {
+	//	color = Color::Magenta;
+	//}
 
 	return color;
 }
