@@ -68,15 +68,6 @@ Color EnemySetColor() {
 	return color;
 }
 
-int EnemySetAngle() {
-	int rngAngle = rand() % 30;
-	return rngAngle;
-}
-
-float EnemySetRadius() {
-	float rngRadius = static_cast<float>(rand() % 50 + 10);
-	return rngRadius;
-}
 
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 
@@ -112,43 +103,133 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 	pShape->setPosition(pEnemy->spawnPoint);
 	pShape->setFillColor(pEnemy->color);
 }
+int EnemySetAngle() {
+	int rngAngle = rand() % 60;
+	return rngAngle;
+}
 
+float EnemySetRadius() {
+	float rngRadius = static_cast<float>(rand() % 50 + 10);
+	return rngRadius;
+}
 int EnemySetSpeed() {
 	int rngSpeed = rand() % 200 + 100;
-
 	return rngSpeed;
 }
 
 int EnemySetRotation() {
-	int rngRotation = rand() % 45;
+	int rngRotation = rand() % 45 + 10;
 	return rngRotation;
 }
 
-Vector2f EnemySetVelocity(float w, float h, int width, int height, float speed) {
+Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) {
 	Vector2f velocity;
+	int rngSpeed = rand() % 100 + 100;
+	int rngDirection = rand() % 2 + 1;
+	// + x decale droite
+	// - x decale gauche
+	//height 0 UP WALL
+	//x < width / 2 == full left
+	//x == width/2 == middle
+	//x > width / 2 == full right
+	//
+	// + y descend
+	// - y monte
+	//y < height / 2 == full up
+	//y == height / 2 == middle 
+	//y > height / 2 == full down
+	//height /2 
+	//width /2
 
 	//up wall
-	if (h == 0.0f) {
-		velocity = Vector2f(0.0f, speed);
+	if (y == 0.0f) {
+		//left
+		if (x < width/2) {
+			velocity = Vector2f(rngSpeed, speed);
+		}
+		//middle
+		else if (x == width / 2) {
+			if (rngDirection == 1) {
+				velocity = Vector2f(rngSpeed, speed);
+			}
+			else {
+				velocity = Vector2f(-rngSpeed, speed);
+			}
+		}
+		//right
+		else if (x > width / 2) {
+			velocity = Vector2f(-rngSpeed, speed);
+		}
+		//velocity = Vector2f(0.0f, speed);
 	}
 	// down wall
-	else if (h == height) {
-		velocity = Vector2f(0.0f, -speed);
+	else if (y == height) {
+		if (x < width / 2) {
+			velocity = Vector2f(rngSpeed, -speed);
+		}
+		//middle
+		else if (x == width / 2) {
+			if (rngDirection == 1) {
+				velocity = Vector2f(rngSpeed, -speed);
+			}
+			else {
+				velocity = Vector2f(-rngSpeed, -speed);
+			}
+		}
+		//right
+		else if (x > width / 2) {
+			velocity = Vector2f(-rngSpeed, -speed);
+		}
+		//velocity = Vector2f(0.0f, -speed);
 	}
 	//left wall
-	else if (w == 0.0f) {
-		velocity = Vector2f(speed, 0.0f);
+	else if (x == 0.0f) {
+		//up
+		if (y < height / 2) {
+			velocity = Vector2f(speed, rngSpeed);
+		}
+		//middle
+		else if (y == height / 2) {
+			if (rngDirection == 1) {
+				velocity = Vector2f(speed, rngSpeed);
+			}
+			else {
+				velocity = Vector2f(speed, -rngSpeed);
+			}
+		}
+		//downs
+		else if (y > height / 2) {
+			velocity = Vector2f(speed, -rngSpeed);
+		}
+		//velocity = Vector2f(speed, 0.0f);
 	}
 	//right wall
-	else if (w == width) {
-		velocity = Vector2f(-speed, 0.0f);
+	else if (x == width) {
+		//up
+		if (y < height / 2) {
+			velocity = Vector2f(-speed, rngSpeed);
+		}
+		//middle
+		else if (y == height / 2) {
+			if (rngDirection == 1) {
+				velocity = Vector2f(-speed, rngSpeed);
+			}
+			else {
+				velocity = Vector2f(-speed, -rngSpeed);
+			}
+		}
+		//downs
+		else if (y > height / 2) {
+			velocity = Vector2f(-speed, -rngSpeed);
+		}
+		//velocity = Vector2f(-speed, 0.0f);
 	}
 
 	return velocity;
 }
 
 int EnemySetLife() {
-	int rngLife = rand() % 3 + 1;
+	int rngLife = rand()%3 +1;
 	return rngLife;
 }
 
@@ -161,9 +242,6 @@ int EnemySetSize(float radius) {
 	else if (radius > 30) {
 		size = 2;
 	}
-	//else if (radius > 10) {
-	//	size = 1;
-	//}
 	return size;
 }
 

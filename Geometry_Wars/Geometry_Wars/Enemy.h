@@ -30,7 +30,7 @@ Vector2f EnemySetSpawnPoint(int width, int height);
 Color EnemySetColor();
 int EnemySetSpeed();
 int EnemySetRotation();
-Vector2f EnemySetVelocity(float w, float h, int width, int height, float speed);
+Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed);
 int EnemySetAngle();
 float EnemySetRadius();
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape);

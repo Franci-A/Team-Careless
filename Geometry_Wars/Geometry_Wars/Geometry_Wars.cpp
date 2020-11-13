@@ -35,9 +35,9 @@ Timer TIMER;
 int main()
 {
 #pragma region Screen Resolution
-	int width = 0;
-	int height = 0;
-	GetDesktopResolution(width, height);
+	int width = 800;
+	int height = 600;
+	//GetDesktopResolution(width, height);
 #pragma endregion
 #pragma region RNG
 	srand(time(NULL));
@@ -61,15 +61,16 @@ int main()
 	player->triangle.setScale(1.0f, 1.5f);
 	bool defeat = false;
 #pragma endregion
+#pragma region Bullet
+	bool drawBullet = false;
+	Bullet* bullet = new Bullet;
+#pragma endregion
 #pragma region Enemy
 	vector<Enemy*> enemyVect;
 	int maxEnemy = 30;
 	int countEnemy = 0;
 #pragma endregion
-#pragma region Bullet
-	bool drawBullet = false;
-	Bullet* bullet = new Bullet;
-#pragma endregion
+
 
 #pragma region CANVAS
 	Text gameover;
@@ -201,7 +202,7 @@ int main()
 			// Whatever I want to draw goes here
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-				window.draw((*it)->shape);
+					window.draw((*it)->shape);
 			}
 			// Whatever I want to draw goes here
 			window.draw(player->triangle);
