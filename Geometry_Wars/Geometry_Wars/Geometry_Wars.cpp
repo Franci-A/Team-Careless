@@ -76,22 +76,27 @@ int main()
 
 
 #pragma region CANVAS
-	Text gameover;
-	gameover.setString("Game Over");
-	gameover.setCharacterSize(100);
-	gameover.setOrigin(150, 100);
-	gameover.setFillColor(Color::Red);
-	//float offsetX = gameover.getCharacterSize() * 8 / 2;
-	gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height / 2.0f);
 	Font font;
-	string fontPath = getAssetsPath() + "Homework.otf";
+	string fontPath = getAssetsPath() + "mago2.ttf";
 	if (!font.loadFromFile(fontPath))
 	{
 		std::cout << "Error Load font" << endl;
 		std::cout << "AppPATH " << endl << getAppPath << endl;
 		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
 	}
+	
+	Text gameover;
 	gameover.setFont(font);
+	gameover.setString("Game Over");
+	gameover.setCharacterSize(150);
+	gameover.setOrigin(floor(gameover.getLocalBounds().width /2), floor(gameover.getLocalBounds().height /2));
+	gameover.setFillColor(Color::Red);
+	gameover.setOutlineColor(Color::White);
+	gameover.setOutlineThickness(.5f);
+	//float offsetX = gameover.getCharacterSize() * 8 / 2;
+	gameover.setPosition((float)width / 2.0f /*- offsetX*/, (float)height/3);
+	
+
 
 	Texture texture;
 	Texture textureStars1;
@@ -121,14 +126,14 @@ int main()
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
 	music.setLoop(true);
-	music.setVolume(1);
+	music.setVolume(5);
 	music.play();
 
 	sf::SoundBuffer hit;
 	hit.loadFromFile(getAssetsPath() + "hit.wav");
 	sf::Sound sound;
 	sound.setBuffer(hit);
-	sound.setVolume(1);
+	sound.setVolume(5);
 
 #pragma endregion
 #pragma region TEST CREATE AT START ENEMY
@@ -155,7 +160,7 @@ int main()
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		Vector2f starsMove;
-		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y))
+		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y) && !defeat)
 		{
 			starsMove = PlayerMove((*player), localPosition, deltaTime);
 			stars1.move(- starsMove.x /2 , - starsMove.y /2);
@@ -261,7 +266,9 @@ int main()
 		}
 		else {
 			//Game Over
+			window.draw(background);
 			window.draw(gameover);
+
 		}
 
 		window.display();
