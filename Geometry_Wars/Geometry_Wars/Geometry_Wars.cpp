@@ -113,6 +113,13 @@ int main()
 	stars1.setTexture(textureStars1);
 	stars2.setTexture(textureStars2);
 
+	texture.setSmooth(true);
+	textureStars1.setRepeated(true);
+	textureStars1.setSmooth(true);
+	textureStars2.setRepeated(true);
+	textureStars2.setSmooth(true);
+
+
 	background.scale(2, 2);
 	stars1.scale(2, 2);
 	stars2.scale(2, 2);
