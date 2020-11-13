@@ -1,7 +1,9 @@
-﻿  Geometry_Wars.cpp
+﻿  Collision.cpp
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(42,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(117,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+  Geometry_Wars.cpp
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(43,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(115,93): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -10,7 +12,7 @@ F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(1
           [
               T=float
           ]
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(117,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(115,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -19,5 +21,27 @@ F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(1
           [
               T=float
           ]
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(169,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  PlayerController.cpp
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(33,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(44,117): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(44,100): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(44,83): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(44,50): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
   Geometry_Wars.vcxproj -> F:\School_Projects\Team-Careless\Geometry_Wars\x64\Debug\Geometry_Wars.exe
