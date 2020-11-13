@@ -5,15 +5,13 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <cmath>
 #include <string>
-#include <chrono>
-#include <cstdlib>
-#include <ctime>
+
 #pragma endregion
 
 #pragma region Header Files
 #include "ScreenResolution.h"
+#include "AssetsUtils.h"
 #include "Enemy.h"
 #include "PlayerController.h"
 #include "Bullet.h"
@@ -30,7 +28,6 @@ using namespace sf;
 
 #pragma region Global Variable
 Timer TIMER;
-//float PI = 3.141592653;
 
 #pragma endregion
 
@@ -62,12 +59,6 @@ int main()
 	player.triangle.setOrigin(20, 20);
 	player.triangle.setScale(1.0f, 1.5f);
 	bool defeat = false;
-	sf::Text gameover;
-	gameover.setString("Game Over");
-	gameover.setCharacterSize(50);
-	gameover.setFillColor(sf::Color::Red);
-	gameover.setPosition((float)width / 2, (float)height / 2);
-
 #pragma endregion
 #pragma region Enemy
 	vector<Enemy*> enemyVect;
@@ -80,7 +71,24 @@ int main()
 	Bullet* bullet = new Bullet;
 #pragma endregion
 
-#pragma region CREATE AT START ENEMY
+#pragma region CANVAS
+	Text gameover;
+	gameover.setString("Game Over");
+	gameover.setCharacterSize(50);
+	gameover.setFillColor(Color::Red);
+	float offsetX = gameover.getCharacterSize() * 8 / 2;
+	gameover.setPosition((float)width / 2.0f - offsetX, (float)height / 2.0f);
+	Font font;
+	if (!font.loadFromFile(getAssetsPath() + "arial.ttf"))
+	{
+		cout << "Error Load font" << endl;
+		cout << "AppPATH " << endl << getAppPath << endl;
+		cout << "AssetPATH " << endl << getAssetsPath() << endl;
+	}
+	gameover.setFont(font);
+#pragma endregion
+
+#pragma region TEST CREATE AT START ENEMY
 
 	//CREATE AT START
 	//for (int i = 0; i < maxEnemy; i++) {
@@ -92,7 +100,7 @@ int main()
 #pragma endregion
 
 	//VideoMode DesktopMode = VideoMode::GetDesktopMode();
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen); //Style::Fullscreen
 	// Initialise everything below
 	// Game loop
 	while (window.isOpen()) {
@@ -149,6 +157,12 @@ int main()
 		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
 			EnemyUpdate(*it, width, height);
 			
+			//Direction Enemy
+			t.rotate((*it)->angle, (*it)->spawnPoint.x, (*it)->spawnPoint.y);
+			if (!(*it)->hasSpawn) {
+				(*it)->shape.setPosition((*it)->spawnPoint);
+			}
+
 			//collision 
 			bool hascolidWithplayer = HasCollided(player, (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
@@ -161,15 +175,6 @@ int main()
 				(*it)->isAlive = false;
 			}
 		}
-
-		//Direction of enemy
-		//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-		//	t.rotate(enemyList.at(u).angle, enemyList.at(u).spawnPoint.x, enemyList.at(u).spawnPoint.y);
-		//	if (!enemyList.at(u).hasSpawn) {
-		//		enemyShapeList.at(u).setPosition(enemyList.at(u).spawnPoint);
-		//		enemyList.at(u).hasSpawn = true;
-		//	}
-		//}
 #pragma endregion
 #pragma region DESTROY ENEMY
 		//NEED LONG TEST
@@ -193,6 +198,10 @@ int main()
 			// Whatever I want to draw goes here
 			//Enemy
 			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+				if (!(*it)->hasSpawn) {
+					window.draw((*it)->shape, t);
+					(*it)->hasSpawn = true;
+				}
 				window.draw((*it)->shape);
 			}
 			//Player

@@ -20,7 +20,6 @@ struct Enemy {
 	bool isAlive = true;
 	bool hasSpawn = false;
 
-
 	int size = 0; //not real size -> for divide on destroy
 	int life = 0;
 	int scoreValue = 0;
