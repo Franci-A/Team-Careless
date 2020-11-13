@@ -1,4 +1,21 @@
-﻿  Geometry_Wars.cpp
+﻿  Bullet.cpp
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(12,24): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(12,53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(13,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(13,101): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(13,52): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,72): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,101): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(14,52): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(29,50): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(30,50): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(32,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Bullet.cpp(32,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Collision.cpp
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Geometry_Wars.cpp
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Enemy.h(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(42,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(81,16): warning C4244: 'initializing': conversion from 'unsigned int' to 'float', possible loss of data
@@ -20,7 +37,7 @@ F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(1
           [
               T=float
           ]
-F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(167,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\Geometry_Wars.cpp(168,18): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   PlayerController.cpp
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(33,29): warning C4305: 'initializing': truncation from 'double' to 'float'
 F:\School_Projects\Team-Careless\Geometry_Wars\Geometry_Wars\PlayerController.cpp(44,117): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data

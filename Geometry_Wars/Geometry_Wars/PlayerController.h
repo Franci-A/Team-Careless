@@ -4,7 +4,7 @@
 #include"DeltaTime.h"
 
 struct Player {
-	float speed = 1.0f;
+	float speed = 180.0f;
 	sf::CircleShape triangle;
 	bool hasBullet = true;
 };

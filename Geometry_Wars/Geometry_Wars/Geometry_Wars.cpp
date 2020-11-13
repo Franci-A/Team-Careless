@@ -109,8 +109,8 @@ int main()
 	while (window.isOpen()) {
 		Event event;
 		//Delta Time
-		deltaTime = clockPlayer.getElapsedTime().asSeconds();
-		
+		deltaTime = clockDelta.getElapsedTime().asSeconds();
+		clockDelta.restart();
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y))
@@ -134,7 +134,7 @@ int main()
 
 		if (drawBullet) {
 			Check_Wall_Collision(bullet, width, height);
-			UpdatePosition(bullet);
+			UpdatePosition(bullet, deltaTime);
 		}
 
 		while (window.pollEvent(event)) {

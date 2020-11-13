@@ -7,13 +7,13 @@ Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE 
 {
 
 	(*newBall).type = type;
-	(*newBall).X_offset = cursorX - playerX;
-	(*newBall).Y_offset = cursorY - playerY;
-	if (sqrt(powf(cursorX, 2) + powf(cursorY, 2)) != 0) {
+	//(*newBall).X_offset = cursorX - playerX;
+	//(*newBall).Y_offset = cursorY - playerY;
+	if (sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2)) != 0) {
 		(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 		(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 	}
-	(*newBall).speed = .1f;
+	(*newBall).speed = 100.0f;
 
 	(*newBall).timer_StartPoint = GetTime();
 	(*newBall).timer = 0.0f;
@@ -22,12 +22,12 @@ Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE 
 }
 
 // Mvmt - Update Position
-void UpdatePosition(Bullet* ball)
+void UpdatePosition(Bullet* ball, float deltaTime)
 {
 	(*ball).timer = GetTime() - (*ball).timer_StartPoint;
 
-	(*ball).posX = (*ball).X_offset * (*ball).speed ;
-	(*ball).posY = (*ball).Y_offset * (*ball).speed;
+	(*ball).posX = (*ball).X_offset * (*ball).speed *deltaTime;
+	(*ball).posY = (*ball).Y_offset * (*ball).speed * deltaTime;
 
 	(*ball).visual.move((*ball).posX, (*ball).posY);
 }
