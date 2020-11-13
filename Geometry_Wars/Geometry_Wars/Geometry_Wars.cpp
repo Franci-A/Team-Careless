@@ -53,13 +53,13 @@ int main()
 	Time elapsedTime2;
 #pragma endregion
 #pragma region Player
-	Player player;
-	player.triangle.setPointCount(3);
-	player.triangle.setRadius(20);
-	player.triangle.setPosition((float)width / 2, (float)height / 2);
-	player.triangle.setFillColor(Color::Cyan);
-	player.triangle.setOrigin(20, 20);
-	player.triangle.setScale(1.0f, 1.5f);
+	Player* player = new Player;
+	player->triangle.setPointCount(3);
+	player->triangle.setRadius(20);
+	player->triangle.setPosition((float)width / 2, (float)height / 2);
+	player->triangle.setFillColor(Color::Cyan);
+	player->triangle.setOrigin(20, 20);
+	player->triangle.setScale(1.0f, 1.5f);
 	bool defeat = false;
 #pragma endregion
 #pragma region Enemy
@@ -110,7 +110,7 @@ int main()
 		Event event;
 		//Delta Time
 		deltaTime = clockPlayer.getElapsedTime().asSeconds();
-
+		
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y))
@@ -122,7 +122,7 @@ int main()
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
 			//cout << localPosition.x <<  " " << localPosition.y << endl;
 			//cout << player.triangle.getPosition().x << " " << player.triangle.getPosition().y << endl;
-			bullet = PlayerShot(drawBullet, localPosition, player, bullet);
+			bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
 			//cout << bullet->X_offset << " " << bullet->Y_offset << endl;
 		}
 		if (drawBullet) {
@@ -171,7 +171,7 @@ int main()
 			}
 
 			//collision 
-			bool hascolidWithplayer = HasCollided(player, (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
 				//Defaite----------------------
 				defeat = true;
@@ -235,5 +235,4 @@ int main()
 		count++;
 		
 	}
-	delete bullet;
 }

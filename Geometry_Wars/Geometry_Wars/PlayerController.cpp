@@ -6,10 +6,10 @@ void PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
 	float x = 0;
 	float y = 0;
 	if (player.triangle.getPosition().x + 20 <= localPosition.x) {
-		x = player.speed ;
+		x = player.speed *deltaTime;
 	}
 	else if (player.triangle.getPosition().x + 20 > localPosition.x) {
-		x = -player.speed;
+		x = -player.speed *deltaTime;
 	}
 	else {
 		x = 0;
@@ -17,10 +17,10 @@ void PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
 
 
 	if (player.triangle.getPosition().y + 20 <= localPosition.y) {
-		y = player.speed;
+		y = player.speed *deltaTime;
 	}
 	else if (player.triangle.getPosition().y + 20 > localPosition.y) {
-		y = -player.speed;
+		y = -player.speed *deltaTime;
 	}
 	else {
 		y = 0;

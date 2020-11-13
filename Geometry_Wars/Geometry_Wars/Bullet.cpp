@@ -9,10 +9,10 @@ Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE 
 	(*newBall).type = type;
 	(*newBall).X_offset = cursorX - playerX;
 	(*newBall).Y_offset = cursorY - playerY;
-	//if (sqrt(powf(cursorX, 2) + powf(cursorY, 2)) != 0) {
-	//	(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
-	//	(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
-	//}
+	if (sqrt(powf(cursorX, 2) + powf(cursorY, 2)) != 0) {
+		(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
+		(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
+	}
 	(*newBall).speed = .1f;
 
 	(*newBall).timer_StartPoint = GetTime();
