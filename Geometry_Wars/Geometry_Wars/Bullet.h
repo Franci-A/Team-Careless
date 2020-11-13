@@ -1,8 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-
-
 enum BALL_TYPE
 {
 	DEFAULT
@@ -11,18 +9,18 @@ enum BALL_TYPE
 
 struct Bullet
 {
-	int posX;
-	int posY;
+	int posX = 0;
+	int posY = 0;
 
 	int X_offset = 0;
 	int Y_offset = 0;
-	float speed;
+	float speed = 0.0f;
 
 	sf::CircleShape visual;
 
-	BALL_TYPE type;
+	BALL_TYPE type = DEFAULT;
 
-	float timer_StartPoint;
+	float timer_StartPoint = 0.0f;
 	float timer = 0.0f;
 };
 

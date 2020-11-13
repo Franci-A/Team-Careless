@@ -187,27 +187,26 @@ int main()
 		}
 #pragma endregion
 
-
-
 		window.clear();
-		//NEW ENEMY
-		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
-			window.draw((*it)->shape);
-		}
 
 		if (!defeat) {
-			//for (unsigned u = 0; u < enemyShapeList.size(); u++) {
-			//	window.draw(enemyShapeList.at(u), t);
-			//}
 			// Whatever I want to draw goes here
+			//Enemy
+			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+				window.draw((*it)->shape);
+			}
+			//Player
 			window.draw(player.triangle);
+			//Bullet
 			if (drawBullet) {
 				window.draw(bullet->visual);
 			}
 		}
 		else {
+			//Game Over
 			window.draw(gameover);
 		}
+
 		window.display();
 	}
 
