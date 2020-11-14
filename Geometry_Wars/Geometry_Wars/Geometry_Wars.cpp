@@ -126,14 +126,14 @@ int main()
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
 	music.setLoop(true);
-	music.setVolume(5);
+	music.setVolume(0.1f);
 	music.play();
 
 	sf::SoundBuffer hit;
 	hit.loadFromFile(getAssetsPath() + "hit.wav");
 	sf::Sound sound;
 	sound.setBuffer(hit);
-	sound.setVolume(5);
+	sound.setVolume(0.1f);
 #pragma endregion
 
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen);
