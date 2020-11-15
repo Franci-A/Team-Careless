@@ -132,7 +132,7 @@ float EnemySetRadius(EnemyType type) {
 		return 10.0f;
 	}
 	else if (type == EnemyType::SNAKE) {
-		return 14.0f;
+		return 30.0f;
 	}
 	return rngRadius;
 }
@@ -265,7 +265,7 @@ int EnemySetLife(EnemyType type) {
 int EnemySetSize(float radius) {
 	int size = 1;
 
-	if (radius > 50) {
+	if (radius > 70) {
 		size = 3;
 	}
 	else if (radius > 30) {
@@ -293,8 +293,11 @@ bool EnemySetCanDivide(EnemyType type) {
 
 bool EnemySetFollowPlayer(EnemyType type) {
 	int rngFollow = rand() % 101 % 50;
-	if (type == EnemyType::MINI) {
+	if (type == EnemyType::MINI || type == EnemyType::SNAKE) {
 		return false;
+	}
+	else if (type == EnemyType::KAMIKAZE || type == EnemyType::TELEPORTER) {
+		return true;
 	}
 	return !(rngFollow % 3);
 }
@@ -315,10 +318,10 @@ EnemyType EnemySetType() {
 	switch (rngEnemyType)
 	{
 	case 1:
-		type = EnemyType::MINI;
+		type = EnemyType::BASIC; //EnemyType::MINI;
 		break;
 	case 2:
-		type = EnemyType::TELEPORT;
+		type = EnemyType::TELEPORTER;
 		break;
 	case 3:
 		type = EnemyType::SNAKE;
@@ -397,6 +400,7 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 		pEnemy->shape.rotate(deltaAngle);
 	}
 	
+	//SNake type move pattern
 	if (pEnemy->type == EnemyType::SNAKE) {
 		int speedX = 20;
 		int speedY = 4;
@@ -420,8 +424,6 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 	if (pEnemy->shape.getPosition().y > height) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, 0.0f);
 	//left
 	if (pEnemy->shape.getPosition().y < 0) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, (float)height);
-
-
 }
 
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height) {
@@ -444,34 +446,37 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 	float posX = enemy->radius * cos(ConvertDegToRad(alpha));
 	float posY = enemy->radius * sin(ConvertDegToRad(alpha));
 
+	divide->type = EnemyType::BASIC;
+	divide->hasOutline = false;
 	divide->radius = enemy->radius / 2;
 	divide->shape.setRadius(divide->radius);
 	divide->spawnPoint = Vector2f(enemy->shape.getPosition().x + posX, enemy->shape.getPosition().y + posY);
 	divide->shape.setPosition(divide->spawnPoint);
 	divide->velocity = Vector2f(posX, posY);
+	divide->shape.setOutlineThickness(0);
 	divide->shape.setOrigin(divide->radius, divide->radius);
 
 	//not destroying immediatly (and not having super vfx effect)
-	divide->invicibleTime = 1.0f;
+	divide->invicibleTime = 0.2f;
 }
 
 void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime) {
-	float x = pEnemy->speed * deltaTime;
-	float y = pEnemy->speed * deltaTime;
+	//float x = pEnemy->speed * deltaTime;
+	//float y = pEnemy->speed * deltaTime;
 
-	if (pEnemy->shape.getPosition().x + pEnemy->radius <= pPlayer->triangle.getPosition().x) {
-		x = pEnemy->speed * deltaTime;
-	}
-	else if (pEnemy->shape.getPosition().x + pEnemy->radius > pPlayer->triangle.getPosition().x) {
-		x = -pEnemy->speed * deltaTime;
-	}
+	//if (pEnemy->shape.getPosition().x + pEnemy->radius <= pPlayer->triangle.getPosition().x) {
+	//	x = pEnemy->speed * deltaTime;
+	//}
+	//else if (pEnemy->shape.getPosition().x + pEnemy->radius > pPlayer->triangle.getPosition().x) {
+	//	x = -pEnemy->speed * deltaTime;
+	//}
 
-	if (pEnemy->shape.getPosition().y + pEnemy->radius <= pPlayer->triangle.getPosition().y) {
-		y = pEnemy->speed * deltaTime;
-	}
-	else if (pEnemy->shape.getPosition().y + pEnemy->radius > pPlayer->triangle.getPosition().y) {
-		y = -pEnemy->speed * deltaTime;
-	}
+	//if (pEnemy->shape.getPosition().y + pEnemy->radius <= pPlayer->triangle.getPosition().y) {
+	//	y = pEnemy->speed * deltaTime;
+	//}
+	//else if (pEnemy->shape.getPosition().y + pEnemy->radius > pPlayer->triangle.getPosition().y) {
+	//	y = -pEnemy->speed * deltaTime;
+	//}
 
-	pEnemy->shape.move(x, y);
+	//pEnemy->shape.move(x, y);
 }

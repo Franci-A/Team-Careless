@@ -226,12 +226,15 @@ int main()
 				if ((*it)->hasOutline) {
 					(*it)->shape.setOutlineThickness(0);
 					(*it)->hasOutline = false;
-					(*it)->invicibleTime = 0.5f;
+					(*it)->invicibleTime = 0.2f;
 				}
 				//enemy life
-				else if((*it)->life > 0) {
+				else if((*it)->life > 1) {
 					(*it)->life--;
-					(*it)->invicibleTime = 0.5f;
+					(*it)->shape.setRadius((*it)->radius / 2);
+					(*it)->radius = (*it)->shape.getRadius();
+					(*it)->shape.setOrigin((*it)->radius, (*it)->radius);
+					(*it)->invicibleTime = 0.2f;
 				}
 				//Dead
 				else {
