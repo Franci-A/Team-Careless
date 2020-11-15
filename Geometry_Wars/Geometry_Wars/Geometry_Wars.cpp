@@ -220,7 +220,7 @@ int main()
 							delete (*it);
 							it = enemyList.erase(it);
 						}
-						//enemyList.clear();
+						enemyList.clear();
 					}
 					countEnemy = 0;
 					score = 0;
@@ -328,7 +328,7 @@ int main()
 
 #pragma endregion
 #pragma region Destroy ENEMY
-		int tempID = 0; //for deleting corresponding tail of snake
+		int tempID = 1; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
 			auto it = enemyList.begin();
 
