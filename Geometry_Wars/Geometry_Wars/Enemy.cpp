@@ -137,7 +137,7 @@ float EnemySetRadius(EnemyType type) {
 	return rngRadius;
 }
 int EnemySetSpeed(EnemyType type) {
-	int rngSpeed = rand() % 200 + 100;
+	int rngSpeed = rand() % 100 + 100;
 
 	if (type == EnemyType::MINI) {
 		return 1300;
