@@ -233,7 +233,7 @@ int main()
 			}
 		}
 
-		//ENEMY Functions
+		//ENEMY
 #pragma region Create Enemy
 		elapsedTimeSpawn = clockSpawn.getElapsedTime();
 		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
@@ -242,21 +242,21 @@ int main()
 			enemi = EnemyCreate(width, height);
 
 			//SNAKE ID
-			if (enemi->type == EnemyType::SNAKE) {
-				countSnake++;
-				enemi->snakeID = countSnake;
-			}
+			//if (enemi->type == EnemyType::SNAKE) {
+			//	countSnake++;
+			//	enemi->snakeID = countSnake;
+			//}
 			enemyList.push_back(enemi);
 
-			//SNAKE TAIL CREATION
-			if (enemi->type == EnemyType::SNAKE) {
-				for (int i = 0; i < enemi->snakeLength; i++) {
-					Enemy* tail = new Enemy;
-					tail = EnemySnakeTail(*enemyList.rbegin());
-					tail->snakeID = countSnake;
-					enemyList.push_back(tail);
-				}
-			}
+			////SNAKE TAIL CREATION
+			//if (enemi->type == EnemyType::SNAKE) {
+			//	for (int i = 0; i < enemi->snakeLength; i++) {
+			//		Enemy* tail = new Enemy;
+			//		tail = EnemySnakeTail(*enemyList.rbegin());
+			//		tail->snakeID = countSnake;
+			//		enemyList.push_back(tail);
+			//	}
+			//}
 
 			clockSpawn.restart();
 			countEnemy++;
@@ -290,7 +290,6 @@ int main()
 			//collision bullet -> enemy
 			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
-
 				//enemy shield
 				if ((*it)->hasOutline) {
 					(*it)->shape.setOutlineThickness(0);
@@ -300,7 +299,7 @@ int main()
 				//enemy life
 				else if((*it)->life > 1) {
 					(*it)->life--;
-					(*it)->shape.setRadius((*it)->radius / 2);
+					(*it)->shape.setRadius((*it)->radius / 1.5f);
 					(*it)->radius = (*it)->shape.getRadius();
 					(*it)->shape.setOrigin((*it)->radius, (*it)->radius);
 					(*it)->shape.setFillColor(Color((*it)->shape.getFillColor().r, (*it)->shape.getFillColor().g *2 ,0));
@@ -335,6 +334,8 @@ int main()
 		}
 
 #pragma endregion
+
+		//BUG CRASH HERE
 #pragma region Destroy ENEMY
 		int tempID = 0; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
@@ -345,19 +346,19 @@ int main()
 				if (!(*it)->isAlive) {
 
 					//get the snake head id to delete corresponding tail
-					if ((*it)->type == EnemyType::SNAKE) {
-						tempID = (*it)->snakeID;
-					}
+					//if ((*it)->type == EnemyType::SNAKE) {
+					//	tempID = (*it)->snakeID;
+					//}
 					
 					sound.play();
 					delete (*it);
 					it = enemyList.erase(it);
 					
 					//delete tail of snake
-					while ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
-						delete (*it);
-						it = enemyList.erase(it);
-					}
+					//while ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
+					//	delete (*it);
+					//	it = enemyList.erase(it);
+					//}
 					countEnemy--;
 				}
 				else {

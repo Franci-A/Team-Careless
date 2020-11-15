@@ -7,7 +7,7 @@ struct Player {
 	float speed = 400.0f;
 	sf::CircleShape triangle;
 	bool hasBullet = true;
-	int life = 5;
+	int life = 100000000;
 	float invicibleTime = 0.0f;
 };
 

@@ -121,14 +121,17 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 	pShape->setFillColor(pEnemy->color);
 }
 
-float EnemySetRadius(EnemyType type) {
+float EnemySetRadius(EnemyType type, int life) {
 	float rngRadius = static_cast<float>(rand() % 60 + 20);
-
+	
 	if (type == EnemyType::MINI) {
 		return 10.0f;
 	}
 	else if (type == EnemyType::SNAKE) {
 		return 30.0f;
+	}
+	else if (life > 1) {
+		return rand() % 50 + 50;
 	}
 	return rngRadius;
 }
@@ -265,10 +268,10 @@ int EnemySetLife(EnemyType type) {
 int EnemySetSize(float radius) {
 	int size = 1;
 
-	if (radius > 70) {
+	if (radius > 100) {
 		size = 3;
 	}
-	else if (radius > 30) {
+	else if (radius > 50) {
 		size = 2;
 	}
 	return size;
@@ -371,10 +374,8 @@ Enemy* EnemyCreate(int width, int height) {
 	enemy->hasOutline = EnemySetHasOutline(enemy->type);
 
 	//need
-	enemy->radius = EnemySetRadius(enemy->type);
-
-	//Gameplay & UI
 	enemy->life = EnemySetLife(enemy->type);
+	enemy->radius = EnemySetRadius(enemy->type, enemy->life);	
 	enemy->size = EnemySetSize(enemy->radius);
 	enemy->scoreValue = EnemySetScoreValue(enemy->radius, enemy->type);
 
@@ -417,6 +418,15 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 
 	}
 
+	//TELEPORTER Type
+	if (pEnemy->type == EnemyType::TELEPORTER) {
+	
+	}
+
+	if (pEnemy->type == EnemyType::KAMIKAZE) {
+
+	}
+	//Follow player
 	if (pEnemy->followPlayer) {
 		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
 	}

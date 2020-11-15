@@ -90,7 +90,7 @@ int EnemySetRotation();
 Vector2f EnemySetDirectionX(float x, int width, int height, float speed, EnemyType type);
 Vector2f EnemySetDirectionY(float y, int width, int height, float speed, EnemyType type);
 Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, EnemyType type);
-float EnemySetRadius(EnemyType type);
+float EnemySetRadius(EnemyType type, int life);
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape);
 int EnemySetLife(EnemyType type);
 int EnemySetSize(float radius);
