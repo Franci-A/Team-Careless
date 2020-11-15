@@ -1,10 +1,9 @@
 #include "PlayerController.h"
 
-
-
 sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
 	float x = 0;
 	float y = 0;
+
 	if (player.triangle.getPosition().x + 20 <= localPosition.x) {
 		x = player.speed *deltaTime;
 	}

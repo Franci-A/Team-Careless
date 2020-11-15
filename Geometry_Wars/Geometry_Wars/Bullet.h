@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-enum BALL_TYPE
+enum class BALL_TYPE
 {
 	DEFAULT
 	// si Bonus . . .
@@ -18,7 +18,7 @@ struct Bullet
 
 	sf::CircleShape visual;
 
-	BALL_TYPE type = DEFAULT;
+	BALL_TYPE type = BALL_TYPE::DEFAULT;
 
 	float timer_StartPoint = 0.0f;
 	float timer = 0.0f;

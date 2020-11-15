@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <list>
 #include <string>
 #pragma endregion
 
@@ -42,6 +43,7 @@ int main()
 	Clock clockSpawn;
 	Clock clockPlayer;
 	Clock clockDelta;
+	Clock clockInvicible;
 	Time elapsedTimeSpawn;
 #pragma endregion
 
@@ -62,7 +64,7 @@ int main()
 #pragma endregion
 
 #pragma region Enemy
-	vector<Enemy*> enemyVect;
+	list<Enemy*> enemyList;
 	int maxEnemy = 30;
 	int countEnemy = 0;
 #pragma endregion
@@ -136,7 +138,7 @@ int main()
 	sound.setVolume(0.1f);
 #pragma endregion
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
 	// Game loop
@@ -150,6 +152,7 @@ int main()
 		Vector2f starsMove;
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y) && !defeat)
 		{
+			//Background Parallax
 			starsMove = PlayerMove((*player), localPosition, deltaTime);
 			stars1.move(- starsMove.x /2 , - starsMove.y /2);
 			background.move(- starsMove.x /5 , - starsMove.y /5);
@@ -190,14 +193,15 @@ int main()
 		{
 			Enemy* enemi = new Enemy;
 			enemi = EnemyCreate(width, height);
-			enemyVect.push_back(enemi);
+			enemyList.push_back(enemi);
 
 			clockSpawn.restart();
 			countEnemy++;
 		}
 #pragma endregion
 #pragma region Update Enemy
-		for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+		//MOVE & COLLISION & ALIVE & SCORE
+		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
 			EnemyUpdate(*it, width, height, deltaTime, deltaAngle);
 
@@ -210,26 +214,62 @@ int main()
 
 			//collision bullet -> enemy
 			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
-			if (hascolidWithBullet && drawBullet) {
-				(*it)->isAlive = false;
-				//Update score
-				score += (*it)->scoreValue;
-				scoreText.setString(to_string(score));
+			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
+
+				//enemy shield
+				if ((*it)->hasOutline) {
+					(*it)->shape.setOutlineThickness(0);
+					(*it)->hasOutline = false;
+					(*it)->invicibleTime = 0.5f;
+				}
+				//enemy life
+				else if((*it)->life > 0) {
+					(*it)->life--;
+				}
+				//Dead
+				else {
+					(*it)->isAlive = false;
+					//Update score
+					score += (*it)->scoreValue;
+					scoreText.setString(to_string(score));
+				}
+			}
+			
+			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
+
+			}
+		}
+
+		//DIVIDE ENEMY
+		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+			if (!(*it)->isAlive) {
+				//divide type
+				if ((*it)->canDivide) {
+					EnemyDivide((*it), enemyList, width, height);
+				}
+			}
+		}
+
+		//remove invicible
+		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+			if ((*it)->invicibleTime > 0) {
+				(*it)->invicibleTime -= deltaTime;
 			}
 		}
 
 #pragma endregion
 #pragma region Destroy ENEMY
 		
-		if (!enemyVect.empty()) {
-			auto it = enemyVect.begin();
+		if (!enemyList.empty()) {
+			auto it = enemyList.begin();
 
-			while (it != enemyVect.end()) {
+			while (it != enemyList.end()) {
 
 				if (!(*it)->isAlive) {
+
 					sound.play();
 					delete (*it);
-					it = enemyVect.erase(it);
+					it = enemyList.erase(it);
 					countEnemy--;
 				}
 				else {
@@ -247,7 +287,7 @@ int main()
 			window.draw(stars1);
 			
 			//Enemy
-			for (auto it = enemyVect.begin(); it != enemyVect.end(); it++) {
+			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 					window.draw((*it)->shape);
 			}
 
@@ -269,10 +309,14 @@ int main()
 
 	//DESTROY end game
 
-	while (!enemyVect.empty()) {
-		delete enemyVect.at(0);
-		enemyVect.erase(enemyVect.begin());
+	while (!enemyList.empty()) {
+		auto it = enemyList.begin();
 
+		while (it != enemyList.end()) {
+				delete (*it);
+				it = enemyList.erase(it);
+		}
+		enemyList.clear();
 	}
 
 	delete player;
