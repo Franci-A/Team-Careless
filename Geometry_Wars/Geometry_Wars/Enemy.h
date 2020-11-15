@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>;
 #include <list>
+
+#include "PlayerController.h"
+
 using namespace std;
 using namespace sf;
 
@@ -9,12 +12,12 @@ enum class EnemyType {
 	MINI,
 	TELEPORT,
 	SNAKE,
-	DIVIDER
+	KAMIKAZE
 };
 struct Enemy {
 
 	//type
-	EnemyType enemyType = EnemyType::BASIC;
+	EnemyType type = EnemyType::BASIC;
 
 	//special feature
 	bool followPlayer = false;
@@ -37,7 +40,6 @@ struct Enemy {
 	//control
 	bool isAlive = true;
 	bool hasSpawn = false;
-	bool isInvicible = false;
 
 	//divide, life, score
 	int size = 0; //not real size -> for divide on destroy
@@ -48,18 +50,26 @@ struct Enemy {
 
 string EnemySetShapeType();
 Vector2f EnemySetSpawnPoint(int width, int height);
-Color EnemySetColor(bool canDivide, int life);
-int EnemySetSpeed();
+Color EnemySetColor(bool canDivide, int life, EnemyType type);
+int EnemySetSpeed(EnemyType type);
 int EnemySetRotation();
-Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed);
+Vector2f EnemySetDirectionX(float x, int width, int height, float speed, EnemyType type);
+Vector2f EnemySetDirectionY(float y, int width, int height, float speed, EnemyType type);
+Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, EnemyType type);
 int EnemySetAngle();
-float EnemySetRadius();
+float EnemySetRadius(EnemyType type);
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape);
-int EnemySetLife();
+int EnemySetLife(EnemyType type);
 int EnemySetSize(float radius);
-int EnemySetScoreValue(float radius);
+int EnemySetScoreValue(float radius, EnemyType type);
+bool EnemySetHasOutline(EnemyType type);
+bool EnemySetFollowPlayer(EnemyType type);
+bool EnemySetCanDivide(EnemyType type);
+EnemyType EnemySetType();
+
 Enemy* EnemyCreate(int width, int height);
-void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle);
-Vector2f EnemySetDirectionX(float x, int width, int height, float speed);
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer);
+
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height);
 void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int count);
+void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime);

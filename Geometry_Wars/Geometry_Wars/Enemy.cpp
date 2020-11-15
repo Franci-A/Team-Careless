@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "PlayerController.h"
 #include "MathUtils.h"
 
 string EnemySetShapeType() {
@@ -43,7 +44,7 @@ Vector2f EnemySetSpawnPoint(int width, int height) {
 	return spawnPoint;
 }
 
-Color EnemySetColor(bool canDivide, int life) {
+Color EnemySetColor(bool canDivide, int life, EnemyType type) {
 
 	Color color(rand() % 155 + 100,
 				rand() % 75,
@@ -66,7 +67,9 @@ Color EnemySetColor(bool canDivide, int life) {
 		color = Color(11, 102, 35);
 	}
 
-
+	if (type == EnemyType::MINI) {
+		return Color::Magenta;
+	}
 
 	return color;
 }
@@ -116,12 +119,23 @@ int EnemySetAngle() {
 	return rngAngle;
 }
 
-float EnemySetRadius() {
+float EnemySetRadius(EnemyType type) {
 	float rngRadius = static_cast<float>(rand() % 60 + 20);
+
+	if (type == EnemyType::MINI) {
+		return 10.0f;
+	}
+	else if (type == EnemyType::SNAKE) {
+		return 20.0f;
+	}
 	return rngRadius;
 }
-int EnemySetSpeed() {
+int EnemySetSpeed(EnemyType type) {
 	int rngSpeed = rand() % 200 + 100;
+
+	if (type == EnemyType::MINI) {
+		return 1300;
+	}
 	return rngSpeed;
 }
 
@@ -136,11 +150,14 @@ int EnemySetRotation() {
 //SPAWN DONW LEFT -> GO UP (RIGHT)
 //SPAWN DOWN MIDDLE -> GO UP (RIGHT OR LEFT)
 //SPAWN DDOWN RIGHT -> GO UP (LEFT)
-Vector2f EnemySetDirectionX(float x, int width, int height, float speed) {
+Vector2f EnemySetDirectionX(float x, int width, int height, float speed, EnemyType type) {
 	Vector2f velocity = Vector2f (100.0f, 100.0f);
 	int rngSpeed = rand() % 100 + 100;
 	int rngDirection = rand() % 2; // 0 = gp straight| 1 = go right |2 = go left
 
+	if (type == EnemyType::MINI) {
+		rngSpeed = rand() % 500 + 500;
+	}
 	//spawn left or middle -> go right
 	if (rngDirection != 0) {
 		if (x <= width / 2 && rngDirection == 1) {
@@ -173,7 +190,7 @@ Vector2f EnemySetDirectionX(float x, int width, int height, float speed) {
 //SPAWN RIGHT DONW -> GO LEFT (UP)
 //SPAWN RIGTH MIDDLE -> GO LEFT (UP OR DOWN)
 //SPAWN RIGHT UP -> GO LEFT (DOWN)
-Vector2f EnemySetDirectionY(float y, int width, int height, float speed) {
+Vector2f EnemySetDirectionY(float y, int width, int height, float speed, EnemyType type) {
 	Vector2f velocity = Vector2f (100.0f, 100.0f);
 	int rngSpeed = rand() % 100 + 100; 
 	int rngDirection = rand() % 2; // 0 = gp straight | 1 = go up | 2 = go down
@@ -203,34 +220,39 @@ Vector2f EnemySetDirectionY(float y, int width, int height, float speed) {
 	return velocity;
 }
 
-Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed) {
+Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, EnemyType type) {
 	Vector2f velocity;
 
 	//SPAWN UP
 	if (y == 0.0f) {
 		//Go down (right or left)
-		velocity = EnemySetDirectionX(x, width, height, speed);
+		velocity = EnemySetDirectionX(x, width, height, speed, type);
 	}
 	//SPAWN DOWN
 	else if (y == height) {
 		//Go up (right or left)
-		velocity = EnemySetDirectionX(x, width, height, -speed);
+		velocity = EnemySetDirectionX(x, width, height, -speed, type);
 	}
 	//SPAWN LEFT
 	else if (x == 0.0f) {
 		//Go right (up or down)
-		velocity = EnemySetDirectionY(y, width, height, speed);
+		velocity = EnemySetDirectionY(y, width, height, speed, type);
 	}
 	//SPAWN RIGHT
 	else if (x == width) {
 		//Go left (up or down)
-		velocity = EnemySetDirectionY(y, width, height, -speed);
+		velocity = EnemySetDirectionY(y, width, height, -speed, type);
 	}
 	return velocity;
 }
 
-int EnemySetLife() {
+int EnemySetLife(EnemyType type) {
 	int rngLife = rand() % 3 + 1;
+
+	if (type == EnemyType::MINI || type == EnemyType::KAMIKAZE) {
+		return 1;
+	}
+
 	return rngLife;
 }
 
@@ -246,24 +268,63 @@ int EnemySetSize(float radius) {
 	return size;
 }
 
-int EnemySetScoreValue(float radius) {
+int EnemySetScoreValue(float radius, EnemyType type) {
 	int scoreVal = (int)radius * 10;
+
+	if (type != EnemyType::BASIC) {
+		scoreVal *= 2;
+	}
 	return scoreVal;
 }
 
-bool EnemySetCanDivide() {
+bool EnemySetCanDivide(EnemyType type) {
 	int rngDivide = rand() % 101;
+	if (type == EnemyType::MINI || type == EnemyType::KAMIKAZE) {
+		return false;
+	}
 	return !(rngDivide % 5);
 }
 
-bool EnemySetFollowPlayer() {
+bool EnemySetFollowPlayer(EnemyType type) {
 	int rngFollow = rand() % 101 % 50;
-	return !(rngFollow % 5);
+	if (type == EnemyType::MINI) {
+		return false;
+	}
+	return !(rngFollow % 3);
 }
 
-bool EnemySetHasOutline() {
+bool EnemySetHasOutline(EnemyType type) {
 	int rngOutline = rand() % 101;
-	return !(rngOutline % 5);
+
+	if (type == EnemyType::MINI) {
+		return false;
+	}
+	return !(rngOutline % 4);
+}
+
+EnemyType EnemySetType() {
+	int rngEnemyType = rand() % 5;
+	EnemyType type;
+
+	switch (rngEnemyType)
+	{
+	case 1:
+		type = EnemyType::MINI;
+		break;
+	case 2:
+		type = EnemyType::TELEPORT;
+		break;
+	case 3:
+		type = EnemyType::SNAKE;
+		break;
+	case 4:
+		type = EnemyType::KAMIKAZE;
+		break;
+	default:
+		type = EnemyType::BASIC;
+		break;
+	}
+	return type;
 }
 
 Enemy* EnemyCreate(int width, int height) {
@@ -271,42 +332,41 @@ Enemy* EnemyCreate(int width, int height) {
 	CircleShape shape;
 
 	//Type 
-	enemy->enemyType = EnemyType::BASIC;
+	enemy->type = EnemySetType();
 	//special feature
-	enemy->canDivide = EnemySetCanDivide();
-	enemy->followPlayer = EnemySetFollowPlayer();
-	enemy->hasOutline = EnemySetHasOutline();
+	enemy->canDivide = EnemySetCanDivide(enemy->type);
+	enemy->followPlayer = EnemySetFollowPlayer(enemy->type);
+	enemy->hasOutline = EnemySetHasOutline(enemy->type);
 
 	//need
 	enemy->angle = EnemySetAngle();
-	enemy->radius = EnemySetRadius();
+	enemy->radius = EnemySetRadius(enemy->type);
 
 	//Gameplay & UI
-	enemy->life = EnemySetLife();
+	enemy->life = EnemySetLife(enemy->type);
 	enemy->size = EnemySetSize(enemy->radius);
-	enemy->scoreValue = EnemySetScoreValue(enemy->radius);
+	enemy->scoreValue = EnemySetScoreValue(enemy->radius, enemy->type);
 
 	//Shape
 	enemy->shapeType = EnemySetShapeType();
 	enemy->spawnPoint = EnemySetSpawnPoint(width, height);
-	enemy->color = EnemySetColor(enemy->canDivide, enemy->life);
+	enemy->color = EnemySetColor(enemy->canDivide, enemy->life, enemy->type);
 	EnemySetShape(enemy, &shape);
 	enemy->shape = shape;
 
 	//Speed
-	enemy->speed = EnemySetSpeed();
+	enemy->speed = EnemySetSpeed(enemy->type);
 	enemy->rotation = EnemySetRotation();
-	enemy->velocity = EnemySetVelocity(enemy->spawnPoint.x, enemy->spawnPoint.y, width, height, enemy->speed);
+	enemy->velocity = EnemySetVelocity(enemy->spawnPoint.x, enemy->spawnPoint.y, width, height, enemy->speed, enemy->type);
 
 	//bool
 	enemy->isAlive = true;
 	enemy->hasSpawn = false;
-	enemy->isInvicible = false;
 
 	return enemy;
 }
 
-void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle) {
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer) {
 	//Move Enemy
 	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
 	pEnemy->shape.rotate(deltaAngle);
@@ -319,6 +379,10 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 	if (pEnemy->shape.getPosition().y > height) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, 0.0f);
 	//left
 	if (pEnemy->shape.getPosition().y < 0) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, (float)height);
+
+	if (pEnemy->followPlayer) {
+		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
+	}
 }
 
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height) {
@@ -350,4 +414,25 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 
 	//not destroying immediatly (and not having super vfx effect)
 	divide->invicibleTime = 1.0f;
+}
+
+void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime) {
+	float x = pEnemy->speed * deltaTime;
+	float y = pEnemy->speed * deltaTime;
+
+	if (pEnemy->shape.getPosition().x + pEnemy->radius <= pPlayer->triangle.getPosition().x) {
+		x = pEnemy->speed * deltaTime;
+	}
+	else if (pEnemy->shape.getPosition().x + pEnemy->radius > pPlayer->triangle.getPosition().x) {
+		x = -pEnemy->speed * deltaTime;
+	}
+
+	if (pEnemy->shape.getPosition().y + pEnemy->radius <= pPlayer->triangle.getPosition().y) {
+		y = pEnemy->speed * deltaTime;
+	}
+	else if (pEnemy->shape.getPosition().y + pEnemy->radius > pPlayer->triangle.getPosition().y) {
+		y = -pEnemy->speed * deltaTime;
+	}
+
+	pEnemy->shape.move(x, y);
 }

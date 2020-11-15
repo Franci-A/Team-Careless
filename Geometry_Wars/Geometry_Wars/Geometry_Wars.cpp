@@ -152,8 +152,8 @@ int main()
 		Vector2f starsMove;
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y) && !defeat)
 		{
-			//Background Parallax
 			starsMove = PlayerMove((*player), localPosition, deltaTime);
+			//Background parallax
 			stars1.move(- starsMove.x /2 , - starsMove.y /2);
 			background.move(- starsMove.x /5 , - starsMove.y /5);
 		}
@@ -203,7 +203,7 @@ int main()
 		//MOVE & COLLISION & ALIVE & SCORE
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
-			EnemyUpdate(*it, width, height, deltaTime, deltaAngle);
+			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player);
 
 			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);

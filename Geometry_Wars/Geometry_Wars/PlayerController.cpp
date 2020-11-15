@@ -14,7 +14,6 @@ sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaT
 		x = 0;
 	}
 
-
 	if (player.triangle.getPosition().y + 20 <= localPosition.y) {
 		y = player.speed *deltaTime;
 	}
