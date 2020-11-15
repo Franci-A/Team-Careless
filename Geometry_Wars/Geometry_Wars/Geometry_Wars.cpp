@@ -138,10 +138,12 @@ int main()
 	sound.setVolume(0.1f);
 #pragma endregion
 
-
+#pragma region Game Manager
+	bool pause = false;
+#pragma endregion
 #pragma region TEST	
-	float snakeX = 800;
-	float snakeY = sin(snakeX);
+	//float snakeX = 800;
+	//float snakeY = sin(snakeX);
 #pragma endregion TEST
 
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //, Style::Fullscreen
@@ -153,6 +155,11 @@ int main()
 		//Delta Time
 		deltaTime = clockDelta.getElapsedTime().asSeconds();
 		clockDelta.restart();
+
+		if (pause) {
+			deltaTime = 0.0f;
+		}
+
 		//Player Movement
 		Vector2f localPosition = Vector2f(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
 		Vector2f starsMove;
@@ -164,10 +171,13 @@ int main()
 			background.move(- starsMove.x /5 , - starsMove.y /5);
 		}
 		//Player face cursor
-		PlayerRotation((*player), localPosition); 
+		if (!pause) {
+			PlayerRotation((*player), localPosition);
+		}
+
 
 		//Fire!
-		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet) {
+		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
 			bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
 		}
 
@@ -190,12 +200,39 @@ int main()
 			if (event.type == sf::Event::Closed || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
 				window.close();
 			}
+
+			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::P) {
+				if (!pause) {
+					pause = true;
+				}
+				else {
+					pause = false;
+				}
+			}
+
+			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+				if (defeat) {
+					while (!enemyList.empty()) {
+						auto it = enemyList.begin();
+
+						while (it != enemyList.end()) {
+							delete (*it);
+							it = enemyList.erase(it);
+						}
+						enemyList.clear();
+					}
+					countEnemy = 0;
+					score = 0;
+					scoreText.setString("0");
+					defeat = false;
+				}
+			}
 		}
 
 		//ENEMY Functions
 #pragma region Create Enemy
 		elapsedTimeSpawn = clockSpawn.getElapsedTime();
-		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy)
+		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 		{
 			Enemy* enemi = new Enemy;
 			enemi = EnemyCreate(width, height);
@@ -214,10 +251,19 @@ int main()
 			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
-				defeat = true;
-				drawBullet = false;
+				if (player->life > 1) {
+					player->life--;
+					player->invicibleTime = 2.0f;
+				}
+				else {
+					defeat = true;
+					drawBullet = false;
+				}
 			}
 
+			if (player->invicibleTime > 0) {
+				player->invicibleTime -= deltaTime;
+			}
 			//collision bullet -> enemy
 			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
@@ -234,6 +280,7 @@ int main()
 					(*it)->shape.setRadius((*it)->radius / 2);
 					(*it)->radius = (*it)->shape.getRadius();
 					(*it)->shape.setOrigin((*it)->radius, (*it)->radius);
+					(*it)->shape.setFillColor(Color((*it)->shape.getFillColor().r, (*it)->shape.getFillColor().g *2 ,0));
 					(*it)->invicibleTime = 0.2f;
 				}
 				//Dead

@@ -120,10 +120,6 @@ void EnemySetShape(Enemy* pEnemy, CircleShape* pShape) {
 	pShape->setPosition(pEnemy->spawnPoint);
 	pShape->setFillColor(pEnemy->color);
 }
-int EnemySetAngle() {
-	int rngAngle = rand() % 60;
-	return rngAngle;
-}
 
 float EnemySetRadius(EnemyType type) {
 	float rngRadius = static_cast<float>(rand() % 60 + 20);
@@ -352,7 +348,6 @@ Enemy* EnemyCreate(int width, int height) {
 	enemy->hasOutline = EnemySetHasOutline(enemy->type);
 
 	//need
-	enemy->angle = EnemySetAngle();
 	enemy->radius = EnemySetRadius(enemy->type);
 
 	//Gameplay & UI
@@ -396,18 +391,19 @@ Enemy* EnemyCreate(int width, int height) {
 void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer) {
 	//Move Enemy
 	if (pEnemy->type != EnemyType::SNAKE) {
-		pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
+		pEnemy->shape.move(pEnemy->velocity * deltaTime);
+		//pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
 		pEnemy->shape.rotate(deltaAngle);
 	}
 	
 	//SNake type move pattern
 	if (pEnemy->type == EnemyType::SNAKE) {
 		int speedX = 20;
-		int speedY = 4;
+		int speedY = 400;
 		int phi = 5;
 		pEnemy->snakeX--;
 		pEnemy->snakeY = sin(ConvertDegToRad(pEnemy->snakeX * phi));
-		pEnemy->shape.move(ConvertDegToRad(pEnemy->snakeX) * deltaTime * speedX, pEnemy->snakeY * speedY);
+		pEnemy->shape.move(ConvertDegToRad(pEnemy->snakeX) * deltaTime * speedX, pEnemy->snakeY * speedY * deltaTime);
 
 	}
 

@@ -7,12 +7,13 @@
 using namespace std;
 using namespace sf;
 
-enum class EnemyType {
+enum struct EnemyType {
 	BASIC,
 	MINI,
-	TELEPORT,
+	TELEPORTER,
 	SNAKE,
-	KAMIKAZE
+	KAMIKAZE,
+	SUB		//sub enemy of the one that got destroy
 };
 struct Enemy {
 
@@ -30,7 +31,6 @@ struct Enemy {
 	Vector2f spawnPoint = Vector2f(0.0f ,0.0f);
 	CircleShape shape;
 	float radius = 0.0f;
-	int angle = 0;
 
 	//behaviour
 	int speed = 0;
@@ -41,7 +41,7 @@ struct Enemy {
 	bool isAlive = true;
 	bool hasSpawn = false;
 
-	//divide, life, score
+	//gameplay & ui
 	int size = 0; //not real size -> for divide on destroy
 	int life = 0;
 	int scoreValue = 0;
@@ -54,6 +54,29 @@ struct Enemy {
 
 };
 
+struct Basic : Enemy {
+
+};
+
+struct Mini : Enemy {
+
+};
+
+struct Snake : Enemy {
+
+};
+
+struct Kamikaze : Enemy {
+
+};
+
+struct Teleporter : Enemy {
+
+};
+struct Sub : Enemy {
+
+};
+
 string EnemySetShapeType();
 Vector2f EnemySetSpawnPoint(int width, int height, EnemyType type);
 Color EnemySetColor(bool canDivide, int life, EnemyType type);
@@ -62,7 +85,6 @@ int EnemySetRotation();
 Vector2f EnemySetDirectionX(float x, int width, int height, float speed, EnemyType type);
 Vector2f EnemySetDirectionY(float y, int width, int height, float speed, EnemyType type);
 Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, EnemyType type);
-int EnemySetAngle();
 float EnemySetRadius(EnemyType type);
 void EnemySetShape(Enemy* pEnemy, CircleShape* pShape);
 int EnemySetLife(EnemyType type);
