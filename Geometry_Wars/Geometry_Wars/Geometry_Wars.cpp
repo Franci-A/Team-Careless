@@ -202,6 +202,7 @@ int main()
 				window.close();
 			}
 
+			//PAUSE
 			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::P) {
 				if (!pause) {
 					pause = true;
@@ -211,6 +212,7 @@ int main()
 				}
 			}
 
+			//RESTART and reset parameters
 			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R) {
 				if (defeat) {
 					if (!enemyList.empty()) {
@@ -238,16 +240,22 @@ int main()
 		{
 			Enemy* enemi = new Enemy;
 			enemi = EnemyCreate(width, height);
+
+			//SNAKE ID
 			if (enemi->type == EnemyType::SNAKE) {
 				countSnake++;
 				enemi->snakeID = countSnake;
 			}
 			enemyList.push_back(enemi);
+
+			//SNAKE TAIL CREATION
 			if (enemi->type == EnemyType::SNAKE) {
-				Enemy* tail = new Enemy;
-				tail = EnemySnakeTail(*enemyList.rbegin());
-				tail->snakeID = countSnake;
-				enemyList.push_back(tail);
+				for (int i = 0; i < enemi->snakeLength; i++) {
+					Enemy* tail = new Enemy;
+					tail = EnemySnakeTail(*enemyList.rbegin());
+					tail->snakeID = countSnake;
+					enemyList.push_back(tail);
+				}
 			}
 
 			clockSpawn.restart();
@@ -328,7 +336,7 @@ int main()
 
 #pragma endregion
 #pragma region Destroy ENEMY
-		int tempID = 1; //for deleting corresponding tail of snake
+		int tempID = 0; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
 			auto it = enemyList.begin();
 
@@ -346,7 +354,7 @@ int main()
 					it = enemyList.erase(it);
 					
 					//delete tail of snake
-					if ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
+					while ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
 						delete (*it);
 						it = enemyList.erase(it);
 					}

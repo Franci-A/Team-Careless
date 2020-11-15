@@ -51,7 +51,7 @@ struct Enemy {
 	//SNAKE 
 	float snakeX = 800.0f;
 	float snakeY = 0.0f;
-	int snakeLengt = 5;
+	int snakeLength = 5;
 	int snakeID = 0;
 
 	//TELEPORT
