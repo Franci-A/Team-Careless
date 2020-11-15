@@ -46,10 +46,16 @@ struct Enemy {
 	int life = 0;
 	int scoreValue = 0;
 	float invicibleTime = 0.0f;
+
+	//SNAKE 
+	float snakeX = 800.0f;
+	float snakeY = 0.0f;
+	int snakeLengt = 5;
+
 };
 
 string EnemySetShapeType();
-Vector2f EnemySetSpawnPoint(int width, int height);
+Vector2f EnemySetSpawnPoint(int width, int height, EnemyType type);
 Color EnemySetColor(bool canDivide, int life, EnemyType type);
 int EnemySetSpeed(EnemyType type);
 int EnemySetRotation();

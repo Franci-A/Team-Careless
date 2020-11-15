@@ -138,6 +138,12 @@ int main()
 	sound.setVolume(0.1f);
 #pragma endregion
 
+
+#pragma region TEST	
+	float snakeX = 800;
+	float snakeY = sin(snakeX);
+#pragma endregion TEST
+
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
@@ -225,6 +231,7 @@ int main()
 				//enemy life
 				else if((*it)->life > 0) {
 					(*it)->life--;
+					(*it)->invicibleTime = 0.5f;
 				}
 				//Dead
 				else {
@@ -303,6 +310,9 @@ int main()
 			window.draw(gameover);
 			window.draw(scoreText);
 		}
+
+		//SNAKE TYPE 
+
 
 		window.display();
 	}

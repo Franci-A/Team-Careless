@@ -18,29 +18,35 @@ string EnemySetShapeType() {
 	return shapeVect[rngShape];
 }
 
-Vector2f EnemySetSpawnPoint(int width, int height) {
+Vector2f EnemySetSpawnPoint(int width, int height, EnemyType type) {
 
 	float rngWidth = static_cast<float>(rand() % width);
 	float rngHeight = static_cast<float>(rand() % height);
 	int rngWallSpawn = rand() % 4 + 1;
 	Vector2f spawnPoint = Vector2f(0, 0);
 
-	//UP
-	if (rngWallSpawn == 1) {
-		spawnPoint = Vector2f(rngWidth, 0);
+	if (type != EnemyType::SNAKE) {
+		//UP
+		if (rngWallSpawn == 1) {
+			spawnPoint = Vector2f(rngWidth, 0);
+		}
+		//RIGHT
+		else if (rngWallSpawn == 2) {
+			spawnPoint = Vector2f((float)width, rngHeight);
+		}
+		//DOWN
+		else if (rngWallSpawn == 3) {
+			spawnPoint = Vector2f(rngWidth, (float)height);
+		}
+		//LEFT
+		else if (rngWallSpawn == 4) {
+			spawnPoint = Vector2f(0, rngHeight);
+		}
 	}
-	//RIGHT
-	else if (rngWallSpawn == 2) {
-		spawnPoint = Vector2f((float)width, rngHeight);
-	}
-	//DOWN
-	else if (rngWallSpawn == 3) {
-		spawnPoint = Vector2f(rngWidth, (float)height);
-	}
-	//LEFT
-	else if (rngWallSpawn == 4) {
+	else {
 		spawnPoint = Vector2f(0, rngHeight);
 	}
+
 	return spawnPoint;
 }
 
@@ -126,7 +132,7 @@ float EnemySetRadius(EnemyType type) {
 		return 10.0f;
 	}
 	else if (type == EnemyType::SNAKE) {
-		return 20.0f;
+		return 14.0f;
 	}
 	return rngRadius;
 }
@@ -327,6 +333,10 @@ EnemyType EnemySetType() {
 	return type;
 }
 
+void EnemySnakeTail() {
+
+}
+
 Enemy* EnemyCreate(int width, int height) {
 	Enemy* enemy = new Enemy;
 	CircleShape shape;
@@ -349,7 +359,7 @@ Enemy* EnemyCreate(int width, int height) {
 
 	//Shape
 	enemy->shapeType = EnemySetShapeType();
-	enemy->spawnPoint = EnemySetSpawnPoint(width, height);
+	enemy->spawnPoint = EnemySetSpawnPoint(width, height, enemy->type);
 	enemy->color = EnemySetColor(enemy->canDivide, enemy->life, enemy->type);
 	EnemySetShape(enemy, &shape);
 	enemy->shape = shape;
@@ -363,13 +373,44 @@ Enemy* EnemyCreate(int width, int height) {
 	enemy->isAlive = true;
 	enemy->hasSpawn = false;
 
+	if (enemy->type == EnemyType::SNAKE) {
+		//need to spawn tail
+		//radius of snake 
+		//spawn on the left of the snake
+		//move it with the same pattern as snake head
+		//the actual spawn depend of the pattern and the spawn point
+		//need a vect and make it spawn after x time, 
+		//spawn at the same spawn point as head juste decale in time
+		//or just spawn everything with decalage radius
+		//the pattern should be late by x time;
+		EnemySnakeTail(); 
+	}
+
 	return enemy;
 }
 
+
 void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer) {
 	//Move Enemy
-	pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
-	pEnemy->shape.rotate(deltaAngle);
+	if (pEnemy->type != EnemyType::SNAKE) {
+		pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
+		pEnemy->shape.rotate(deltaAngle);
+	}
+	
+	if (pEnemy->type == EnemyType::SNAKE) {
+		int speedX = 20;
+		int speedY = 4;
+		int phi = 5;
+		pEnemy->snakeX--;
+		pEnemy->snakeY = sin(ConvertDegToRad(pEnemy->snakeX * phi));
+		pEnemy->shape.move(ConvertDegToRad(pEnemy->snakeX) * deltaTime * speedX, pEnemy->snakeY * speedY);
+
+	}
+
+	if (pEnemy->followPlayer) {
+		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
+	}
+
 	//loop map
 	//down
 	if (pEnemy->shape.getPosition().x > width) pEnemy->shape.setPosition(0.0f, pEnemy->shape.getPosition().y);
@@ -380,9 +421,7 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 	//left
 	if (pEnemy->shape.getPosition().y < 0) pEnemy->shape.setPosition(pEnemy->shape.getPosition().x, (float)height);
 
-	if (pEnemy->followPlayer) {
-		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
-	}
+
 }
 
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height) {
@@ -402,8 +441,8 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 	//Spawn point y = radius * sin(alpha)
 	//Alpha = 360 degree / (number of enemy to spawn) * current index of enemy to spawn
 	float alpha = 360.0f / (enemy->size * 3.0f) * index;
-	float posX = enemy->radius * cos(alpha);
-	float posY = enemy->radius * sin(alpha);
+	float posX = enemy->radius * cos(ConvertDegToRad(alpha));
+	float posY = enemy->radius * sin(ConvertDegToRad(alpha));
 
 	divide->radius = enemy->radius / 2;
 	divide->shape.setRadius(divide->radius);
