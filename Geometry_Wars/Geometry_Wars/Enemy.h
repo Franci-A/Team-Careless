@@ -12,8 +12,9 @@ enum struct EnemyType {
 	MINI,
 	TELEPORTER,
 	SNAKE,
+	TAIL, //tail of the snake
 	KAMIKAZE,
-	SUB		//sub enemy of the one that got destroy
+	SUB,	//sub enemy of the one that got destroy (divide)
 };
 struct Enemy {
 
@@ -51,7 +52,11 @@ struct Enemy {
 	float snakeX = 800.0f;
 	float snakeY = 0.0f;
 	int snakeLengt = 5;
+	int snakeID = 0;
 
+	//TELEPORT
+	float timeBeforeTeleport = 5.0f;
+	float stopMoveTime = 3.0f;
 };
 
 struct Basic : Enemy {
@@ -101,3 +106,5 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height);
 void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int count);
 void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime);
+
+Enemy* EnemySnakeTail(Enemy*);

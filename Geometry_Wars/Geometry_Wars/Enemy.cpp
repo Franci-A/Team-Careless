@@ -136,7 +136,7 @@ int EnemySetSpeed(EnemyType type) {
 	int rngSpeed = rand() % 100 + 100;
 
 	if (type == EnemyType::MINI) {
-		return 1300;
+		return 1000;
 	}
 	return rngSpeed;
 }
@@ -197,6 +197,9 @@ Vector2f EnemySetDirectionY(float y, int width, int height, float speed, EnemyTy
 	int rngSpeed = rand() % 100 + 100; 
 	int rngDirection = rand() % 2; // 0 = gp straight | 1 = go up | 2 = go down
 
+	if (type == EnemyType::MINI) {
+		rngSpeed = rand() % 500 + 500;
+	}
 	//spawn up or middle -> go right 
 	if (rngDirection != 0) {
 		if (y <= height / 2 && rngDirection == 1) {
@@ -245,13 +248,14 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, 
 		//Go left (up or down)
 		velocity = EnemySetDirectionY(y, width, height, -speed, type);
 	}
+
 	return velocity;
 }
 
 int EnemySetLife(EnemyType type) {
 	int rngLife = rand() % 3 + 1;
 
-	if (type == EnemyType::MINI || type == EnemyType::KAMIKAZE) {
+	if (type == EnemyType::MINI || type == EnemyType::KAMIKAZE || type == EnemyType::SNAKE || type == EnemyType::SUB) {
 		return 1;
 	}
 
@@ -314,7 +318,7 @@ EnemyType EnemySetType() {
 	switch (rngEnemyType)
 	{
 	case 1:
-		type = EnemyType::BASIC; //EnemyType::MINI;
+		type = EnemyType::MINI;
 		break;
 	case 2:
 		type = EnemyType::TELEPORTER;
@@ -332,8 +336,27 @@ EnemyType EnemySetType() {
 	return type;
 }
 
-void EnemySnakeTail() {
+Enemy* EnemySnakeTail(Enemy* snakeHead) {
+	Enemy* snakeTail = new Enemy;
 
+	snakeTail->type = EnemyType::TAIL;
+	snakeTail->canDivide = false;
+	snakeTail->hasOutline = false;
+	snakeTail->followPlayer = false;
+	snakeTail->life = 0;
+	snakeTail->radius = snakeHead->radius/1.5f;
+	snakeTail->shape = snakeHead->shape;
+	snakeTail->shape.setOutlineThickness(0);
+	snakeTail->shape.setRadius(snakeTail->radius);
+	snakeTail->spawnPoint = Vector2f(snakeHead->shape.getPosition().x - snakeHead->radius * 2, snakeHead->shape.getPosition().y);
+	snakeTail->shape.setPosition(snakeTail->spawnPoint);
+	snakeTail->shape.setOrigin(snakeTail->radius, snakeTail->radius);
+	snakeTail->color = Color::Black;
+	snakeTail->shape.setFillColor(Color::Black);
+	snakeTail->speed = snakeHead->speed;
+	snakeTail->rotation = snakeHead->rotation;
+
+	return snakeTail;
 }
 
 Enemy* EnemyCreate(int width, int height) {
@@ -371,19 +394,6 @@ Enemy* EnemyCreate(int width, int height) {
 	enemy->isAlive = true;
 	enemy->hasSpawn = false;
 
-	if (enemy->type == EnemyType::SNAKE) {
-		//need to spawn tail
-		//radius of snake 
-		//spawn on the left of the snake
-		//move it with the same pattern as snake head
-		//the actual spawn depend of the pattern and the spawn point
-		//need a vect and make it spawn after x time, 
-		//spawn at the same spawn point as head juste decale in time
-		//or just spawn everything with decalage radius
-		//the pattern should be late by x time;
-		EnemySnakeTail(); 
-	}
-
 	return enemy;
 }
 
@@ -397,7 +407,7 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 	}
 	
 	//SNake type move pattern
-	if (pEnemy->type == EnemyType::SNAKE) {
+	if (pEnemy->type == EnemyType::SNAKE || pEnemy->type == EnemyType::TAIL) {
 		int speedX = 20;
 		int speedY = 400;
 		int phi = 5;

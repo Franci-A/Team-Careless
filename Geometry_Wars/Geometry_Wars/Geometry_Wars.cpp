@@ -67,6 +67,7 @@ int main()
 	list<Enemy*> enemyList;
 	int maxEnemy = 30;
 	int countEnemy = 0;
+	int countSnake = 0;
 #pragma endregion
 
 #pragma region CANVAS
@@ -81,7 +82,7 @@ int main()
 	
 	Text gameover;
 	gameover.setFont(font);
-	gameover.setString("Game Over");
+	gameover.setString("Game Over\nRestart ?\n[R]");
 	gameover.setCharacterSize(150);
 	gameover.setOrigin(floor(gameover.getLocalBounds().width /2), floor(gameover.getLocalBounds().height /2));
 	gameover.setFillColor(Color::Red);
@@ -212,18 +213,19 @@ int main()
 
 			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R) {
 				if (defeat) {
-					while (!enemyList.empty()) {
+					if (!enemyList.empty()) {
 						auto it = enemyList.begin();
 
 						while (it != enemyList.end()) {
 							delete (*it);
 							it = enemyList.erase(it);
 						}
-						enemyList.clear();
+						//enemyList.clear();
 					}
 					countEnemy = 0;
 					score = 0;
 					scoreText.setString("0");
+					player->life = 5;
 					defeat = false;
 				}
 			}
@@ -236,7 +238,17 @@ int main()
 		{
 			Enemy* enemi = new Enemy;
 			enemi = EnemyCreate(width, height);
+			if (enemi->type == EnemyType::SNAKE) {
+				countSnake++;
+				enemi->snakeID = countSnake;
+			}
 			enemyList.push_back(enemi);
+			if (enemi->type == EnemyType::SNAKE) {
+				Enemy* tail = new Enemy;
+				tail = EnemySnakeTail(*enemyList.rbegin());
+				tail->snakeID = countSnake;
+				enemyList.push_back(tail);
+			}
 
 			clockSpawn.restart();
 			countEnemy++;
@@ -251,16 +263,19 @@ int main()
 			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
-				if (player->life > 1) {
-					player->life--;
-					player->invicibleTime = 2.0f;
-				}
-				else {
-					defeat = true;
-					drawBullet = false;
+				if (player->invicibleTime <= 0) {
+					if (player->life > 1) {
+						player->life--;
+						player->invicibleTime = 3.0f;
+					}
+					else {
+						defeat = true;
+						drawBullet = false;
+					}
 				}
 			}
 
+			//When divide enemy sub don't get destroy immediatly
 			if (player->invicibleTime > 0) {
 				player->invicibleTime -= deltaTime;
 			}
@@ -284,16 +299,13 @@ int main()
 					(*it)->invicibleTime = 0.2f;
 				}
 				//Dead
-				else {
+				//TAil of snake can't be destroy until head is dead
+				else if((*it)->type != EnemyType::TAIL) {
 					(*it)->isAlive = false;
 					//Update score
 					score += (*it)->scoreValue;
 					scoreText.setString(to_string(score));
 				}
-			}
-			
-			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
-
 			}
 		}
 
@@ -307,7 +319,7 @@ int main()
 			}
 		}
 
-		//remove invicible
+		//remove invicible of divide and outline type
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if ((*it)->invicibleTime > 0) {
 				(*it)->invicibleTime -= deltaTime;
@@ -316,7 +328,7 @@ int main()
 
 #pragma endregion
 #pragma region Destroy ENEMY
-		
+		int tempID = 0; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
 			auto it = enemyList.begin();
 
@@ -324,9 +336,20 @@ int main()
 
 				if (!(*it)->isAlive) {
 
+					//get the snake head id to delete corresponding tail
+					if ((*it)->type == EnemyType::SNAKE) {
+						tempID = (*it)->snakeID;
+					}
+					
 					sound.play();
 					delete (*it);
 					it = enemyList.erase(it);
+					
+					//delete tail of snake
+					if ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
+						delete (*it);
+						it = enemyList.erase(it);
+					}
 					countEnemy--;
 				}
 				else {
@@ -345,7 +368,7 @@ int main()
 			
 			//Enemy
 			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-					window.draw((*it)->shape);
+				window.draw((*it)->shape);
 			}
 
 			window.draw(player->triangle);
@@ -360,9 +383,6 @@ int main()
 			window.draw(gameover);
 			window.draw(scoreText);
 		}
-
-		//SNAKE TYPE 
-
 
 		window.display();
 	}
