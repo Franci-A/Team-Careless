@@ -1,30 +1,15 @@
 #include "PlayerController.h"
 
 sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime) {
-	float x = 0;
-	float y = 0;
 
-	if (player.triangle.getPosition().x + 20 <= localPosition.x) {
-		x = player.speed *deltaTime;
-	}
-	else if (player.triangle.getPosition().x + 20 > localPosition.x) {
-		x = -player.speed *deltaTime;
-	}
-	else {
-		x = 0;
-	}
+	// limit screen
+	float x = localPosition.x - player.triangle.getPosition().x; //difference of x position 
+	float y = localPosition.y - player.triangle.getPosition().y; // difference of y position 
+	float lenght = sqrt(pow(x, 2) + pow(y, 2)); //distance between enemy and player
+	sf::Vector2f direction = (localPosition - player.triangle.getPosition()) / lenght; //normalize vector
 
-	if (player.triangle.getPosition().y + 20 <= localPosition.y) {
-		y = player.speed *deltaTime;
-	}
-	else if (player.triangle.getPosition().y + 20 > localPosition.y) {
-		y = -player.speed *deltaTime;
-	}
-	else {
-		y = 0;
-	}
-	player.triangle.move(x, y);
-	return sf::Vector2f(x, y);
+	player.triangle.move(direction * player.speed * deltaTime);
+	return sf::Vector2f(direction * player.speed * deltaTime);
 }
 
 void PlayerRotation(Player& player, sf::Vector2f localPosition) {

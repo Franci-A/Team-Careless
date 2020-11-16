@@ -57,7 +57,13 @@ int main()
 	player->triangle.setScale(1.0f, 1.5f);
 	bool defeat = false;
 #pragma endregion
-
+	////test
+	//CircleShape test;
+	//test.setPointCount(4);
+	//test.setRadius(40);
+	//test.setRotation(90);
+	//test.setScale(1, .5f);
+	//test.setPosition(width / 2, height / 2);
 #pragma region Bullet
 	bool drawBullet = false;
 	Bullet* bullet = new Bullet;
@@ -175,7 +181,6 @@ int main()
 		if (!pause) {
 			PlayerRotation((*player), localPosition);
 		}
-
 
 		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
@@ -378,12 +383,11 @@ int main()
 #pragma endregion
 
 		window.clear();
-
+		
 		if (!defeat) {
 
 			window.draw(background);
 			window.draw(stars1);
-			
 			//Enemy
 			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 				window.draw((*it)->shape);
