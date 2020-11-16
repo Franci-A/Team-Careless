@@ -266,7 +266,7 @@ int main()
 		//MOVE & COLLISION & ALIVE & SCORE
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
-			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player);
+			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player, enemyList);
 			
 			//draw circle of teleportation
 			if((*it)->type == EnemyType::TELEPORTER && (*it)->teleportPosition != Vector2f(-1.0f, -1.0f)) {

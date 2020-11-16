@@ -56,9 +56,14 @@ struct Enemy {
 
 	//TELEPORT
 	float timeBeforeTeleport = 5.0f;
-	float stopMoveTime = 2.0f;
 	Vector2f teleportPosition = Vector2f(-1.0f, -1.0f);
 	CircleShape teleportCircle;
+
+	//KAMIKAZE
+	float timerBeforeExplode = 5.0f;
+
+	//TELEPORT et KAMIKAZE
+	float stopMoveTime = 2.0f;
 };
 
 struct Basic : Enemy {
@@ -103,7 +108,7 @@ bool EnemySetCanDivide(EnemyType type);
 EnemyType EnemySetType();
 
 Enemy* EnemyCreate(int width, int height);
-void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer);
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer, list<Enemy*>& enemyList);
 
 void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height);
 void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int count);

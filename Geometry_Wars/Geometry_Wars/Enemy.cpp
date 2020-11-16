@@ -403,7 +403,7 @@ Enemy* EnemyCreate(int width, int height) {
 }
 
 
-void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer) {
+void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer, list<Enemy*>& enemyList) {
 	Vector2f velocity = pEnemy->velocity;
 	
 	//TELEPORTER
@@ -426,6 +426,25 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 				velocity = pEnemy->velocity;
 			}
 			
+			//stop movement time reduce
+			pEnemy->stopMoveTime -= deltaTime;
+		}
+	}
+	if (pEnemy->type == EnemyType::KAMIKAZE) {
+		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
+		pEnemy->timerBeforeExplode -= deltaTime;
+		if (pEnemy->timerBeforeExplode <= 0) {
+			//stop mvt
+			velocity = Vector2f(0, 0);
+			//rotate a lot
+			pEnemy->rotation = 180;
+			//wait
+			if (pEnemy->stopMoveTime <= 0) {
+				//explode
+				EnemyDivide(pEnemy, enemyList, width, height);
+				pEnemy->isAlive = false;
+			}
+
 			pEnemy->stopMoveTime -= deltaTime;
 		}
 	}
@@ -445,9 +464,6 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 		pEnemy->snakeX--;
 		pEnemy->snakeY = sin(ConvertDegToRad(pEnemy->snakeX * phi));
 		pEnemy->shape.move(ConvertDegToRad(pEnemy->snakeX) * deltaTime * speedX, pEnemy->snakeY * speedY * deltaTime);
-
-	}
-	if (pEnemy->type == EnemyType::KAMIKAZE) {
 
 	}
 	//Follow player
@@ -496,7 +512,10 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 	divide->shape.setOutlineThickness(0);
 	divide->shape.setOrigin(divide->radius, divide->radius);
 	divide->shape.setFillColor(Color(255, 0, 0));
-
+	
+	if (enemy->type == EnemyType::KAMIKAZE) {
+		divide->velocity *= 30.0f;
+	}
 	//not destroying immediatly (and not having super vfx effect)
 	divide->invicibleTime = 0.2f;
 }
