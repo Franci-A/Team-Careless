@@ -283,6 +283,7 @@ int main()
 					if (player->life > 1) {
 						player->life--;
 						player->invicibleTime = 3.0f;
+						(*it)->isAlive = false;
 					}
 					else {
 						defeat = true;

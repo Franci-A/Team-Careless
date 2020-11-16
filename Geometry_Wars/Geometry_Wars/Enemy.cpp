@@ -521,24 +521,21 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 }
 
 void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime) {
-	//float x = pEnemy->speed * deltaTime;
-	//float y = pEnemy->speed * deltaTime;
 
-	//if (pEnemy->shape.getPosition().x + pEnemy->radius <= pPlayer->triangle.getPosition().x) {
-	//	x = pEnemy->speed * deltaTime;
-	//}
-	//else if (pEnemy->shape.getPosition().x + pEnemy->radius > pPlayer->triangle.getPosition().x) {
-	//	x = -pEnemy->speed * deltaTime;
-	//}
+	
+	//pythagore & vector normalization
+	float xEnemy = pEnemy->shape.getPosition().x;
+	float yEnemy = pEnemy->shape.getPosition().y;
+	float xPlayer = pPlayer->triangle.getPosition().x;
+	float yPlayer = pPlayer->triangle.getPosition().y;
 
-	//if (pEnemy->shape.getPosition().y + pEnemy->radius <= pPlayer->triangle.getPosition().y) {
-	//	y = pEnemy->speed * deltaTime;
-	//}
-	//else if (pEnemy->shape.getPosition().y + pEnemy->radius > pPlayer->triangle.getPosition().y) {
-	//	y = -pEnemy->speed * deltaTime;
-	//}
+	float dx = xPlayer - xEnemy; //difference of x position 
+	float dy = yPlayer - yEnemy; // difference of y position 
+	float lenght = sqrt(pow(dx, 2) + pow(dy, 2)); //distance between enemy and player
+	Vector2f direction = (pPlayer->triangle.getPosition() - pEnemy->shape.getPosition()) / lenght; //normalize vector
 
-	//pEnemy->shape.move(x, y);
+	float speed = 500.0f;
+	pEnemy->shape.move(direction * speed * deltaTime);
 }
 
 void EnemyTeleport() {

@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>;
 #include <list>
+#include <vector>
 
 #include "PlayerController.h"
 
@@ -53,6 +54,7 @@ struct Enemy {
 	float snakeY = 0.0f;
 	int snakeLength = 5;
 	int snakeID = 0;
+	vector<CircleShape> tail;
 
 	//TELEPORT
 	float timeBeforeTeleport = 5.0f;
@@ -66,28 +68,28 @@ struct Enemy {
 	float stopMoveTime = 2.0f;
 };
 
-struct Basic : Enemy {
-
-};
-
-struct Mini : Enemy {
-
-};
-
-struct Snake : Enemy {
-
-};
-
-struct Kamikaze : Enemy {
-
-};
-
-struct Teleporter : Enemy {
-
-};
-struct Sub : Enemy {
-
-};
+//struct Basic : Enemy {
+//
+//};
+//
+//struct Mini : Enemy {
+//
+//};
+//
+//struct Snake : Enemy {
+//
+//};
+//
+//struct Kamikaze : Enemy {
+//
+//};
+//
+//struct Teleporter : Enemy {
+//
+//};
+//struct Sub : Enemy {
+//
+//};
 
 string EnemySetShapeType();
 Vector2f EnemySetSpawnPoint(int width, int height, EnemyType type);
