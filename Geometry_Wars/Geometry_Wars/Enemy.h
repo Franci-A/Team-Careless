@@ -14,7 +14,7 @@ enum struct EnemyType {
 	SNAKE,
 	TAIL, //tail of the snake
 	KAMIKAZE,
-	SUB,	//sub enemy of the one that got destroy (divide)
+	DIVIDE,	//sub enemy of the one that got destroy (divide)
 };
 struct Enemy {
 
@@ -56,7 +56,9 @@ struct Enemy {
 
 	//TELEPORT
 	float timeBeforeTeleport = 5.0f;
-	float stopMoveTime = 3.0f;
+	float stopMoveTime = 2.0f;
+	Vector2f teleportPosition = Vector2f(-1.0f, -1.0f);
+	CircleShape teleportCircle;
 };
 
 struct Basic : Enemy {

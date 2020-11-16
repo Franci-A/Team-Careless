@@ -267,6 +267,14 @@ int main()
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
 			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player);
+			
+			//draw circle of teleportation
+			if((*it)->type == EnemyType::TELEPORTER && (*it)->teleportPosition != Vector2f(-1.0f, -1.0f)) {
+				(*it)->teleportCircle.setRadius((*it)->radius);
+				(*it)->teleportCircle.setFillColor(Color(0, 0, 150, 150));
+				(*it)->teleportCircle.setOrigin((*it)->teleportCircle.getRadius(), (*it)->teleportCircle.getRadius());
+				(*it)->teleportCircle.setPosition((*it)->teleportPosition);
+			}
 
 			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
@@ -378,8 +386,12 @@ int main()
 			//Enemy
 			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 				window.draw((*it)->shape);
+				if ((*it)->type == EnemyType::TELEPORTER && (*it)->timeBeforeTeleport <= 0) {
+					window.draw((*it)->teleportCircle);
+				}
+				
 			}
-
+			
 			window.draw(player->triangle);
 			if (drawBullet) {
 				window.draw(bullet->visual);

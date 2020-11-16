@@ -77,6 +77,10 @@ Color EnemySetColor(bool canDivide, int life, EnemyType type) {
 		return Color::Magenta;
 	}
 
+	if (type == EnemyType::TELEPORTER) {
+		return Color::Blue;
+	}
+
 	return color;
 }
 
@@ -258,7 +262,7 @@ Vector2f EnemySetVelocity(float x, float y, int width, int height, float speed, 
 int EnemySetLife(EnemyType type) {
 	int rngLife = rand() % 3 + 1;
 
-	if (type == EnemyType::MINI || type == EnemyType::KAMIKAZE || type == EnemyType::SNAKE || type == EnemyType::SUB) {
+	if (type != EnemyType::BASIC) {
 		return 1;
 	}
 
@@ -400,13 +404,39 @@ Enemy* EnemyCreate(int width, int height) {
 
 
 void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer) {
+	Vector2f velocity = pEnemy->velocity;
+	
+	//TELEPORTER
+	if (pEnemy->type == EnemyType::TELEPORTER) {
+		pEnemy->timeBeforeTeleport -= deltaTime;
+		if (pEnemy->timeBeforeTeleport <= 0) {
+			//get player position
+			if (pEnemy->teleportPosition == Vector2f(-1.0f, -1.0f)) {
+				pEnemy->teleportPosition = Vector2f(pPlayer->triangle.getPosition().x, pPlayer->triangle.getPosition().y);
+			}
+			//stop move
+			velocity = Vector2f(0, 0);
+			//wait
+			if (pEnemy->stopMoveTime <= 0) {
+				//teleport
+				pEnemy->shape.setPosition(pEnemy->teleportPosition);
+				pEnemy->timeBeforeTeleport = 5.0f;
+				pEnemy->stopMoveTime = 2.0f;
+				//retreive velocity
+				velocity = pEnemy->velocity;
+			}
+			
+			pEnemy->stopMoveTime -= deltaTime;
+		}
+	}
+
 	//Move Enemy
 	if (pEnemy->type != EnemyType::SNAKE) {
-		pEnemy->shape.move(pEnemy->velocity * deltaTime);
+		pEnemy->shape.move(velocity * deltaTime);
 		//pEnemy->shape.setPosition(pEnemy->shape.getPosition() + pEnemy->velocity * deltaTime);
 		pEnemy->shape.rotate(deltaAngle);
 	}
-	
+
 	//SNake type move pattern
 	if (pEnemy->type == EnemyType::SNAKE || pEnemy->type == EnemyType::TAIL) {
 		int speedX = 20;
@@ -417,12 +447,6 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 		pEnemy->shape.move(ConvertDegToRad(pEnemy->snakeX) * deltaTime * speedX, pEnemy->snakeY * speedY * deltaTime);
 
 	}
-
-	//TELEPORTER Type
-	if (pEnemy->type == EnemyType::TELEPORTER) {
-	
-	}
-
 	if (pEnemy->type == EnemyType::KAMIKAZE) {
 
 	}
@@ -453,8 +477,6 @@ void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height) 
 }
 
 void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
-	//LOL i found how to do vfx by accident
-
 	//Spawn point X = radius * cos(alpha)
 	//Spawn point y = radius * sin(alpha)
 	//Alpha = 360 degree / (number of enemy to spawn) * current index of enemy to spawn
@@ -462,8 +484,10 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 	float posX = enemy->radius * cos(ConvertDegToRad(alpha));
 	float posY = enemy->radius * sin(ConvertDegToRad(alpha));
 
-	divide->type = EnemyType::BASIC;
+	divide->type = EnemyType::DIVIDE;
+	divide->life = 1;
 	divide->hasOutline = false;
+	divide->canDivide = false;
 	divide->radius = enemy->radius / 2;
 	divide->shape.setRadius(divide->radius);
 	divide->spawnPoint = Vector2f(enemy->shape.getPosition().x + posX, enemy->shape.getPosition().y + posY);
@@ -471,6 +495,7 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 	divide->velocity = Vector2f(posX, posY);
 	divide->shape.setOutlineThickness(0);
 	divide->shape.setOrigin(divide->radius, divide->radius);
+	divide->shape.setFillColor(Color(255, 0, 0));
 
 	//not destroying immediatly (and not having super vfx effect)
 	divide->invicibleTime = 0.2f;
@@ -495,4 +520,8 @@ void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime) {
 	//}
 
 	//pEnemy->shape.move(x, y);
+}
+
+void EnemyTeleport() {
+
 }
