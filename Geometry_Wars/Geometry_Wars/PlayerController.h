@@ -4,13 +4,13 @@
 #include"DeltaTime.h"
 
 struct Player {
-	float speed = 400.0f;
+	float speed = 650.0f;
 	sf::CircleShape triangle;
 	bool hasBullet = true;
-	int life = 100000000;
+	int life = 100;
 	float invicibleTime = 0.0f;
 };
 
-sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime);
+sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime, int screenWidth, int screenHeight);
 void PlayerRotation(Player& player, sf::Vector2f localPosition);
 Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player,  Bullet* bullet);
