@@ -6,8 +6,9 @@
 enum class BALL_TYPE
 {
 	DEFAULT,
-	TRIPLE
-	// si Bonus . . .
+	TRIPLE,
+	BIG,
+	ACCELERATOR
 };
 
 struct Bullet
@@ -35,7 +36,6 @@ struct Bullet_Powerup
 	int ammo;
 };
 
-//Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall);
 Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, Bullet* newBall);
 
 void UpdatePosition(Bullet* ball, float deltaTime);

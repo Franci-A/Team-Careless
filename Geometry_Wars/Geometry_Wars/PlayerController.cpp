@@ -50,27 +50,32 @@ void PlayerRotation(Player& player, sf::Vector2f localPosition) {
 	player.triangle.setRotation(rotation- 90);
 }
 
-//Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player, Bullet* bullet) {
-//	bullet = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, BALL_TYPE::DEFAULT, bullet);
-//	bullet->visual.setPosition(player.triangle.getPosition().x + bullet->X_offset * 5, player.triangle.getPosition().y + bullet->Y_offset*5 );
-//	bullet->visual.setRadius(10);
-//	bullet->visual.setOrigin(10, 10);
-//	drawBullet = true;
-//	return bullet;
-//}
-
 void PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player) {
 	std::list<Bullet*>::iterator it = player.bulletList.begin();
+	int n = 0;
 	while (it != player.bulletList.end())
 	{
 		(*it) = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, (*it));
 		(*it)->visual.setPosition(player.triangle.getPosition().x + (*it)->X_offset * 5, player.triangle.getPosition().y + (*it)->Y_offset*5 );
+		
+		if ((*it)->type == BALL_TYPE::TRIPLE) {
+			if (n == 1) {
+				(*it)->X_offset += 1;
+				(*it)->Y_offset += 1;
+			}
+			else if (n == 2) {
+				(*it)->X_offset -= 1;
+				(*it)->Y_offset -= 1;
+			}
+			n++;
+		}
+			
 		it++;
 	}
 	drawBullet = true;
 }
 
-//
+// Filling BulletList
 Bullet* AddNewBullet(Bullet_Powerup powerup)
 {
 	Bullet* bullet = new Bullet;
@@ -79,17 +84,25 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 	bullet->visual = powerup.visual;
 	bullet->speed = powerup.speed;
 
+	bullet->visual.setOrigin(bullet->visual.getRadius(), bullet->visual.getRadius());
+
+	// Set BulletTypes Colors
 	if (bullet->type == BALL_TYPE::DEFAULT) {
 		bullet->visual.setFillColor(sf::Color(255, 255, 255, 255));
 		bullet->visual.setOutlineThickness(0);
 	}
 	else if (bullet->type == BALL_TYPE::TRIPLE) {
-		bullet->visual.setFillColor(sf::Color(148, 214, 208, 255));
+		bullet->visual.setFillColor(sf::Color(118, 154, 230, 255));
 		bullet->visual.setOutlineThickness(1.5f);
-		bullet->visual.setOutlineColor(sf::Color(255, 255, 255, 255));
 	}
-
-	bullet->visual.setOrigin(bullet->visual.getRadius(), bullet->visual.getRadius());
+	else if (bullet->type == BALL_TYPE::BIG) {
+		bullet->visual.setFillColor(sf::Color(255, 181, 83, 255));
+		bullet->visual.setOutlineThickness(2.5f);
+	}
+	else if (bullet->type == BALL_TYPE::ACCELERATOR) {
+		bullet->visual.setFillColor(sf::Color(154, 25, 240, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
 	
 	return bullet;
 }

@@ -71,7 +71,7 @@ int main()
 	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
 	InitializeBulletpedia(bulletpedia);
 
-	PowerupSwap(player, BALL_TYPE::DEFAULT, bulletpedia);
+	PowerupSwap(player, BALL_TYPE::TRIPLE, bulletpedia);
 #pragma endregion
 
 #pragma region Enemy
@@ -190,17 +190,23 @@ int main()
 		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
 			//bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
-			cout << "Fire !";
 			PlayerShot(drawBullet, localPosition, (*player));
 		}
 
 		//Collision bullet -> player : Pickup bullet
 		if (drawBullet && !defeat) {
 			for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
-				//
 				bool hascolid = HasCollidedBullet((*(*it)), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
 				if (hascolid) {
 					drawBullet = false;
+
+					if ((*it)->type == BALL_TYPE::TRIPLE) {
+						(*it)->X_offset = 0;
+						(*it)->Y_offset = 0;
+					}
+					else if ((*it)->type == BALL_TYPE::ACCELERATOR) {
+						(*it)->speed = bulletpedia[BALL_TYPE::ACCELERATOR].speed;
+					}
 				}
 			}
 		}
