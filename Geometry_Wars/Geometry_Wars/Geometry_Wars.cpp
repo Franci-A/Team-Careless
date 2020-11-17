@@ -172,7 +172,7 @@ int main()
 		Vector2f starsMove;
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y) && !defeat)
 		{
-			starsMove = PlayerMove((*player), localPosition, deltaTime);
+			starsMove = PlayerMove((*player), localPosition, deltaTime, width, height);
 			//Background parallax
 			stars1.move(- starsMove.x /2 , - starsMove.y /2);
 			background.move(- starsMove.x /5 , - starsMove.y /5);

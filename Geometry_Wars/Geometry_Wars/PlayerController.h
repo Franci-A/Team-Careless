@@ -11,6 +11,6 @@ struct Player {
 	float invicibleTime = 0.0f;
 };
 
-sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime);
+sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime, int screenWidth, int screenHeight);
 void PlayerRotation(Player& player, sf::Vector2f localPosition);
 Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player,  Bullet* bullet);
