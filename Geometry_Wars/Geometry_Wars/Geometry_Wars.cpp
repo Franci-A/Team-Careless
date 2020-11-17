@@ -265,16 +265,9 @@ int main()
 #pragma region Update Enemy
 		//MOVE & COLLISION & ALIVE & SCORE
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			deltaAngle = deltaTime * IIM_PI * 2.0f * (*it)->rotation;
-			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player, enemyList);
 			
-			//draw circle of teleportation
-			if((*it)->type == EnemyType::TELEPORTER && (*it)->teleportPosition != Vector2f(-1.0f, -1.0f)) {
-				(*it)->teleportCircle.setRadius((*it)->radius);
-				(*it)->teleportCircle.setFillColor(Color(0, 0, 150, 150));
-				(*it)->teleportCircle.setOrigin((*it)->teleportCircle.getRadius(), (*it)->teleportCircle.getRadius());
-				(*it)->teleportCircle.setPosition((*it)->teleportPosition);
-			}
+			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player, enemyList);
+		
 
 			//collision Player -> enemy
 			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);

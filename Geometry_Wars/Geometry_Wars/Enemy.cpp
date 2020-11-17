@@ -374,7 +374,7 @@ Enemy* EnemyCreate(int width, int height) {
 	enemy->type = EnemySetType();
 	//special feature
 	enemy->canDivide = EnemySetCanDivide(enemy->type);
-	enemy->followPlayer = EnemySetFollowPlayer(enemy->type);
+	enemy->followPlayer = false; //EnemySetFollowPlayer(enemy->type);
 	enemy->hasOutline = EnemySetHasOutline(enemy->type);
 
 	//need
@@ -406,6 +406,7 @@ Enemy* EnemyCreate(int width, int height) {
 void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float deltaAngle, Player* pPlayer, list<Enemy*>& enemyList) {
 	Vector2f velocity = pEnemy->velocity;
 	
+	deltaAngle = deltaTime * IIM_PI * 2.0f * pEnemy->rotation;
 	//TELEPORTER
 	if (pEnemy->type == EnemyType::TELEPORTER) {
 		pEnemy->timeBeforeTeleport -= deltaTime;
@@ -430,6 +431,15 @@ void EnemyUpdate(Enemy* pEnemy, int width, int height, float deltaTime, float de
 			pEnemy->stopMoveTime -= deltaTime;
 		}
 	}
+
+	//draw circle of teleportation
+	if	(pEnemy->type == EnemyType::TELEPORTER && pEnemy->teleportPosition != Vector2f(-1.0f, -1.0f)) {
+		pEnemy->teleportCircle.setRadius(pEnemy->radius);
+		pEnemy->teleportCircle.setFillColor(Color(0, 0, 150, 150));
+		pEnemy->teleportCircle.setOrigin(pEnemy->teleportCircle.getRadius(), pEnemy->teleportCircle.getRadius());
+		pEnemy->teleportCircle.setPosition(pEnemy->teleportPosition);
+	}
+
 	if (pEnemy->type == EnemyType::KAMIKAZE) {
 		EnemyFollowPlayer(pEnemy, pPlayer, deltaTime);
 		pEnemy->timerBeforeExplode -= deltaTime;
@@ -521,7 +531,6 @@ void EnemyDivideSetParameters(Enemy* divide, Enemy* enemy, int index) {
 }
 
 void EnemyFollowPlayer(Enemy* pEnemy, Player* pPlayer, float deltaTime) {
-
 	
 	//pythagore & vector normalization
 	float xEnemy = pEnemy->shape.getPosition().x;
