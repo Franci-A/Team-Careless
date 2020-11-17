@@ -50,11 +50,55 @@ void PlayerRotation(Player& player, sf::Vector2f localPosition) {
 	player.triangle.setRotation(rotation- 90);
 }
 
-Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player, Bullet* bullet) {
-	bullet = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, BALL_TYPE::DEFAULT, bullet);
-	bullet->visual.setPosition(player.triangle.getPosition().x + bullet->X_offset * 5, player.triangle.getPosition().y + bullet->Y_offset*5 );
-	bullet->visual.setRadius(10);
-	bullet->visual.setOrigin(10, 10);
+//Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player, Bullet* bullet) {
+//	bullet = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, BALL_TYPE::DEFAULT, bullet);
+//	bullet->visual.setPosition(player.triangle.getPosition().x + bullet->X_offset * 5, player.triangle.getPosition().y + bullet->Y_offset*5 );
+//	bullet->visual.setRadius(10);
+//	bullet->visual.setOrigin(10, 10);
+//	drawBullet = true;
+//	return bullet;
+//}
+
+void PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player) {
+	std::list<Bullet*>::iterator it = player.bulletList.begin();
+	while (it != player.bulletList.end())
+	{
+		(*it) = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, (*it));
+		(*it)->visual.setPosition(player.triangle.getPosition().x + (*it)->X_offset * 5, player.triangle.getPosition().y + (*it)->Y_offset*5 );
+		it++;
+	}
 	drawBullet = true;
+}
+
+//
+Bullet* AddNewBullet(Bullet_Powerup powerup)
+{
+	Bullet* bullet = new Bullet;
+
+	bullet->type = powerup.type;
+	bullet->visual = powerup.visual;
+	bullet->speed = powerup.speed;
+
+	if (bullet->type == BALL_TYPE::DEFAULT) {
+		bullet->visual.setFillColor(sf::Color(255, 255, 255, 255));
+		bullet->visual.setOutlineThickness(0);
+	}
+	else if (bullet->type == BALL_TYPE::TRIPLE) {
+		bullet->visual.setFillColor(sf::Color(148, 214, 208, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+		bullet->visual.setOutlineColor(sf::Color(255, 255, 255, 255));
+	}
+
+	bullet->visual.setOrigin(bullet->visual.getRadius(), bullet->visual.getRadius());
+	
 	return bullet;
+}
+
+void PowerupSwap(Player* player, BALL_TYPE type, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
+{
+	player->bulletList.clear();
+	for (int i = 0; i < bulletpedia[type].ammo; i++) {
+		player->bulletList.push_back(AddNewBullet(bulletpedia[type]));
+	}
+	player->bulletType = type;
 }

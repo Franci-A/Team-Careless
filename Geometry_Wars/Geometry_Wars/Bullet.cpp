@@ -1,15 +1,27 @@
 #include "Bullet.h";
 
 
-Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall) //Remplacer player X et Y par ptr -> Player
-{
+//Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall) //Remplacer player X et Y par ptr -> Player
+//{
+//	(*newBall).type = type;
+//	if (sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2)) != 0) {
+//		(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
+//		(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
+//	}
+//	(*newBall).speed = 120.0f;
+//
+//	//(*newBall).timer_StartPoint = GetTime();
+//	(*newBall).timer = 0.0f;
+//
+//	return newBall;
+//}
 
-	(*newBall).type = type;
+Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, Bullet* newBall) //Remplacer player X et Y par ptr -> Player
+{
 	if (sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2)) != 0) {
 		(*newBall).X_offset = (10 * (cursorX - playerX)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 		(*newBall).Y_offset = (10 * (cursorY - playerY)) / sqrt(powf(cursorX - playerX, 2) + powf(cursorY - playerY, 2));
 	}
-	(*newBall).speed = 500.0f;
 
 	//(*newBall).timer_StartPoint = GetTime();
 	(*newBall).timer = 0.0f;
@@ -40,5 +52,21 @@ void Check_Wall_Collision(Bullet* ball, int width, int height)
 	}
 }
 
-// CatchBall(ptr ball) // Si collision Player-Ball
-// delete Ball
+void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
+{
+	Bullet_Powerup Default{
+		BALL_TYPE::DEFAULT,
+		sf::CircleShape::CircleShape(10.0f),
+		120,
+		1
+	};
+	bulletpedia[BALL_TYPE::DEFAULT] = Default;
+
+	Bullet_Powerup Triple{
+		BALL_TYPE::TRIPLE,
+		sf::CircleShape::CircleShape(9.5f),
+		130,
+		3
+	};
+	bulletpedia[BALL_TYPE::TRIPLE] = Triple;
+}

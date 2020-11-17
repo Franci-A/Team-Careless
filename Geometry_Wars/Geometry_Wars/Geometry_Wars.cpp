@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <list>
+//#include <list>
 #include <string>
 #pragma endregion
 
@@ -66,7 +66,12 @@ int main()
 	//test.setPosition(width / 2, height / 2);
 #pragma region Bullet
 	bool drawBullet = false;
-	Bullet* bullet = new Bullet;
+	//Bullet* bullet = new Bullet; // à remplacer par ~~ player->bulletList.bullet
+	// Tests Powerups
+	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
+	InitializeBulletpedia(bulletpedia);
+
+	PowerupSwap(player, BALL_TYPE::DEFAULT, bulletpedia);
 #pragma endregion
 
 #pragma region Enemy
@@ -184,21 +189,30 @@ int main()
 
 		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
-			bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
+			//bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
+			cout << "Fire !";
+			PlayerShot(drawBullet, localPosition, (*player));
 		}
 
 		//Collision bullet -> player : Pickup bullet
 		if (drawBullet && !defeat) {
-			bool hascolid = HasCollidedBullet((*bullet), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
-			if (hascolid) {
-				drawBullet = false;
+			for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
+				//
+				bool hascolid = HasCollidedBullet((*(*it)), player->triangle.getPosition().x, player->triangle.getPosition().y, player->triangle.getRadius());
+				if (hascolid) {
+					drawBullet = false;
+				}
 			}
 		}
 
 		//Update bullet
 		if (drawBullet && !defeat) {
-			Check_Wall_Collision(bullet, width, height);
-			UpdatePosition(bullet, deltaTime);
+			for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
+				Check_Wall_Collision((*it), width, height);
+				UpdatePosition((*it), deltaTime);
+			}
+			//Check_Wall_Collision(bullet, width, height);
+			//UpdatePosition(bullet, deltaTime);
 		}
 
 		while (window.pollEvent(event)) {
@@ -302,7 +316,12 @@ int main()
 				player->invicibleTime -= deltaTime;
 			}
 			//collision bullet -> enemy
-			bool hascolidWithBullet = HasCollidedBullet((*bullet), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+			list<Bullet*>::iterator bullet_it = player->bulletList.begin();
+			bool hascolidWithBullet = false;
+			while (bullet_it != player->bulletList.end() && !hascolidWithBullet) {
+				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+				bullet_it++;
+			}
 			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
 				//enemy shield
 				if ((*it)->hasOutline) {
@@ -399,7 +418,9 @@ int main()
 			
 			window.draw(player->triangle);
 			if (drawBullet) {
-				window.draw(bullet->visual);
+				for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
+					window.draw((*it)->visual);
+				}
 			}
 			window.draw(scoreText);
 		}
@@ -425,6 +446,17 @@ int main()
 		enemyList.clear();
 	}
 
+	while (!player->bulletList.empty()) {
+		auto it = player->bulletList.begin();
+
+		while (it != player->bulletList.end()) {
+			delete (*it);
+			it = player->bulletList.erase(it);
+		}
+		player->bulletList.clear();
+	}
+
 	delete player;
-	delete bullet;
+
+	//delete bullet;
 }
