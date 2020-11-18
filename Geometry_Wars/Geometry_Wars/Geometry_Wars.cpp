@@ -382,13 +382,12 @@ int main()
 			window.draw(background);
 			window.draw(stars1);
 			//Enemy
-			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-				window.draw((*it)->shape);
-				if ((*it)->type == EnemyType::TELEPORTER && (*it)->timeBeforeTeleport <= 0) {
-					window.draw((*it)->teleportCircle);
-				}
-				
-			}
+			//for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+			//	window.draw((*it)->shape);
+			//	if ((*it)->type == EnemyType::TELEPORTER && (*it)->timeBeforeTeleport <= 0) {
+			//		window.draw((*it)->teleportCircle);
+			//	}
+			//}
 			
 			window.draw(player->triangle);
 			if (drawBullet) {
