@@ -11,6 +11,7 @@ struct Player {
 	float invicibleTime = 0.0f;
 	BALL_TYPE bulletType = BALL_TYPE::DEFAULT;
 	std::list<Bullet*> bulletList;
+	bool hasShield = false;
 };
 
 sf::Vector2f PlayerMove(Player& player, sf::Vector2f localPosition, float deltaTime, int screenWidth, int screenHeight);
