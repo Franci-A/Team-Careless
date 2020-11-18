@@ -1,10 +1,15 @@
 #pragma once
+#include <list>
+#include <map>
 #include <SFML/Graphics.hpp>
 
 enum class BALL_TYPE
 {
-	DEFAULT
-	// si Bonus . . .
+	DEFAULT,
+	TRIPLE,
+	BIG,
+	ACCELERATOR,
+	SNAKE
 };
 
 struct Bullet
@@ -24,11 +29,17 @@ struct Bullet
 	float timer = 0.0f;
 };
 
+struct Bullet_Powerup
+{
+	BALL_TYPE type;
+	sf::CircleShape visual;
+	int speed;
+	int ammo;
+};
 
-Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, BALL_TYPE type, Bullet* newBall);
+Bullet* SpawnBall(int playerX, int playerY, int cursorX, int cursorY, Bullet* newBall);
 
 void UpdatePosition(Bullet* ball, float deltaTime);
-
-
 void Check_Wall_Collision(Bullet* ball, int width, int height);
 
+void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia);

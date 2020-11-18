@@ -50,11 +50,92 @@ void PlayerRotation(Player& player, sf::Vector2f localPosition) {
 	player.triangle.setRotation(rotation- 90);
 }
 
-Bullet* PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player, Bullet* bullet) {
-	bullet = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, BALL_TYPE::DEFAULT, bullet);
-	bullet->visual.setPosition(player.triangle.getPosition().x + bullet->X_offset * 5, player.triangle.getPosition().y + bullet->Y_offset*5 );
-	bullet->visual.setRadius(10);
-	bullet->visual.setOrigin(10, 10);
+void PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player) {
+	std::list<Bullet*>::iterator it = player.bulletList.begin();
+	int n_triple = 0;
+	int n_big = 0;
+	int n_snake = 0;
+	while (it != player.bulletList.end())
+	{
+		if ((*it)->type == BALL_TYPE::BIG) {
+			n_big = 2;
+		}
+
+		if ((*it)->type == BALL_TYPE::SNAKE) {
+			n_snake++;
+		}
+
+		float OffsetFactor = 5 + n_big + (4 * n_snake);
+		(*it) = SpawnBall(player.triangle.getPosition().x, player.triangle.getPosition().y, localPosition.x, localPosition.y, (*it));
+		(*it)->visual.setPosition(player.triangle.getPosition().x + (*it)->X_offset * OffsetFactor, player.triangle.getPosition().y + (*it)->Y_offset* OffsetFactor);
+		
+		if ((*it)->type == BALL_TYPE::TRIPLE) {
+			if (n_triple == 1) {
+				(*it)->X_offset += 1;
+				(*it)->Y_offset += 1;
+			}
+			else if (n_triple == 2) {
+				(*it)->X_offset -= 1;
+				(*it)->Y_offset -= 1;
+			}
+			n_triple++;
+		}
+			
+		it++;
+	}
 	drawBullet = true;
+}
+
+// Filling BulletList
+Bullet* AddNewBullet(Bullet_Powerup powerup)
+{
+	Bullet* bullet = new Bullet;
+
+	bullet->type = powerup.type;
+	bullet->visual = powerup.visual;
+	bullet->speed = powerup.speed;
+
+	bullet->visual.setOrigin(bullet->visual.getRadius(), bullet->visual.getRadius());
+
+	// Set BulletTypes Colors
+	if (bullet->type == BALL_TYPE::DEFAULT) {
+		bullet->visual.setFillColor(sf::Color(255, 255, 255, 255));
+		bullet->visual.setOutlineThickness(0);
+	}
+	else if (bullet->type == BALL_TYPE::TRIPLE) {
+		bullet->visual.setFillColor(sf::Color(118, 154, 230, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
+	else if (bullet->type == BALL_TYPE::BIG) {
+		bullet->visual.setFillColor(sf::Color(255, 181, 83, 255));
+		bullet->visual.setOutlineThickness(2.5f);
+	}
+	else if (bullet->type == BALL_TYPE::ACCELERATOR) {
+		bullet->visual.setFillColor(sf::Color(154, 25, 240, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
+	else if (bullet->type == BALL_TYPE::SNAKE) {
+		bullet->visual.setFillColor(sf::Color(80, 200, 60, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
+	
 	return bullet;
+}
+
+void PowerupSwap(Player* player, BALL_TYPE type, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
+{
+	player->bulletList.clear();
+	for (int i = 0; i < bulletpedia[type].ammo; i++) {
+		player->bulletList.push_back(AddNewBullet(bulletpedia[type]));
+	}
+
+	if (type == BALL_TYPE::SNAKE) {
+		int n = 0;
+		for (std::list<Bullet*>::iterator it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
+			(*it)->visual.setRadius((*it)->visual.getRadius() - (0.5f - n));
+			n++;
+		}
+	}
+
+	player->bulletType = type;
 }
