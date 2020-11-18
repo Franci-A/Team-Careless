@@ -79,4 +79,12 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 		1
 	};
 	bulletpedia[BALL_TYPE::ACCELERATOR] = Accelerator;
+
+	Bullet_Powerup Snake{
+		BALL_TYPE::SNAKE,
+		sf::CircleShape::CircleShape(11.0f),
+		110,
+		5
+	};
+	bulletpedia[BALL_TYPE::SNAKE] = Snake;
 }

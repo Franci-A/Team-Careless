@@ -71,7 +71,7 @@ int main()
 	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
 	InitializeBulletpedia(bulletpedia);
 
-	PowerupSwap(player, BALL_TYPE::TRIPLE, bulletpedia);
+	PowerupSwap(player, BALL_TYPE::SNAKE, bulletpedia);
 #pragma endregion
 
 #pragma region Enemy
@@ -189,7 +189,6 @@ int main()
 
 		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
-			//bullet = PlayerShot(drawBullet, localPosition, (*player), bullet);
 			PlayerShot(drawBullet, localPosition, (*player));
 		}
 
