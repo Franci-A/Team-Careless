@@ -260,8 +260,8 @@ int main()
 			countEnemy++;
 		}
 #pragma endregion
-//#pragma region Update Enemy
-//		//Move pattern
+#pragma region Update Enemy
+		//Move pattern
 		deltaAngle = deltaTime * IIM_PI * 2.0f;
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			(*it)->update(width, height, deltaAngle, deltaTime, player);
@@ -302,7 +302,6 @@ int main()
 				else {
 					(*it)->isAlive = false;
 					//Update score
-					
 					switch ((*it)->type)
 					{
 					case EnemyType::BASIC:
@@ -343,8 +342,8 @@ int main()
 				}
 			}
 		}
-//
-//		//DIVIDE ENEMY
+
+		//DIVIDE ENEMY
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if (!(*it)->isAlive) {
 				//divide type
@@ -355,6 +354,13 @@ int main()
 						EnemyDivide((*it), enemyList);
 				}
 
+			}
+		}
+
+		//remove invicibility
+		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+			if ((*it)->GetInvicibleTime() > 0) {
+				(*it)->UpdateInvicibleTime();
 			}
 		}
 

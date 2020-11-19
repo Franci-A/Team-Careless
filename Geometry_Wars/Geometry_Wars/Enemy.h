@@ -684,13 +684,13 @@ public:
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
 		if (radius >= 80) {
-			this->divideNumber = 3;
+			this->divideNumber = 9;
 		}
 		else if (radius >= 60) {
 			this->divideNumber = 6;
 		}
 		else if (radius >= 40) {
-			this->divideNumber = 9;
+			this->divideNumber = 3;
 		}
 	}
 
@@ -974,6 +974,9 @@ public:
 		this->subClass->life--;
 		this->subClass->shape->setRadius(this->subClass->shape->getRadius() / 2);
 		this->subClass->shape->setOrigin(this->subClass->shape->getRadius(), this->subClass->shape->getRadius());
+	}
+	void UpdateInvicibleTime() {
+		this->subClass->invicibleTime--;
 	}
 	//Getter
 	CircleShape GetShape() {
