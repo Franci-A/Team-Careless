@@ -92,6 +92,9 @@ public:
 	bool GetHasShield() {
 		return this->hasShield;
 	}
+	virtual bool GetHasExplode() {
+		return false;
+	}
 };
 
 //constructor
@@ -430,6 +433,7 @@ public:
 	float divideNumber = 1.f;
 	float timerBeforeExplode = 3.0f;
 	float stopMoveTime = 2.0f;
+	bool hasExplode = false;
 
 	//constructor & deconstructor
 	Kamikaze();
@@ -459,6 +463,10 @@ public:
 		return this->divideNumber;
 	}
 
+	bool GetHasExplode() override {
+		return this->hasExplode;
+	}
+
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) override {
 
 		this->shape->rotate(deltaAngle * rotation);
@@ -476,6 +484,7 @@ public:
 			if (this->stopMoveTime <= 0) {
 				//explode
 				this->isAlive = false;
+				this->hasExplode = true;
 			}
 			this->stopMoveTime -= deltaTime;
 		}
@@ -683,10 +692,10 @@ public:
 	void SetShape() override;
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
-		if (radius >= 80) {
+/*		if (radius >= 80) {
 			this->divideNumber = 9;
 		}
-		else if (radius >= 60) {
+		else */if (radius >= 60) {
 			this->divideNumber = 6;
 		}
 		else if (radius >= 40) {
@@ -866,10 +875,10 @@ public:
 	void SetShape() override;
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
-		if (radius >= 80) {
+/*		if (radius >= 80) {
 			this->divideNumber = 9;
 		}
-		else if (radius >= 60) {
+		else */if (radius >= 60) {
 			this->divideNumber = 6;
 		}
 		else if (radius >= 40) {
@@ -1005,6 +1014,10 @@ public:
 	}
 	bool GetHasShield() {
 		return this->subClass->GetHasShield();
+	}
+
+	bool GetHasExplode() {
+		return this->subClass->GetHasExplode();
 	}
 	//update
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) {

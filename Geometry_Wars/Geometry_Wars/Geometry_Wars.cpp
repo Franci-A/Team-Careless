@@ -418,11 +418,16 @@ int main()
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if (!(*it)->isAlive) {
 				//divide type
-				if ((*it)->type == EnemyType::KAMIKAZE ||
-					(*it)->type == EnemyType::DIVIDER ||
+				if ((*it)->type == EnemyType::DIVIDER ||
 					(*it)->type == EnemyType::LIFEDIVIDER)
 				{
 					EnemyDivide((*it), enemyList);
+				}
+
+				if ((*it)->type == EnemyType::KAMIKAZE) {
+					if ((*it)->GetHasExplode()) {
+						EnemyDivide((*it), enemyList);
+					}
 				}
 
 			}
