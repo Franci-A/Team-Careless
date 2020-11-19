@@ -39,6 +39,7 @@ public:
 	int life = 1;
 	float invicibleTime = 0.f;
 	int divideNumber = 0;
+	bool hasExplode = false;
 
 	//constructor && deconstructor
 	EnemySubClass();
@@ -72,7 +73,7 @@ public:
 	bool GetIsAlive();
 	virtual float GetInvicibleTime();
 	bool GetHasShield();
-	virtual bool GetHasExplode();
+	bool GetHasExplode();
 };
 class Basic : public EnemySubClass {
 public:
@@ -111,7 +112,6 @@ public:
 	//variable
 	float timerBeforeExplode = 3.0f;
 	float stopMoveTime = 2.0f;
-	bool hasExplode = false;
 
 	//constructor & deconstructor
 	Kamikaze();
@@ -123,9 +123,6 @@ public:
 	void SetSpeed() override;
 	void SetFollow() override;
 	void SetDivideNumber();
-
-	//getter
-	bool GetHasExplode() override;
 
 	//update
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) override;

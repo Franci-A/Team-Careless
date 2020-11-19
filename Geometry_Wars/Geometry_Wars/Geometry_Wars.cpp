@@ -431,7 +431,6 @@ int main()
 						EnemyDivide((*it), enemyList);
 					}
 				}
-
 			}
 		}
 

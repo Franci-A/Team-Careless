@@ -217,7 +217,7 @@ int EnemySubClass::GetLife() { return this->life; }
 bool EnemySubClass::GetIsAlive() { return this->isAlive; }
 float EnemySubClass::GetInvicibleTime() { return this->invicibleTime; }
 bool EnemySubClass::GetHasShield() { return this->hasShield; }
-bool EnemySubClass::GetHasExplode() { return false; }
+bool EnemySubClass::GetHasExplode() { return this->hasExplode; }
 CircleShape* EnemySubClass::GetTeleportCircle() { return nullptr; }
 int EnemySubClass::GetDivideNumber() { return this->divideNumber; }
 #pragma endregion
@@ -265,7 +265,7 @@ void EnemySubClass::update(int width, int height, float deltaAngle, float deltaT
 }
 
 #pragma endregion
-#pragma endregion
+#pragma endregion EnemySubClass
 #pragma region Method Basic 
 void Basic::SetShape() {
 	int minRadius = 20;
@@ -290,7 +290,7 @@ void Basic::SetShape() {
 	SetShield();
 	SetFollow();
 }
-#pragma endregion
+#pragma endregion Basic
 #pragma region Method Teleporter
 #pragma region Setter
 void Teleporter::SetShape() {
@@ -362,7 +362,7 @@ void Teleporter::update(int width, int height, float deltaAngle, float deltaTime
 	}
 }
 #pragma endregion
-#pragma endregion
+#pragma endregion Teleporter
 #pragma region Method Kamikaze
 #pragma region Setter
 void Kamikaze::SetShape() {
@@ -402,10 +402,7 @@ void Kamikaze::SetDivideNumber() {
 		this->divideNumber = 3;
 	}
 }
-#pragma endregion
-#pragma region Getter
-bool Kamikaze::GetHasExplode() { return this->hasExplode; }
-#pragma endregion
+#pragma endregion 
 #pragma region Update
 void Kamikaze::update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) {
 	this->shape->rotate(deltaAngle * rotation);
@@ -429,7 +426,7 @@ void Kamikaze::update(int width, int height, float deltaAngle, float deltaTime, 
 	}
 }
 #pragma endregion
-#pragma endregion
+#pragma endregion Kamikaze
 #pragma region Method Mini
 void Mini::SetShape() {
 	float radius = 10.0f;
@@ -440,7 +437,7 @@ void Mini::SetShape() {
 	this->shape->setOrigin(radius, radius);
 	this->shape->setFillColor(color);
 }
-#pragma endregion
+#pragma endregion Mini
 #pragma region Method Snake
 void Snake::SetShape() {
 	int minRadius = 20;
@@ -467,10 +464,10 @@ void Snake::Move(float deltaTime) {
 	this->snakeY = sin(ConvertDegToRad(this->snakeX * phi));
 	this->shape->move(ConvertDegToRad(this->snakeX) * speedX * deltaTime, this->snakeY * speedY * deltaTime);
 }
-#pragma endregion
+#pragma endregion Snake
 #pragma region Method Tail
 void Tail::SetShape() {}
-#pragma endregion
+#pragma endregion Tail
 #pragma region Method Follower
 void Follower::SetShape() {
 	float radius = 20.0f;
@@ -494,7 +491,7 @@ void Follower::SetSpeed() {
 void Follower::SetFollow() {
 	this->isFollowingPlayer = true;
 }
-#pragma endregion
+#pragma endregion Follower
 #pragma region Method Divider
 void Divider::SetShape() {
 	int minRadius = 50;
@@ -525,7 +522,7 @@ void Divider::SetDivideNumber() {
 				this->divideNumber = 3;
 			}
 }
-#pragma endregion
+#pragma endregion Divider
 #pragma region Method Sub
 #pragma region Setter
 void Sub::SetShape(float radius, int pointCount) {
@@ -577,7 +574,7 @@ void Sub::update(int width, int height, float deltaAngle, float deltaTime, Playe
 	LoopOnMap(width, height);
 }
 #pragma endregion
-#pragma endregion
+#pragma endregion Sub
 #pragma region Method Lifer
 void Lifer::SetShape() {
 	int minRadius = 60;
@@ -606,7 +603,7 @@ void Lifer::SetLife() {
 		this->life = 2;
 	}
 }
-#pragma endregion
+#pragma endregion Lifer
 #pragma region Method LifeDivider
 void LifeDivider::SetShape() {
 	int minRadius = 80;
@@ -649,7 +646,7 @@ void LifeDivider::SetLife() {
 		life = 2;
 	}
 }
-#pragma endregion
+#pragma endregion LifeDivider
 #pragma region Method Enemy
 #pragma region Setter
 void Enemy::SetType() {
@@ -750,8 +747,8 @@ int Enemy::GetPointCount() { return this->subClass->shape->getPointCount(); }
 Vector2f Enemy::GetPosition() { return this->subClass->shape->getPosition(); }
 int Enemy::GetLife() { return this->subClass->GetLife(); }
 float  Enemy::GetInvicibleTime() { return this->subClass->GetInvicibleTime(); }
-bool Enemy::GetHasExplode() { return this->subClass->GetHasShield(); }
-bool Enemy::GetHasShield() { return this->subClass->GetHasExplode(); }
+bool Enemy::GetHasExplode() { return this->subClass->GetHasExplode(); }
+bool Enemy::GetHasShield() { return this->subClass->GetHasShield(); }
 #pragma endregion
 #pragma region Update
 void Enemy::UpdateHasShield() {
@@ -771,5 +768,5 @@ void Enemy::update(int width, int height, float deltaAngle, float deltaTime, Pla
 	this->isAlive = this->subClass->GetIsAlive();
 }
 #pragma endregion 
-#pragma endregion
+#pragma endregion Enemy
 #pragma endregion Method
