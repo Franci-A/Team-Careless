@@ -38,7 +38,8 @@ public:
 	bool isFollowingPlayer = false;					//Follow player or not
 	bool canDivide = false;
 	bool isAlive = true;
-
+	int life = 1;
+	float invicibleTime = 0.f;
 	//constructor && deconstructor
 	EnemySubClass();
 	virtual ~EnemySubClass();
@@ -48,7 +49,7 @@ public:
 	virtual void SetShape(float radius, int pointCount) {}
 	void SetShield();		//Enemy can have an outline as a shield
 	virtual void SetSpawnPoint(int width, int height);
-	virtual void SetSpawnPoint(float radius, int divideNumber, Vector2f parentPos, int index) {}
+	virtual void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index) {}
 	virtual void SetRotation();
 	void SetDirection(int width, int height);
 	void SetDirectionX(int width, int height);
@@ -79,9 +80,17 @@ public:
 	virtual int GetDivideNumber() {
 		return 0;
 	}
-
-	virtual bool GetIsAlive() {
+	int GetLife() {
+		return this->life;
+	}
+	bool GetIsAlive() {
 		return this->isAlive;
+	}
+	virtual float GetInvicibleTime() {
+		return this->invicibleTime;
+	}
+	bool GetHasShield() {
+		return this->hasShield;
 	}
 };
 
@@ -286,8 +295,6 @@ public:
 
 //constructor
 Basic::Basic() {
-	SetShield();
-	SetFollow();
 }
 
 //deconstructor
@@ -314,6 +321,9 @@ void Basic::SetShape() {
 		this->shape->setPointCount(rngPointCount);
 	}
 	this->shape->setFillColor(color);
+
+	SetShield();
+	SetFollow();
 }
 
 #pragma endregion
@@ -437,18 +447,18 @@ public:
 	}
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
-		if (radius >= 40) {
-			this->divideNumber = 3;
-		}
-		else if (radius >= 60) {
+		if (radius >= 60) {
 			this->divideNumber = 6;
+		}
+		else if (radius >= 40) {
+			this->divideNumber = 3;
 		}
 	}
 
 	int GetDivideNumber() override {
-		cout << divideNumber << endl;
 		return this->divideNumber;
 	}
+
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) override {
 
 		this->shape->rotate(deltaAngle * rotation);
@@ -461,13 +471,11 @@ public:
 			this->speed = 0;
 			//rotate a lot
 			this->rotation = 180;
-			this->stopMoveTime -= deltaTime;
 			//wait
+			this->stopMoveTime -= deltaTime;
 			if (this->stopMoveTime <= 0) {
 				//explode
-				//Divide(enemyList, width, height);
 				this->isAlive = false;
-				SetDivideNumber();
 			}
 			this->stopMoveTime -= deltaTime;
 		}
@@ -476,9 +484,6 @@ public:
 
 //constructor
 Kamikaze::Kamikaze() {
-	SetFollow();
-	canDivide = true;
-
 }
 
 //deconstructor
@@ -502,11 +507,12 @@ void Kamikaze::SetShape() {
 	this->shape->setFillColor(color);
 	this->shape->setOutlineThickness(outlineThickness);
 	this->shape->setOutlineColor(colorOutline);
+
+	SetFollow();
+	canDivide = true;
+	SetDivideNumber();
 }
 
-//void Kamikaze::Divide() {
-//
-//}
 #pragma endregion
 #pragma region Mini
 class Mini : public EnemySubClass {
@@ -677,16 +683,17 @@ public:
 	void SetShape() override;
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
-		if (radius >= 40) {
+		if (radius >= 80) {
 			this->divideNumber = 3;
 		}
 		else if (radius >= 60) {
 			this->divideNumber = 6;
 		}
-		else if (radius >= 80) {
+		else if (radius >= 40) {
 			this->divideNumber = 9;
 		}
 	}
+
 	int GetDivideNumber() override {
 		return this->divideNumber;
 	}
@@ -694,8 +701,6 @@ public:
 
 //constructor
 Divider::Divider() {
-	SetShield();
-	SetFollow();
 	canDivide = true;
 }
 
@@ -716,6 +721,10 @@ void Divider::SetShape() {
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
 	this->shape->setFillColor(color);
+
+	SetShield();
+	SetFollow();
+	SetDivideNumber();
 }
 #pragma endregion
 #pragma region Sub
@@ -731,8 +740,23 @@ public :
 	//method
 	//Setter
 	void SetShape(float radius, int pointCount) override;
-	void SetSpawnPoint(float radius, int divideNumber,  Vector2f parentPos, int index) override;
-	void SetFollow(EnemyType type);
+	void SetSubParameters(float radius, int divideNumber,  Vector2f parentPos, int index) override;
+	void SetFollow(EnemyType type) override;
+	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) override{
+		this->shape->rotate(deltaAngle * rotation);
+		this->invicibleTime -= deltaTime;
+		if (isFollowingPlayer == true) {
+			FollowPlayer(pPlayer, deltaTime);
+		}
+		else {
+			Move(deltaTime);
+		}
+		LoopOnMap(width, height);
+	}
+	
+	float GetInvicibleTime() override{
+		return this->invicibleTime;
+	}
 
 };
 
@@ -753,25 +777,30 @@ void Sub::SetShape(float radius, int pointCount) {
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(radius/ 2, radius/ 2);
 	this->shape->setFillColor(color);
+
+
 }
 
-void Sub::SetSpawnPoint(float radius, int divideNumber, Vector2f parentPos, int index) {
+void Sub::SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index) {
 
-	float alpha = 360.0f / divideNumber  * index;		//Alpha = 360 degree / (number of enemy to spawn) * index of enemy
+	float alpha = 360.0f / divideNumber  * index;			//Alpha = 360 degree / (number of enemy to spawn) * index of enemy
 	float posX = radius * cos(ConvertDegToRad(alpha));		//Spawn point X = radius * cos(alpha)
 	float posY = radius * sin(ConvertDegToRad(alpha));		//Spawn point y = radius * sin(alpha)
 
 	this->spawnPoint = Vector2f(parentPos.x + posX, parentPos.y + posY);
 	this->shape->setPosition(this->spawnPoint);
 	this->direction = Vector2f(posX, posY);
+
 }
 
 void Sub::SetFollow(EnemyType type) {
 	if (type == EnemyType::KAMIKAZE) {
 		isFollowingPlayer = true;
+		this->speed = 200.0f;
 	}
 	else {
 		isFollowingPlayer = false;
+		this->speed = 1.0f;
 	}
 }
 #pragma endregion
@@ -786,6 +815,15 @@ public :
 
 	//method
 	void SetShape() override;
+	void SetLife() {
+		float radius = this->shape->getRadius();
+		if (radius >= 80) {
+			this->life = 3;
+		}
+		else if (radius >= 60) {
+			this->life = 2;
+		}
+	}
 };
 
 
@@ -811,6 +849,8 @@ void Lifer::SetShape() {
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
 	this->shape->setFillColor(color);
+
+	SetLife();
 }
 #pragma endregion
 #pragma region LifeDivider
@@ -826,18 +866,28 @@ public:
 	void SetShape() override;
 	void SetDivideNumber() {
 		float radius = this->shape->getRadius();
-		if (radius >= 40) {
-			this->divideNumber = 3;
+		if (radius >= 80) {
+			this->divideNumber = 9;
 		}
 		else if (radius >= 60) {
 			this->divideNumber = 6;
 		}
-		else if (radius >= 80) {
-			this->divideNumber = 9;
+		else if (radius >= 40) {
+			this->divideNumber = 3;
 		}
 	}
 	int GetDivideNumber() override {
 		return this->divideNumber;
+	}
+
+	void SetLife() {
+		float radius = this->shape->getRadius();
+		if (radius >= 100 ) {
+			life = 3;
+		}
+		else if (radius >= 80) {
+			life = 2;
+		}
 	}
 
 };
@@ -866,6 +916,9 @@ void LifeDivider::SetShape() {
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
 	this->shape->setFillColor(color);
+
+	SetLife();
+	SetDivideNumber();
 }
 #pragma endregion
 
@@ -878,18 +931,10 @@ public:
 	EnemySubClass* subClass = nullptr;
 	bool isAlive = true;
 
-	//int divideNumber;
-	//int life = 0;
-	//int scoreValue = 0;
-	float invicibleTime = .0f; //not multiple collision when divide
-
-	//special feature
-	//bool canDivide = false;
-
 	//constructor & deconstructor
 	Enemy(int width, int height);
 	Enemy(int width, int height, EnemyType type);
-	Enemy(float radius, int pointCount, int divideNumber, Vector2f parentPos, int index, EnemyType type);
+	Enemy(float radius, int pointCount, int divideNumber, Vector2f parentPos, int index, EnemyType type, EnemyType parentType);
 	~Enemy();
 
 	//Method
@@ -905,8 +950,8 @@ public:
 	void SetSpawnPoint(int widht, int height) {
 		this->subClass->SetSpawnPoint(widht, height);
 	}
-	void SetSpawnPoint(float radius, int divideNumber, Vector2f parentPos, int index) {
-		this->subClass->SetSpawnPoint(radius, divideNumber, parentPos, index);
+	void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index) {
+		this->subClass->SetSubParameters(radius, divideNumber, parentPos, index);
 	}
 	void SetSpeed() {
 		this->subClass->SetSpeed();
@@ -915,6 +960,21 @@ public:
 		this->subClass->SetDirection(width, height);
 	}
 
+	void SetFollow(EnemyType parentType) {
+		this->subClass->SetFollow(parentType);
+	}
+	void SetHasShield(bool hasShield) {
+		this->subClass->hasShield = hasShield;
+		this->subClass->shape->setOutlineThickness(0);
+	}
+	void SetInvicibleTime(float value) {
+		this->subClass->invicibleTime = value;
+	}
+	void UpdateLife() {
+		this->subClass->life--;
+		this->subClass->shape->setRadius(this->subClass->shape->getRadius() / 2);
+		this->subClass->shape->setOrigin(this->subClass->shape->getRadius(), this->subClass->shape->getRadius());
+	}
 	//Getter
 	CircleShape GetShape() {
 		return *(this->subClass->shape);
@@ -934,7 +994,15 @@ public:
 	Vector2f GetPosition() {
 		return this->subClass->shape->getPosition();
 	}
-
+	int GetLife() {
+		return this->subClass->GetLife();
+	}
+	float GetInvicibleTime() {
+		return this->subClass->GetInvicibleTime();
+	}
+	bool GetHasShield() {
+		return this->subClass->GetHasShield();
+	}
 	//update
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) {
 		this->subClass->update(width, height, deltaAngle, deltaTime, pPlayer);
@@ -960,12 +1028,13 @@ Enemy::Enemy(int width, int height, EnemyType type) {
 	SetSpeed();
 }
 
-//for divide
-Enemy::Enemy(float radius, int pointCount, int divideNumber, Vector2f parentPos, int index, EnemyType type) {
+//for type SUB (on divide parent enemy)
+Enemy::Enemy(float radius, int pointCount, int divideNumber, Vector2f parentPos, int index, EnemyType type, EnemyType parentType) {
 	this->type = type;
 	SetSubClass();
 	SetShape(radius, pointCount);
-	SetSpawnPoint(radius, divideNumber, parentPos, index);
+	SetSubParameters(radius, divideNumber, parentPos, index);
+	SetFollow(parentType);
 }
 //DESTRUCTOR
 Enemy::~Enemy() {
@@ -1055,10 +1124,10 @@ void Enemy::SetSubClass() {
 #pragma endregion
 
 //void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList, int width, int height);
-void EnemyDivide(Enemy* pEnemy, list<Enemy*>& pEnemyList, int width, int height) {
+void EnemyDivide(Enemy* pEnemy, list<Enemy*>& pEnemyList) {
 
 	for (int count = 0; count < pEnemy->GetDivideNumber(); count++) {
-		Enemy* divide = new Enemy(pEnemy->GetRadius(), pEnemy->GetPointCount(), pEnemy->GetDivideNumber(), pEnemy->GetPosition(), count, EnemyType::SUB);
+		Enemy* divide = new Enemy(pEnemy->GetRadius(), pEnemy->GetPointCount(), pEnemy->GetDivideNumber(), pEnemy->GetPosition(), count, EnemyType::SUB, pEnemy->type);
 		pEnemyList.push_back(divide);
 	}
 }
