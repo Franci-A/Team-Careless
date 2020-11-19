@@ -146,7 +146,6 @@ int main()
 
 #pragma region Score
 	int score = 0;
-	int comboCount = 1;
 	int charSizeScore = 100;
 	Text scoreText;
 	scoreText.setString("0");
@@ -320,29 +319,52 @@ int main()
 		elapsedTimeSpawn = clockSpawn.getElapsedTime();
 		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 		{
-			Enemy* enemy = new Enemy(width, height);
-			enemyList.push_back(enemy);
+			Enemy* enemi = new Enemy;
+			enemi = EnemyCreate(width, height);
+
+			//SNAKE ID
+			//if (enemi->type == EnemyType::SNAKE) {
+			//	countSnake++;
+			//	enemi->snakeID = countSnake;
+			//}
+			enemyList.push_back(enemi);
+
+			////SNAKE TAIL CREATION
+			//if (enemi->type == EnemyType::SNAKE) {
+			//	for (int i = 0; i < enemi->snakeLength; i++) {
+			//		Enemy* tail = new Enemy;
+			//		tail = EnemySnakeTail(*enemyList.rbegin());
+			//		tail->snakeID = countSnake;
+			//		enemyList.push_back(tail);
+			//	}
+			//}
+
 			clockSpawn.restart();
 			countEnemy++;
 		}
 #pragma endregion
 #pragma region Update Enemy
-		//Move pattern
-		deltaAngle = deltaTime * IIM_PI * 2.0f;
+		//MOVE & COLLISION & ALIVE & SCORE
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			(*it)->update(width, height, deltaAngle, deltaTime, player);
-		}
+			
+			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player, enemyList);
+		
 
-		//Collision
-		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			//collision Enemy -> Player 
-			bool hascolidWithplayer = HasCollided((*player), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
+			//collision Player -> enemy
+			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
 					if (player->life > 1) {
-						player->life--;
-						player->invicibleTime = 3.0f;
-
+						if (player->hasShield) {
+							player->triangle.setOutlineThickness(0);
+							player->hasShield = false;
+							player->invicibleTime = 3.0f;
+						}
+						else if (!invicibleBonus) 
+						{
+							player->life--;
+							player->invicibleTime = 3.0f;
+						}
 						(*it)->isAlive = false;
 					}
 					else {
@@ -351,64 +373,40 @@ int main()
 					}
 				}
 			}
-			//collision Enemy -> Bullet
+
+			//When divide enemy sub don't get destroy immediatly
+			if (player->invicibleTime > 0) {
+				player->invicibleTime -= deltaTime;
+			}
+			//collision bullet -> enemy
 			list<Bullet*>::iterator bullet_it = player->bulletList.begin();
 			bool hascolidWithBullet = false;
 			while (bullet_it != player->bulletList.end() && !hascolidWithBullet) {
-				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
+				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
 				bullet_it++;
 			}
-			if (hascolidWithBullet && drawBullet && (*it)->GetInvicibleTime() <= 0) {
+			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
 				//enemy shield
-				if ((*it)->GetHasShield()) {
-					(*it)->SetHasShield(false);
-					(*it)->SetInvicibleTime(0.2f);
+				if ((*it)->hasOutline) {
+					(*it)->shape.setOutlineThickness(0);
+					(*it)->hasOutline = false;
+					(*it)->invicibleTime = 0.2f;
 				}
 				//enemy life
-				else if ((*it)->GetLife() > 1) {
-					(*it)->UpdateLife();
-					(*it)->SetInvicibleTime(0.2f);
+				else if((*it)->life > 1) {
+					(*it)->life--;
+					(*it)->shape.setRadius((*it)->radius / 1.5f);
+					(*it)->radius = (*it)->shape.getRadius();
+					(*it)->shape.setOrigin((*it)->radius, (*it)->radius);
+					(*it)->shape.setFillColor(Color((*it)->shape.getFillColor().r, (*it)->shape.getFillColor().g *2 ,0));
+					(*it)->invicibleTime = 0.2f;
 				}
-				//enemy Death
-				else {
+				//Dead
+				//TAil of snake can't be destroy until head is dead
+				else if((*it)->type != EnemyType::TAIL) {
 					(*it)->isAlive = false;
 					//Update score
-					switch ((*it)->type)
-					{
-					case EnemyType::BASIC:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::MINI:
-						score += 100 * comboCount;
-						break;
-					case EnemyType::TELEPORTER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::SNAKE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::KAMIKAZE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::FOLLOWER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::DIVIDER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::SUB:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::LIFER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::LIFEDIVIDER:
-						score += 40 * comboCount;
-						break;
-					default:
-						score += 10 * comboCount;
-						break;
-					}
+					score += (*it)->scoreValue;
 					scoreText.setString(to_string(score));
 				}
 			}
@@ -418,25 +416,24 @@ int main()
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if (!(*it)->isAlive) {
 				//divide type
-				if ((*it)->type == EnemyType::KAMIKAZE ||
-					(*it)->type == EnemyType::DIVIDER ||
-					(*it)->type == EnemyType::LIFEDIVIDER)
-				{
-					EnemyDivide((*it), enemyList);
+				if ((*it)->canDivide) {
+					EnemyDivide((*it), enemyList, width, height);
 				}
-
 			}
 		}
 
-		//remove invicibility
+		//remove invicible of divide and outline type
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			if ((*it)->GetInvicibleTime() > 0) {
-				(*it)->UpdateInvicibleTime();
+			if ((*it)->invicibleTime > 0) {
+				(*it)->invicibleTime -= deltaTime;
 			}
 		}
 
 #pragma endregion
+
+		//BUG CRASH HERE
 #pragma region Destroy ENEMY
+		int tempID = 0; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
 			auto it = enemyList.begin();
 
@@ -444,9 +441,20 @@ int main()
 
 				if (!(*it)->isAlive) {
 
+					//get the snake head id to delete corresponding tail
+					//if ((*it)->type == EnemyType::SNAKE) {
+					//	tempID = (*it)->snakeID;
+					//}
+					
 					sound.play();
 					delete (*it);
 					it = enemyList.erase(it);
+					
+					//delete tail of snake
+					//while ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
+					//	delete (*it);
+					//	it = enemyList.erase(it);
+					//}
 					countEnemy--;
 				}
 				else {
@@ -464,10 +472,11 @@ int main()
 			window.draw(stars1);
 			//Enemy
 			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-				window.draw((*it)->GetShape());
-				if ((*it)->type == EnemyType::TELEPORTER) {
-					window.draw((*it)->GetTeleportCircle());
+				window.draw((*it)->shape);
+				if ((*it)->type == EnemyType::TELEPORTER && (*it)->timeBeforeTeleport <= 0) {
+					window.draw((*it)->teleportCircle);
 				}
+				
 			}
 			
 			window.draw(player->triangle);
