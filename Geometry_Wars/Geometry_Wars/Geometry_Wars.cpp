@@ -17,6 +17,7 @@
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
+#include "Bonus.h"
 #pragma endregion
 
 #pragma region Namespace
@@ -24,12 +25,16 @@ using namespace std;
 using namespace sf;
 #pragma endregion
 
+void RainbowEffect(int& r, bool& addR);
+
 int main()
 {
 #pragma region Screen Resolution
 	int width = 800;
 	int height = 600;
 	GetDesktopResolution(width, height);
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
 #pragma endregion
 
 #pragma region RNG
@@ -44,6 +49,7 @@ int main()
 	Clock clockPlayer;
 	Clock clockDelta;
 	Clock clockInvicible;
+	Clock clockBonus;
 	Time elapsedTimeSpawn;
 #pragma endregion
 
@@ -55,6 +61,7 @@ int main()
 	player->triangle.setFillColor(Color::Cyan);
 	player->triangle.setOrigin(20, 20);
 	player->triangle.setScale(1.0f, 1.5f);
+
 	bool defeat = false;
 #pragma endregion
 	////test
@@ -73,6 +80,17 @@ int main()
 
 	PowerupSwap(player, BALL_TYPE::SNAKE, bulletpedia);
 #pragma endregion
+
+	Bonus* bonus = new Bonus;
+	bool drawBonus = false;
+	bool speedBonus = false;
+	bool invicibleBonus = false;
+	int r = 0;
+	bool addR = true;
+	int g = 128;
+	bool addG = true;
+	int b = 255;
+	bool addB = false;
 
 #pragma region Enemy
 	list<Enemy*> enemyList;
@@ -158,7 +176,7 @@ int main()
 	//float snakeY = sin(snakeX);
 #pragma endregion TEST
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window"); //, Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Fullscreen, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
 	// Game loop
@@ -167,6 +185,16 @@ int main()
 		//Delta Time
 		deltaTime = clockDelta.getElapsedTime().asSeconds();
 		clockDelta.restart();
+
+		if (!drawBonus && clockBonus.getElapsedTime().asSeconds() - bonus->timer > 10.0f) {
+			SpawnBonus(bonus, width, height, drawBonus);
+		}
+		else if (drawBonus && bonus->bonustype == BonusType::INVINCIBIL) {
+			RainbowEffect(r, addR);
+			RainbowEffect(g, addG);
+			RainbowEffect(b, addB);
+			bonus->shape.setFillColor(sf::Color::Color(r, g, b));
+		}
 
 		if (pause) {
 			deltaTime = 0.0f;
@@ -208,6 +236,35 @@ int main()
 					}
 				}
 			}
+		}
+
+		//Collision player -> bonus
+		if (drawBonus && HasCollided((*player), bonus->shape.getPosition().x, bonus->shape.getPosition().y, 20.0f)) {
+			drawBonus = false;
+			BonusCollected(bonus, player, clockBonus.getElapsedTime().asSeconds());
+			if (bonus->bonustype == BonusType::SPEED) {
+				speedBonus = true;
+			}
+			else if(bonus->bonustype == BonusType::INVINCIBIL) {
+				invicibleBonus = true;
+			}
+		}
+
+		if (speedBonus && clockBonus.getElapsedTime().asSeconds() - bonus->speedTimer > 10.0f) {
+			speedBonus = false;
+			player->speed -= 300;
+			player->triangle.setOutlineThickness(0);
+		}
+		else if (invicibleBonus && clockBonus.getElapsedTime().asSeconds() - bonus->invincibleTimer > 5.0f) {
+			invicibleBonus = false;
+			player->triangle.setFillColor(sf::Color::Cyan);
+			player->speed -= 200;
+		}
+		else if (invicibleBonus ) {
+			RainbowEffect(r, addR);
+			RainbowEffect(g, addG);
+			RainbowEffect(b, addB);
+			player->triangle.setFillColor(sf::Color::Color(r, g, b));
 		}
 
 		//Update bullet
@@ -298,8 +355,16 @@ int main()
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
 					if (player->life > 1) {
-						player->life--;
-						player->invicibleTime = 3.0f;
+						if (player->hasShield) {
+							player->triangle.setOutlineThickness(0);
+							player->hasShield = false;
+							player->invicibleTime = 3.0f;
+						}
+						else if (!invicibleBonus) 
+						{
+							player->life--;
+							player->invicibleTime = 3.0f;
+						}
 						(*it)->isAlive = false;
 					}
 					else {
@@ -421,6 +486,10 @@ int main()
 				}
 			}
 			window.draw(scoreText);
+
+			if (drawBonus) {
+				window.draw(bonus->shape);
+			}
 		}
 		else {
 			//Game Over
@@ -457,4 +526,25 @@ int main()
 	delete player;
 
 	//delete bullet;
+}
+
+
+void RainbowEffect(int& r,  bool& addR) {
+	if (addR) {
+		r += 5;
+		if (r > 255) {
+			r = 255;
+			addR = false;
+		}
+	}
+	else
+	{
+		r -= 5;
+		if (r < 0) 
+		{ 
+			r = 0;
+			addR = true;
+		}
+	}
+
 }
