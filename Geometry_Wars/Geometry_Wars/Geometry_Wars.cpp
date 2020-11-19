@@ -1,8 +1,7 @@
 #pragma region Lib
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <vector>
-//#include <list>
+#include <list>
 #include <string>
 #pragma endregion
 
@@ -11,13 +10,16 @@
 #include "AssetsUtils.h"
 #include "MathUtils.h"
 #include "Enemy.h"
+#include "EnemyClass.h"
 #include "PlayerController.h"
 #include "Bullet.h"
 #include "Collision.h"
+#include "Bonus.h"
+
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include "Bonus.h"
+
 #pragma endregion
 
 #pragma region Namespace
@@ -108,17 +110,17 @@ int main()
 		std::cout << "AppPATH " << endl << getAppPath << endl;
 		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
 	}
-	
+
 	Text gameover;
 	gameover.setFont(font);
 	gameover.setString("Game Over\nRestart ?\n[R]");
 	gameover.setCharacterSize(150);
-	gameover.setOrigin(floor(gameover.getLocalBounds().width /2), floor(gameover.getLocalBounds().height /2));
+	gameover.setOrigin(floor(gameover.getLocalBounds().width / 2), floor(gameover.getLocalBounds().height / 2));
 	gameover.setFillColor(Color::Red);
 	gameover.setOutlineColor(Color::White);
 	gameover.setOutlineThickness(.5f);
-	gameover.setPosition((float)width / 2.0f , (float)height/3);
-	
+	gameover.setPosition((float)width / 2.0f, (float)height / 3);
+
 
 	Texture texture;
 	Texture textureStars1;
@@ -135,17 +137,18 @@ int main()
 	stars1.setTexture(textureStars1);
 
 	background.scale(3, 3);
-	background.setOrigin(texture.getSize().x/2, texture.getSize().y/2);
-	background.setPosition(width/2, height/2);
+	background.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
+	background.setPosition(width / 2, height / 2);
 	stars1.scale(3, 3);
-	stars1.setOrigin(textureStars1.getSize().x/2 , textureStars1.getSize().y/2);
-	stars1.setPosition(width/2, height/2 );
+	stars1.setOrigin(textureStars1.getSize().x / 2, textureStars1.getSize().y / 2);
+	stars1.setPosition(width / 2, height / 2);
 
 	stars1.setColor(Color(255, 255, 255, 200));
 #pragma endregion
 
 #pragma region Score
 	int score = 0;
+	int comboCount = 1;
 	int charSizeScore = 100;
 	Text scoreText;
 	scoreText.setString("0");
@@ -207,8 +210,8 @@ int main()
 		{
 			starsMove = PlayerMove((*player), localPosition, deltaTime, width, height);
 			//Background parallax
-			stars1.move(- starsMove.x /2 , - starsMove.y /2);
-			background.move(- starsMove.x /5 , - starsMove.y /5);
+			stars1.move(-starsMove.x / 2, -starsMove.y / 2);
+			background.move(-starsMove.x / 5, -starsMove.y / 5);
 		}
 		//Player face cursor
 		if (!pause) {
@@ -245,7 +248,7 @@ int main()
 			if (bonus->bonustype == BonusType::SPEED) {
 				speedBonus = true;
 			}
-			else if(bonus->bonustype == BonusType::INVINCIBIL) {
+			else if (bonus->bonustype == BonusType::INVINCIBIL) {
 				invicibleBonus = true;
 			}
 		}
@@ -260,7 +263,7 @@ int main()
 			player->triangle.setFillColor(sf::Color::Cyan);
 			player->speed -= 200;
 		}
-		else if (invicibleBonus ) {
+		else if (invicibleBonus) {
 			RainbowEffect(r, addR);
 			RainbowEffect(g, addG);
 			RainbowEffect(b, addB);
@@ -319,52 +322,29 @@ int main()
 		elapsedTimeSpawn = clockSpawn.getElapsedTime();
 		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 		{
-			Enemy* enemi = new Enemy;
-			enemi = EnemyCreate(width, height);
-
-			//SNAKE ID
-			//if (enemi->type == EnemyType::SNAKE) {
-			//	countSnake++;
-			//	enemi->snakeID = countSnake;
-			//}
-			enemyList.push_back(enemi);
-
-			////SNAKE TAIL CREATION
-			//if (enemi->type == EnemyType::SNAKE) {
-			//	for (int i = 0; i < enemi->snakeLength; i++) {
-			//		Enemy* tail = new Enemy;
-			//		tail = EnemySnakeTail(*enemyList.rbegin());
-			//		tail->snakeID = countSnake;
-			//		enemyList.push_back(tail);
-			//	}
-			//}
-
+			Enemy* enemy = new Enemy(width, height);
+			enemyList.push_back(enemy);
 			clockSpawn.restart();
 			countEnemy++;
 		}
 #pragma endregion
 #pragma region Update Enemy
-		//MOVE & COLLISION & ALIVE & SCORE
+		//Move pattern
+		deltaAngle = deltaTime * IIM_PI * 2.0f;
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			
-			EnemyUpdate(*it, width, height, deltaTime, deltaAngle, player, enemyList);
-		
+			(*it)->update(width, height, deltaAngle, deltaTime, player);
+		}
 
-			//collision Player -> enemy
-			bool hascolidWithplayer = HasCollided((*player), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+		//Collision
+		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+			//collision Enemy -> Player 
+			bool hascolidWithplayer = HasCollided((*player), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
 					if (player->life > 1) {
-						if (player->hasShield) {
-							player->triangle.setOutlineThickness(0);
-							player->hasShield = false;
-							player->invicibleTime = 3.0f;
-						}
-						else if (!invicibleBonus) 
-						{
-							player->life--;
-							player->invicibleTime = 3.0f;
-						}
+						player->life--;
+						player->invicibleTime = 3.0f;
+
 						(*it)->isAlive = false;
 					}
 					else {
@@ -373,40 +353,64 @@ int main()
 					}
 				}
 			}
-
-			//When divide enemy sub don't get destroy immediatly
-			if (player->invicibleTime > 0) {
-				player->invicibleTime -= deltaTime;
-			}
-			//collision bullet -> enemy
+			//collision Enemy -> Bullet
 			list<Bullet*>::iterator bullet_it = player->bulletList.begin();
 			bool hascolidWithBullet = false;
 			while (bullet_it != player->bulletList.end() && !hascolidWithBullet) {
-				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius);
+				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
 				bullet_it++;
 			}
-			if (hascolidWithBullet && drawBullet && (*it)->invicibleTime <= 0) {
+			if (hascolidWithBullet && drawBullet && (*it)->GetInvicibleTime() <= 0) {
 				//enemy shield
-				if ((*it)->hasOutline) {
-					(*it)->shape.setOutlineThickness(0);
-					(*it)->hasOutline = false;
-					(*it)->invicibleTime = 0.2f;
+				if ((*it)->GetHasShield()) {
+					(*it)->UpdateHasShield();
+					(*it)->SetInvicibleTime(0.2f);
 				}
 				//enemy life
-				else if((*it)->life > 1) {
-					(*it)->life--;
-					(*it)->shape.setRadius((*it)->radius / 1.5f);
-					(*it)->radius = (*it)->shape.getRadius();
-					(*it)->shape.setOrigin((*it)->radius, (*it)->radius);
-					(*it)->shape.setFillColor(Color((*it)->shape.getFillColor().r, (*it)->shape.getFillColor().g *2 ,0));
-					(*it)->invicibleTime = 0.2f;
+				else if ((*it)->GetLife() > 1) {
+					(*it)->UpdateLife();
+					(*it)->SetInvicibleTime(0.2f);
 				}
-				//Dead
-				//TAil of snake can't be destroy until head is dead
-				else if((*it)->type != EnemyType::TAIL) {
+				//enemy Death
+				else {
 					(*it)->isAlive = false;
 					//Update score
-					score += (*it)->scoreValue;
+					switch ((*it)->type)
+					{
+					case EnemyType::BASIC:
+						score += 10 * comboCount;
+						break;
+					case EnemyType::MINI:
+						score += 100 * comboCount;
+						break;
+					case EnemyType::TELEPORTER:
+						score += 20 * comboCount;
+						break;
+					case EnemyType::SNAKE:
+						score += 30 * comboCount;
+						break;
+					case EnemyType::KAMIKAZE:
+						score += 30 * comboCount;
+						break;
+					case EnemyType::FOLLOWER:
+						score += 20 * comboCount;
+						break;
+					case EnemyType::DIVIDER:
+						score += 30 * comboCount;
+						break;
+					case EnemyType::SUB:
+						score += 10 * comboCount;
+						break;
+					case EnemyType::LIFER:
+						score += 30 * comboCount;
+						break;
+					case EnemyType::LIFEDIVIDER:
+						score += 40 * comboCount;
+						break;
+					default:
+						score += 10 * comboCount;
+						break;
+					}
 					scoreText.setString(to_string(score));
 				}
 			}
@@ -416,24 +420,30 @@ int main()
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if (!(*it)->isAlive) {
 				//divide type
-				if ((*it)->canDivide) {
-					EnemyDivide((*it), enemyList, width, height);
+				if ((*it)->type == EnemyType::DIVIDER ||
+					(*it)->type == EnemyType::LIFEDIVIDER)
+				{
+					EnemyDivide((*it), enemyList);
 				}
+
+				if ((*it)->type == EnemyType::KAMIKAZE) {
+					if ((*it)->GetHasExplode()) {
+						EnemyDivide((*it), enemyList);
+					}
+				}
+
 			}
 		}
 
-		//remove invicible of divide and outline type
+		//remove invicibility
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			if ((*it)->invicibleTime > 0) {
-				(*it)->invicibleTime -= deltaTime;
+			if ((*it)->GetInvicibleTime() > 0) {
+				(*it)->UpdateInvicibleTime();
 			}
 		}
 
 #pragma endregion
-
-		//BUG CRASH HERE
 #pragma region Destroy ENEMY
-		int tempID = 0; //for deleting corresponding tail of snake
 		if (!enemyList.empty()) {
 			auto it = enemyList.begin();
 
@@ -441,20 +451,9 @@ int main()
 
 				if (!(*it)->isAlive) {
 
-					//get the snake head id to delete corresponding tail
-					//if ((*it)->type == EnemyType::SNAKE) {
-					//	tempID = (*it)->snakeID;
-					//}
-					
 					sound.play();
 					delete (*it);
 					it = enemyList.erase(it);
-					
-					//delete tail of snake
-					//while ((*it)->type == EnemyType::TAIL && (*it)->snakeID == tempID) {
-					//	delete (*it);
-					//	it = enemyList.erase(it);
-					//}
 					countEnemy--;
 				}
 				else {
@@ -465,20 +464,19 @@ int main()
 #pragma endregion
 
 		window.clear();
-		
+
 		if (!defeat) {
 
 			window.draw(background);
 			window.draw(stars1);
 			//Enemy
 			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-				window.draw((*it)->shape);
-				if ((*it)->type == EnemyType::TELEPORTER && (*it)->timeBeforeTeleport <= 0) {
-					window.draw((*it)->teleportCircle);
+				window.draw((*it)->GetShape());
+				if ((*it)->type == EnemyType::TELEPORTER) {
+					window.draw((*it)->GetTeleportCircle());
 				}
-				
 			}
-			
+
 			window.draw(player->triangle);
 			if (drawBullet) {
 				for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
@@ -507,8 +505,8 @@ int main()
 		auto it = enemyList.begin();
 
 		while (it != enemyList.end()) {
-				delete (*it);
-				it = enemyList.erase(it);
+			delete (*it);
+			it = enemyList.erase(it);
 		}
 		enemyList.clear();
 	}
@@ -529,7 +527,7 @@ int main()
 }
 
 
-void RainbowEffect(int& r,  bool& addR) {
+void RainbowEffect(int& r, bool& addR) {
 	if (addR) {
 		r += 5;
 		if (r > 255) {
@@ -540,8 +538,8 @@ void RainbowEffect(int& r,  bool& addR) {
 	else
 	{
 		r -= 5;
-		if (r < 0) 
-		{ 
+		if (r < 0)
+		{
 			r = 0;
 			addR = true;
 		}
