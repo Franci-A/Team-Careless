@@ -1,8 +1,7 @@
 #pragma region Lib
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <vector>
-//#include <list>
+#include <list>
 #include <string>
 #pragma endregion
 
@@ -11,13 +10,16 @@
 #include "AssetsUtils.h"
 #include "MathUtils.h"
 #include "Enemy.h"
+#include "EnemyClass.h"
 #include "PlayerController.h"
 #include "Bullet.h"
 #include "Collision.h"
+#include "Bonus.h"
+
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
-#include "Bonus.h"
+
 #pragma endregion
 
 #pragma region Namespace
@@ -361,7 +363,7 @@ int main()
 			if (hascolidWithBullet && drawBullet && (*it)->GetInvicibleTime() <= 0) {
 				//enemy shield
 				if ((*it)->GetHasShield()) {
-					(*it)->SetHasShield(false);
+					(*it)->UpdateHasShield();
 					(*it)->SetInvicibleTime(0.2f);
 				}
 				//enemy life
