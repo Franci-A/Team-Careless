@@ -5,7 +5,7 @@ string getAppPath() {
     char cExeFilePath[256];
     GetModuleFileNameA(NULL, cExeFilePath, 256);
     string exeFilePath = cExeFilePath;
-    int exeNamePos = exeFilePath.find_last_of("\\/");
+    size_t exeNamePos = exeFilePath.find_last_of("\\/");
     string appPath = exeFilePath.substr(0, exeNamePos + 1);
     return appPath;
 }
