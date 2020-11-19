@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="EnemyClass.cpp" />
     <ClCompile Include="Geometry_Wars.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="ScreenResolution.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="AssetsUtils.h" />
+    <ClInclude Include="EnemyClass.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="ScreenResolution.h" />
