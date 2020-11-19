@@ -1,5 +1,6 @@
 #include "ScreenResolution.h"
 #include "wtypes.h"
+
 // Get the horizontal and vertical screen sizes in pixel
 void GetDesktopResolution(int& horizontal, int& vertical)
 {
