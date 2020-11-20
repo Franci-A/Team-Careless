@@ -312,14 +312,12 @@ void Teleporter::SetShape() {
 	SetShield();
 	SetFollow();
 }
-
 void Teleporter::SetSpeed() {
 	int minSpeed = 50;
 	int maxSpeed = 100;
 	this->speed = rand() % (maxSpeed - minSpeed) + minSpeed;
 	this->saveSpeed = this->speed;
 }
-
 #pragma endregion
 #pragma region Getter
 CircleShape* Teleporter::GetTeleportCircle() { return teleportCircle; }
@@ -459,8 +457,7 @@ void Snake::SetShape() {
 	int minPointCount = 4;
 	int maxPointCount = 20;
 	int rngPointCount = rand() % (maxPointCount - minPointCount) + minPointCount;
-	Color color(0, rand() % (255 - 200) + 200, 0);
-
+	Color color(0, rand() % (200 - 150) + 150, 0);
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(rngPointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
@@ -495,9 +492,10 @@ void Follower::SetShape() {
 }
 
 void Follower::SetSpeed() {
-	int minSpeed = 200;
-	int maxSpeed = 300;
+	int minSpeed = 270;
+	int maxSpeed = 350;
 	this->speed = rand() % (maxSpeed - minSpeed) + minSpeed;
+	this->rotation = 135;
 }
 
 void Follower::SetFollow() {
