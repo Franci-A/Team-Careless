@@ -4,7 +4,7 @@ VFX::VFX(int divideNumber, Enemy* pEnemy, int i) {
 	float alpha = 360.0f / divideNumber * i;			//Alpha = 360 degree / (number of enemy to spawn) * index of enemy
 	float posX = radius * cos(ConvertDegToRad(alpha));		//Spawn point X = radius * cos(alpha)
 	float posY = radius * sin(ConvertDegToRad(alpha));		//Spawn point y = radius * sin(alpha)
-	int rngColor = rand() % 3;
+	int rngColor = rand() % 6;
 	this->circle.setRadius(10);
 	this->circle.setOrigin(radius, radius);
 	this->circle.setPosition(Vector2f(pEnemy->GetPosition().x + posX, pEnemy->GetPosition().y + posY));
@@ -18,15 +18,15 @@ VFX::VFX(int divideNumber, Enemy* pEnemy, int i) {
 	else if (rngColor == 2) {
 		this->circle.setFillColor(Color(0, 0, 255, 100));
 	}
-	//else if (rngColor == 3) {
-	//	this->circle.setFillColor(Color::Yellow);
-	//}
-	//else if (rngColor == 4) {
-	//	this->circle.setFillColor(Color::Cyan);
-	//}
-	//else if (rngColor == 5) {
-	//	this->circle.setFillColor(Color::Magenta);
-	//}
+	else if (rngColor == 3) {
+		this->circle.setFillColor(Color(255, 255, 0 , 100));
+	}
+	else if (rngColor == 4) {
+		this->circle.setFillColor(Color(0, 255, 255, 100));
+	}
+	else if (rngColor == 5) {
+		this->circle.setFillColor(Color(255, 0, 255, 100));
+	}
 
 	this->direction = Vector2f(posX, posY);
 }
