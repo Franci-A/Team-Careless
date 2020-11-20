@@ -47,7 +47,7 @@ int main()
 #pragma endregion
 
 #pragma region Timer
-	float spawnTime = 1.f;
+	float spawnTime = 2.f;
 	float deltaTime = 0.f;
 	float deltaAngle = 0.f;
 	Clock clockSpawn;
@@ -149,7 +149,6 @@ int main()
 
 #pragma region Score
 	int score = 0;
-	int comboCount = 1;
 	int charSizeScore = 100;
 	Text scoreText;
 	scoreText.setString("0");
@@ -157,7 +156,16 @@ int main()
 	scoreText.setPosition(10, -charSizeScore / 2);
 	scoreText.setFont(font);
 #pragma endregion
-
+#pragma region Combo
+	int comboCount = 0;
+	int charSizeCombo = 100;
+	Text comboText;
+	comboText.setString("x0");
+	comboText.setCharacterSize(charSizeCombo);
+	comboText.setPosition(width - 100, -charSizeCombo/2);
+	comboText.setFillColor(Color::Red);
+	comboText.setFont(font);
+#pragma endregion Combo
 #pragma region Sound
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
@@ -340,6 +348,7 @@ int main()
 					countEnemy = 0;
 					score = 0;
 					scoreText.setString("0");
+					comboText.setString("x0");
 					player->life = 5;
 					defeat = false;
 				}
@@ -377,6 +386,9 @@ int main()
 						defeat = true;
 						drawBullet = false;
 					}
+
+					comboCount = 0;
+					comboText.setString("x0");
 				}
 			}
 			//collision Enemy -> Bullet + bomb bonus
@@ -406,6 +418,8 @@ int main()
 				//enemy Death
 				else {
 					(*it)->isAlive = false;
+					comboCount++;
+					comboText.setString("x" + to_string(comboCount));
 					ScoreUpdate((*it)->type, score, comboCount, scoreText);
 				}
 			}
@@ -461,8 +475,6 @@ int main()
 					window.draw((*it)->visual);
 				}
 			}
-			window.draw(scoreText);
-
 			if (drawBonus) {
 				if (bonus->bonustype == BonusType::BOMB) {
 					window.draw(bonus->bombShape);
@@ -474,6 +486,10 @@ int main()
 			if (drawBomb) {
 				window.draw(bonus->bombShape);
 			}
+
+			//canvas
+			window.draw(scoreText);
+			window.draw(comboText);
 		}
 		else {
 			//Game Over
