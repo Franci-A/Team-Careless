@@ -171,6 +171,8 @@
     <ClCompile Include="AssetsUtils.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="VFXClass.cpp" />
+    <ClCompile Include="VFX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bonus.h" />
@@ -179,6 +181,8 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="AssetsUtils.h" />
     <ClInclude Include="EnemyClass.h" />
+    <ClInclude Include="VFXClass.h" />
+    <ClInclude Include="VFX.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="MathUtils.h" />

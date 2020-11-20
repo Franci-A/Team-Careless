@@ -51,6 +51,12 @@
     <ClCompile Include="Health.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VFX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VFXClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Health.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VFX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VFXClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

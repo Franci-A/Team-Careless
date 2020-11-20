@@ -17,6 +17,7 @@
 #include "Bonus.h"
 #include "Score.h"
 #include "Health.h"
+#include "VFX.h"
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
@@ -195,7 +196,9 @@ int main()
 	sound.setBuffer(hit);
 	sound.setVolume(0.1f);
 #pragma endregion
-
+#pragma region VFX
+	list<VFX*> vfxList;
+#pragma endregion
 #pragma region Game Manager
 	bool pause = false;
 #pragma endregion
@@ -488,9 +491,19 @@ int main()
 			}
 		}
 
+		if (!vfxList.empty()) {
+			for (auto it = vfxList.begin(); it != vfxList.end(); it++) {
+				(*it)->move(deltaTime);
+				(*it)->time -= deltaTime;
+				if ((*it)->time <= 0) {
+					(*it)->isAlive = false;
+				}
+			}
+		}
 #pragma endregion
 #pragma region Destroy ENEMY
-		EnemyDestroy(enemyList, countEnemy, sound);
+		EnemyDestroy(enemyList, countEnemy, sound, vfxList);
+		DestroyVFX(vfxList, deltaTime);
 #pragma endregion
 
 		//update health text
@@ -509,6 +522,9 @@ int main()
 				}
 			}
 
+			for (auto it = vfxList.begin(); it != vfxList.end(); it++) {
+				window.draw((*it)->circle);
+			}
 			window.draw(player->triangle);
 			if (drawBullet) {
 				for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
@@ -545,6 +561,7 @@ int main()
 
 	//DESTROY end game
 
+	//enemy
 	while (!enemyList.empty()) {
 		auto it = enemyList.begin();
 
@@ -554,7 +571,7 @@ int main()
 		}
 		enemyList.clear();
 	}
-
+	//bullet
 	while (!player->bulletList.empty()) {
 		auto it = player->bulletList.begin();
 
@@ -563,6 +580,16 @@ int main()
 			it = player->bulletList.erase(it);
 		}
 		player->bulletList.clear();
+	}
+	//vfx
+	while (!vfxList.empty()) {
+		auto it = vfxList.begin();
+
+		while (it != vfxList.end()) {
+			delete (*it);
+			it = vfxList.erase(it);
+		}
+		vfxList.clear();
 	}
 
 	delete player;
