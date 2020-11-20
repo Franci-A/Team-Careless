@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Bullet.h"
-#include"DeltaTime.h"
+#include "DeltaTime.h"
 
 struct Player {
 	float speed = 650.0f;

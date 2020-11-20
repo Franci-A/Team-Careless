@@ -4,7 +4,7 @@
 
 struct HealthIcon {
 	sf::ConvexShape shape;
-	sf::Text healthCount;
 };
-void InstantiateHealth(HealthIcon* health, int maxHealth, int width, sf::Font font);
-void UpdateHealthText(Player player, HealthIcon* health, int width);
+
+void InstantiateHealth(HealthIcon* health, int maxHealth, int width, sf::Font font, sf::Text& text);
+sf::Text UpdateHealthText(Player player, int width);

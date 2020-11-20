@@ -39,7 +39,7 @@ int main()
 	int width = 800;
 	int height = 600;
 	GetDesktopResolution(width, height);
-	sf::ContextSettings settings;
+	ContextSettings settings;
 	settings.antialiasingLevel = 8;
 #pragma endregion
 
@@ -80,7 +80,8 @@ int main()
 
 	int maxHealth = 5;
 	HealthIcon* healthIcon = new HealthIcon;
-	InstantiateHealth(healthIcon, maxHealth, width, font);
+	Text healthScore;
+	InstantiateHealth(healthIcon, maxHealth, width, font, healthScore);
 	bool defeat = false;
 
 #pragma endregion
@@ -195,7 +196,7 @@ int main()
 #pragma region TEST	
 #pragma endregion TEST
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Default, settings); //, Style::Fullscreen
+	RenderWindow window(VideoMode(width, height), "SFML Window", Style::Default, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
 	// Game loop
@@ -212,7 +213,7 @@ int main()
 			RainbowEffect(r, addR);
 			RainbowEffect(g, addG);
 			RainbowEffect(b, addB);
-			bonus->shape.setFillColor(sf::Color::Color(r, g, b));
+			bonus->shape.setFillColor(Color::Color(r, g, b));
 		}
 
 		if (pause) {
@@ -289,14 +290,14 @@ int main()
 		}
 		else if (invicibleBonus && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 5.0f) {
 			invicibleBonus = false;
-			player->triangle.setFillColor(sf::Color::Cyan);
+			player->triangle.setFillColor(Color::Cyan);
 			player->speed -= 200;
 		}
 		else if (invicibleBonus) {
 			RainbowEffect(r, addR);
 			RainbowEffect(g, addG);
 			RainbowEffect(b, addB);
-			player->triangle.setFillColor(sf::Color::Color(r, g, b));
+			player->triangle.setFillColor(Color::Color(r, g, b));
 		}
 		else if (bombExploding && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 3.5f) {
 			bombExploding = false;
@@ -332,12 +333,12 @@ int main()
 
 		while (window.pollEvent(event)) {
 			// Process any input event here
-			if (event.type == sf::Event::Closed || (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+			if (event.type == Event::Closed || (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape)) {
 				window.close();
 			}
 
 			//PAUSE
-			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::P) {
+			if (event.type == Event::KeyPressed && event.key.code == Keyboard::P) {
 				if (!pause) {
 					pause = true;
 				}
@@ -347,7 +348,7 @@ int main()
 			}
 
 			//RESTART and reset parameters
-			if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+			if (event.type == Event::KeyPressed && event.key.code == Keyboard::R) {
 				if (defeat) {
 					if (!enemyList.empty()) {
 						auto it = enemyList.begin();
@@ -469,7 +470,7 @@ int main()
 #pragma endregion
 
 		//update health text
-		UpdateHealthText((*player), healthIcon, width);
+		healthScore = UpdateHealthText((*player), width);
 		window.clear();
 
 		if (!defeat) {
@@ -490,8 +491,6 @@ int main()
 					window.draw((*it)->visual);
 				}
 			}
-			window.draw(scoreText);
-			window.draw(healthIcon->shape);
 			//window.draw(healthIcon->healthCount);
 			if (drawBonus) {
 				if (bonus->bonustype == BonusType::BOMB || bonus->bonustype == BonusType::BULLETSWAP) {
@@ -508,6 +507,7 @@ int main()
 			//canvas
 			window.draw(scoreText);
 			window.draw(comboText);
+			window.draw(healthIcon->shape);
 		}
 		else {
 			//Game Over
