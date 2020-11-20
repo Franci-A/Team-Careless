@@ -1,10 +1,8 @@
 #pragma region Lib
 #include <iostream>
-#include <SFML/Graphics.hpp>
 #include <list>
 #include <string>
-#pragma endregion
-
+#pragma endregion Lib
 #pragma region Header Files
 #include "ScreenResolution.h"
 #include "AssetsUtils.h"
@@ -14,18 +12,19 @@
 #include "PlayerController.h"
 #include "Bullet.h"
 #include "Collision.h"
+#include "Score.h"
 #include "Bonus.h"
 
+#include <SFML/Graphics.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 
-#pragma endregion
-
+#pragma endregion Header
 #pragma region Namespace
 using namespace std;
 using namespace sf;
-#pragma endregion
+#pragma endregion Namespace
 
 void RainbowEffect(int& r, bool& addR);
 
@@ -37,12 +36,10 @@ int main()
 	GetDesktopResolution(width, height);
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
-#pragma endregion
-
+#pragma endregion Screen
 #pragma region RNG
 	srand(time(NULL));
-#pragma endregion
-
+#pragma endregion rng
 #pragma region Timer
 	float spawnTime = 1.f;
 	float deltaTime = 0.f;
@@ -53,8 +50,7 @@ int main()
 	Clock clockInvicible;
 	Clock clockBonus;
 	Time elapsedTimeSpawn;
-#pragma endregion
-
+#pragma endregion Timer 
 #pragma region Player
 	Player* player = new Player;
 	player->triangle.setPointCount(3);
@@ -65,14 +61,7 @@ int main()
 	player->triangle.setScale(1.0f, 1.5f);
 
 	bool defeat = false;
-#pragma endregion
-	////test
-	//CircleShape test;
-	//test.setPointCount(4);
-	//test.setRadius(40);
-	//test.setRotation(90);
-	//test.setScale(1, .5f);
-	//test.setPosition(width / 2, height / 2);
+#pragma endregion Player
 #pragma region Bullet
 	bool drawBullet = false;
 	//Bullet* bullet = new Bullet; // à remplacer par ~~ player->bulletList.bullet
@@ -81,8 +70,8 @@ int main()
 	InitializeBulletpedia(bulletpedia);
 
 	PowerupSwap(player, BALL_TYPE::SNAKE, bulletpedia);
-#pragma endregion
-
+#pragma endregion Bullet
+#pragma region Bonus
 	Bonus* bonus = new Bonus;
 	bool drawBonus = false;
 	bool speedBonus = false;
@@ -93,15 +82,13 @@ int main()
 	bool addG = true;
 	int b = 255;
 	bool addB = false;
-
+#pragma endregion Bonus
 #pragma region Enemy
 	list<Enemy*> enemyList;
 	int maxEnemy = 30;
 	int countEnemy = 0;
-	int countSnake = 0;
 #pragma endregion
-
-#pragma region CANVAS
+#pragma region Canvas
 	Font font;
 	string fontPath = getAssetsPath() + "mago2.ttf";
 	if (!font.loadFromFile(fontPath))
@@ -144,8 +131,7 @@ int main()
 	stars1.setPosition(width / 2, height / 2);
 
 	stars1.setColor(Color(255, 255, 255, 200));
-#pragma endregion
-
+#pragma endregion Canvas
 #pragma region Score
 	int score = 0;
 	int comboCount = 1;
@@ -155,8 +141,7 @@ int main()
 	scoreText.setCharacterSize(charSizeScore);
 	scoreText.setPosition(10, -charSizeScore / 2);
 	scoreText.setFont(font);
-#pragma endregion
-
+#pragma endregion Score
 #pragma region Sound
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
@@ -169,16 +154,19 @@ int main()
 	sf::Sound sound;
 	sound.setBuffer(hit);
 	sound.setVolume(0.1f);
-#pragma endregion
-
+#pragma endregion Sound
 #pragma region Game Manager
 	bool pause = false;
-#pragma endregion
-#pragma region TEST	
-	//float snakeX = 800;
-	//float snakeY = sin(snakeX);
-#pragma endregion TEST
-
+#pragma endregion Game Manager
+#pragma region Test
+	////test
+//CircleShape test;
+//test.setPointCount(4);
+//test.setRadius(40);
+//test.setRotation(90);
+//test.setScale(1, .5f);
+//test.setPosition(width / 2, height / 2);
+#pragma endregion Test
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Fullscreen, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
@@ -317,19 +305,12 @@ int main()
 			}
 		}
 
-		//ENEMY
-#pragma region Create Enemy
-		elapsedTimeSpawn = clockSpawn.getElapsedTime();
-		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
-		{
-			Enemy* enemy = new Enemy(width, height);
-			enemyList.push_back(enemy);
-			clockSpawn.restart();
-			countEnemy++;
-		}
-#pragma endregion
-#pragma region Update Enemy
-		//Move pattern
+#pragma region Enemy 
+		//create
+		EnemyCreate(enemyList, countEnemy, maxEnemy, pause, elapsedTimeSpawn, clockSpawn, spawnTime, width, height);
+
+		//update
+		//move pattern
 		deltaAngle = deltaTime * IIM_PI * 2.0f;
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			(*it)->update(width, height, deltaAngle, deltaTime, player);
@@ -374,49 +355,12 @@ int main()
 				//enemy Death
 				else {
 					(*it)->isAlive = false;
-					//Update score
-					switch ((*it)->type)
-					{
-					case EnemyType::BASIC:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::MINI:
-						score += 100 * comboCount;
-						break;
-					case EnemyType::TELEPORTER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::SNAKE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::KAMIKAZE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::FOLLOWER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::DIVIDER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::SUB:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::LIFER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::LIFEDIVIDER:
-						score += 40 * comboCount;
-						break;
-					default:
-						score += 10 * comboCount;
-						break;
-					}
-					scoreText.setString(to_string(score));
+					ScoreUpdate((*it)->type, score, comboCount, scoreText);
 				}
 			}
 		}
 
-		//DIVIDE ENEMY
+		//divide enemy
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if (!(*it)->isAlive) {
 				//divide type
@@ -434,33 +378,16 @@ int main()
 			}
 		}
 
-		//remove invicibility
+		//remove enemy invicibility
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if ((*it)->GetInvicibleTime() > 0) {
 				(*it)->UpdateInvicibleTime();
 			}
 		}
 
-#pragma endregion
-#pragma region Destroy ENEMY
-		if (!enemyList.empty()) {
-			auto it = enemyList.begin();
-
-			while (it != enemyList.end()) {
-
-				if (!(*it)->isAlive) {
-
-					sound.play();
-					delete (*it);
-					it = enemyList.erase(it);
-					countEnemy--;
-				}
-				else {
-					it++;
-				}
-			}
-		}
-#pragma endregion
+		//destroy
+		EnemyDestroy(enemyList, countEnemy, sound);
+#pragma endregion Enemy
 
 		window.clear();
 

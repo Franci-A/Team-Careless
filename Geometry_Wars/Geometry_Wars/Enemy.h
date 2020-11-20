@@ -1,12 +1,9 @@
 #pragma once
 #include "EnemyClass.h"
 
-void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList);
+#include <SFML/Audio/Sound.hpp>
+using namespace sf;
 
-//TriggerExit
-//bool hasCollid = false;
-//has collid = true on collision 
-// if hit enemy = false
-//hasCollide = true && in main has collid = false
-//has collidde  =false;
-//
+void EnemyCreate(list<Enemy*>& enemyList, int& countEnemy, int maxEnemy, bool pause, Time& elapsedTimeSpawn, Clock& clockSpawn, float spawnTime, int width, int height);
+void EnemyDivide(Enemy* enemy, list<Enemy*>& pEnemyList);
+void EnemyDestroy(list<Enemy*> &enemyList, int &countEnemy, Sound sound);
