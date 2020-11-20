@@ -159,14 +159,9 @@ int main()
 	bool pause = false;
 #pragma endregion Game Manager
 #pragma region Test
-	////test
-//CircleShape test;
-//test.setPointCount(4);
-//test.setRadius(40);
-//test.setRotation(90);
-//test.setScale(1, .5f);
-//test.setPosition(width / 2, height / 2);
+
 #pragma endregion Test
+
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Fullscreen, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
@@ -341,6 +336,7 @@ int main()
 				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
 				bullet_it++;
 			}
+
 			if (hascolidWithBullet && drawBullet && (*it)->GetInvicibleTime() <= 0) {
 				//enemy shield
 				if ((*it)->GetHasShield()) {
@@ -381,7 +377,7 @@ int main()
 		//remove enemy invicibility
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if ((*it)->GetInvicibleTime() > 0) {
-				(*it)->UpdateInvicibleTime();
+				(*it)->UpdateInvicibleTime(deltaTime);
 			}
 		}
 

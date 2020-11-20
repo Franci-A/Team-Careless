@@ -37,7 +37,7 @@ public:
 	bool canDivide = false;
 	bool isAlive = true;
 	int life = 1;
-	float invicibleTime = 0.f;
+	float invicibleTime = .0f;
 	int divideNumber = 0;
 	bool hasExplode = false;
 
@@ -60,6 +60,7 @@ public:
 	virtual void Move(float deltaTime);
 	virtual void SetFollow();
 	virtual void SetFollow(EnemyType type);
+	void SetInvicibleTime(float value);
 
 	//update
 	void FollowPlayer(Player* pPlayer, float deltaTime);
@@ -280,7 +281,7 @@ public:
 	//update
 	void UpdateHasShield();
 	void UpdateLife();
-	void UpdateInvicibleTime();
+	void UpdateInvicibleTime(float deltaTime);
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer);
 };
 
