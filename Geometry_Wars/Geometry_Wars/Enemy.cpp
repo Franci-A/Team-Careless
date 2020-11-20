@@ -4,7 +4,7 @@ void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause
 	elapsedTimeSpawn = clockSpawn.getElapsedTime();
 	if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 	{
-		Enemy* enemy = new Enemy(width, height, EnemyType::LIFEDIVIDER);
+		Enemy* enemy = new Enemy(width, height);
 		enemyList.push_back(enemy);
 		clockSpawn.restart();
 		countEnemy++;

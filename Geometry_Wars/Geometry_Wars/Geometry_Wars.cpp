@@ -430,7 +430,7 @@ int main()
 		//remove invicibility
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			if ((*it)->GetInvicibleTime() > 0) {
-				(*it)->UpdateInvicibleTime();
+				(*it)->UpdateInvicibleTime(deltaTime);
 			}
 		}
 
