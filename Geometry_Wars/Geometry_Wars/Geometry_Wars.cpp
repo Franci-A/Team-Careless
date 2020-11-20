@@ -216,7 +216,10 @@ int main()
 		if (!pause) {
 			PlayerRotation((*player), localPosition);
 		}
-
+		//Player Invicible Time
+		if (player->invicibleTime > 0) {
+			player->invicibleTime -= deltaTime;
+		}
 		//Fire!
 		if (Mouse::isButtonPressed(Mouse::Left) && canPlaceBomb) {
 			canPlaceBomb = false;
@@ -362,8 +365,7 @@ int main()
 				if (player->invicibleTime <= 0) {
 					if (player->life > 1 && !player->hasShield) {
 						player->life--;
-						player->invicibleTime = 3.0f;
-
+						player->invicibleTime = 0.2f;
 						(*it)->isAlive = false;
 					}
 					else if (player->hasShield) {
