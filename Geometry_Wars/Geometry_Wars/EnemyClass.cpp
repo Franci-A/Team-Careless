@@ -448,7 +448,6 @@ void Snake::SetSpawnPoint(int width, int height) {
 	//left wall
 	this->spawnPoint = Vector2f(0, rngHeight);
 	this->shape->setPosition(spawnPoint);
-	cout << this->spawnPoint.y << endl;
 }
 void Snake::SetShape() {
 	int minRadius = 20;

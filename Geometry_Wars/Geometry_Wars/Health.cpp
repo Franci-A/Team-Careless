@@ -1,7 +1,7 @@
 #include "Health.h"
 #include <list>
 
-void InstantiateHealth(HealthIcon* health ,int maxHealth, int width, sf::Font font, sf::Text& text) {
+void InstantiateHealth(HealthIcon* health , int width) {
 	health->shape.setFillColor(sf::Color::Red);
 	health->shape.setPointCount(8);
 	health->shape.setPoint(0, sf::Vector2f(15, 10));
@@ -14,16 +14,10 @@ void InstantiateHealth(HealthIcon* health ,int maxHealth, int width, sf::Font fo
 	health->shape.setPoint(7, sf::Vector2f(11, 0));
 	health->shape.setScale(1.5, 1.5);
 	health->shape.setPosition(width - health->shape.getLocalBounds().width *2, 10);
-	text.setFont(font);
-	text.setString(std::to_string(maxHealth));
-	text.setCharacterSize(100);
-	text.setPosition(width - health->shape.getPosition().x - text.getLocalBounds().width, 10);
 
 	return ;
 }
 
-sf::Text UpdateHealthText(Player player, int width) {
-	sf::Text text;
+void UpdateHealthText(Player player, sf::Text& text) {
 	text.setString(std::to_string(player.life));
-	return text;
 }

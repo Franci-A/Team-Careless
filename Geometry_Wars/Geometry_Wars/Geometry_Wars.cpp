@@ -78,10 +78,16 @@ int main()
 	player->triangle.setOrigin(20, 20);
 	player->triangle.setScale(1.0f, 1.5f);
 
-	int maxHealth = 5;
+	int maxHealth = player->life;
 	HealthIcon* healthIcon = new HealthIcon;
 	Text healthScore;
-	InstantiateHealth(healthIcon, maxHealth, width, font, healthScore);
+	healthScore.setFont(font);
+	healthScore.setCharacterSize(100);
+	healthScore.setString(to_string(maxHealth));
+	healthScore.setFillColor(Color::Red);
+	InstantiateHealth(healthIcon, width);
+	healthScore.setPosition(healthIcon->shape.getPosition().x - healthScore.getLocalBounds().width - 20, -50);
+	
 	bool defeat = false;
 
 #pragma endregion
@@ -288,6 +294,9 @@ int main()
 			player->speed -= 300;
 			player->triangle.setOutlineThickness(0);
 		}
+		else if (speedBonus) {
+			//
+		}
 		else if (invicibleBonus && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 5.0f) {
 			invicibleBonus = false;
 			player->triangle.setFillColor(Color::Cyan);
@@ -307,6 +316,10 @@ int main()
 		else if (drawBomb && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 3.0f) {
 			bombExploding = true;
 		}
+		else if (player->hasShield) {
+			player->triangle.setOutlineThickness(3);
+			player->triangle.setOutlineColor(sf::Color::Blue);
+		}
 		
 		if (bombExploding) {
 			BombExplodEffect(s, bonus);
@@ -317,9 +330,12 @@ int main()
 			bonus->bombShape.setScale(s, s);
 		}
 
-		if (canPlaceBomb) {
+		if (canPlaceBomb && !speedBonus) {
 			bonus->timer = clockBonus.getElapsedTime().asSeconds();
 			bonus->bonusTimer = clockBonus.getElapsedTime().asSeconds();
+
+			player->triangle.setOutlineThickness(3);
+			player->triangle.setOutlineColor(sf::Color::Color(90, 90, 90));
 		}
 		//Update bullet
 		if (drawBullet && !defeat) {
@@ -386,23 +402,31 @@ int main()
 			bool hascolidWithplayer = HasCollided((*player), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
-					if (player->life > 1 && !player->hasShield) {
+					if (invicibleBonus) {
+						(*it)->isAlive = false;
+						comboCount++;
+						ScoreUpdate((*it)->type, score, comboCount, scoreText);
+					}
+					else if (player->life > 1 && !player->hasShield) {
 						player->life--;
 						player->invicibleTime = 0.2f;
 						(*it)->isAlive = false;
+						comboCount = 0;
 					}
 					else if (player->hasShield) {
 						(*it)->isAlive = false;
 						player->triangle.setOutlineThickness(0);
 						player->hasShield = false;
+						comboCount = 0;
 					}
 					else {
 						defeat = true;
 						drawBullet = false;
+						comboCount = 0;
 					}
 
-					comboCount = 0;
-					comboText.setString("x0");
+					comboText.setString("x" + to_string(comboCount));
+					
 				}
 			}
 			//collision Enemy -> Bullet + bomb bonus
@@ -470,7 +494,7 @@ int main()
 #pragma endregion
 
 		//update health text
-		healthScore = UpdateHealthText((*player), width);
+		UpdateHealthText((*player), healthScore);
 		window.clear();
 
 		if (!defeat) {
@@ -491,7 +515,6 @@ int main()
 					window.draw((*it)->visual);
 				}
 			}
-			//window.draw(healthIcon->healthCount);
 			if (drawBonus) {
 				if (bonus->bonustype == BonusType::BOMB || bonus->bonustype == BonusType::BULLETSWAP) {
 					window.draw(bonus->bombShape);
@@ -508,6 +531,7 @@ int main()
 			window.draw(scoreText);
 			window.draw(comboText);
 			window.draw(healthIcon->shape);
+			window.draw(healthScore);
 		}
 		else {
 			//Game Over

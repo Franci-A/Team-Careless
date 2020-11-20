@@ -1,11 +1,20 @@
 #include "Enemy.h"
 
-void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause,Time &elapsedTimeSpawn,Clock &clockSpawn, float spawnTime, int width, int height, Clock clockWave) {
+void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause,Time &elapsedTimeSpawn,Clock &clockSpawn, float& spawnTime, int width, int height, Clock clockWave) {
 	elapsedTimeSpawn = clockSpawn.getElapsedTime();
 	Time elapsedTimeWave = clockWave.getElapsedTime();
 	if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 	{
-		if (elapsedTimeWave.asSeconds() > 90.0f) {
+		if (elapsedTimeWave.asSeconds() > 200.0f) {
+			spawnTime = 0.5f;
+			Enemy* enemy = new Enemy(width, height);
+			enemyList.push_back(enemy);
+		}else if (elapsedTimeWave.asSeconds() > 120.0f) {
+			spawnTime = 1.0f;
+			Enemy* enemy = new Enemy(width, height);
+			enemyList.push_back(enemy);
+		}
+		else if (elapsedTimeWave.asSeconds() > 90.0f) {
 			Enemy* enemy = new Enemy(width, height);
 			enemyList.push_back(enemy);
 		}
