@@ -50,11 +50,13 @@ int main()
 	float spawnTime = 2.f;
 	float deltaTime = 0.f;
 	float deltaAngle = 0.f;
+	float waveTime = 0.f;
 	Clock clockSpawn;
 	Clock clockPlayer;
 	Clock clockDelta;
 	Clock clockInvicible;
 	Clock clockBonus;
+	Clock clockWave;
 	Time elapsedTimeSpawn;
 #pragma endregion
 
@@ -357,7 +359,7 @@ int main()
 
 		//ENEMY
 #pragma region Create Enemy
-		EnemyCreate(enemyList, countEnemy, maxEnemy, pause, elapsedTimeSpawn, clockSpawn, spawnTime, width, height);
+		EnemyCreate(enemyList, countEnemy, maxEnemy, pause, elapsedTimeSpawn, clockSpawn, spawnTime, width, height, clockWave);
 #pragma endregion
 #pragma region Update Enemy
 		//Move pattern

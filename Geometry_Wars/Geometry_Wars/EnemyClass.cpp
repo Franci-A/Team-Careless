@@ -443,6 +443,15 @@ void Mini::SetShape() {
 }
 #pragma endregion Mini
 #pragma region Method Snake
+void Snake::SetSpawnPoint(int width, int height) {
+	int minHeight = 50;
+	int maxHeight = height - 50;
+	float rngHeight = static_cast<float>(rand() % (maxHeight - minHeight) + minHeight);
+	//left wall
+	this->spawnPoint = Vector2f(0, rngHeight);
+	this->shape->setPosition(spawnPoint);
+	cout << this->spawnPoint.y << endl;
+}
 void Snake::SetShape() {
 	int minRadius = 20;
 	int maxRadius = 40;
@@ -459,7 +468,6 @@ void Snake::SetShape() {
 
 	SetShield();
 }
-
 void Snake::Move(float deltaTime) {
 	int speedX = 20;
 	int speedY = 400;
