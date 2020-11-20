@@ -1,4 +1,4 @@
-#pragma region Lib
+ï»¿#pragma region Lib
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
@@ -28,6 +28,8 @@ using namespace sf;
 #pragma endregion
 
 void RainbowEffect(int& r, bool& addR);
+void BombExpandEffect(float& s, bool& addS);
+void BombExplodEffect(float& s, Bonus* bonus);
 
 int main()
 {
@@ -75,7 +77,7 @@ int main()
 	//test.setPosition(width / 2, height / 2);
 #pragma region Bullet
 	bool drawBullet = false;
-	//Bullet* bullet = new Bullet; // à remplacer par ~~ player->bulletList.bullet
+	//Bullet* bullet = new Bullet; // ï¿½ remplacer par ~~ player->bulletList.bullet
 	// Tests Powerups
 	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
 	InitializeBulletpedia(bulletpedia);
@@ -87,12 +89,17 @@ int main()
 	bool drawBonus = false;
 	bool speedBonus = false;
 	bool invicibleBonus = false;
+	bool drawBomb = false;
+	bool canPlaceBomb = false;
+	bool bombExploding = false;
 	int r = 0;
 	bool addR = true;
 	int g = 128;
 	bool addG = true;
 	int b = 255;
 	bool addB = false;
+	float s = 1.2f;
+	bool addS = true;
 
 #pragma region Enemy
 	list<Enemy*> enemyList;
@@ -179,7 +186,7 @@ int main()
 	//float snakeY = sin(snakeX);
 #pragma endregion TEST
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Fullscreen, settings); //, Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Default, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
 	// Game loop
@@ -219,7 +226,11 @@ int main()
 		}
 
 		//Fire!
-		if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
+		if (Mouse::isButtonPressed(Mouse::Left) && canPlaceBomb) {
+			canPlaceBomb = false;
+			PlaceBomb(player->triangle.getPosition(), bonus, drawBomb, player);
+		}
+		else if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
 			PlayerShot(drawBullet, localPosition, (*player));
 		}
 
@@ -251,14 +262,17 @@ int main()
 			else if (bonus->bonustype == BonusType::INVINCIBIL) {
 				invicibleBonus = true;
 			}
+			else if (bonus->bonustype == BonusType::BOMB) {
+				canPlaceBomb = true;
+			}
 		}
 
-		if (speedBonus && clockBonus.getElapsedTime().asSeconds() - bonus->speedTimer > 10.0f) {
+		if (speedBonus && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 10.0f) {
 			speedBonus = false;
 			player->speed -= 300;
 			player->triangle.setOutlineThickness(0);
 		}
-		else if (invicibleBonus && clockBonus.getElapsedTime().asSeconds() - bonus->invincibleTimer > 5.0f) {
+		else if (invicibleBonus && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 5.0f) {
 			invicibleBonus = false;
 			player->triangle.setFillColor(sf::Color::Cyan);
 			player->speed -= 200;
@@ -269,7 +283,27 @@ int main()
 			RainbowEffect(b, addB);
 			player->triangle.setFillColor(sf::Color::Color(r, g, b));
 		}
+		else if (bombExploding && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 3.5f) {
+			bombExploding = false;
+			drawBomb = false;
+			s = 1.2;
+		}
+		else if (drawBomb && clockBonus.getElapsedTime().asSeconds() - bonus->bonusTimer > 3.0f) {
+			bombExploding = true;
+		}
+		
+		if (bombExploding) {
+			BombExplodEffect(s, bonus);
+			
+		}
+		else if (drawBomb) {
+			BombExpandEffect(s, addS);
+			bonus->bombShape.setScale(s, s);
+		}
 
+		if (canPlaceBomb) {
+			bonus->timer = clockBonus.getElapsedTime().asSeconds();
+		}
 		//Update bullet
 		if (drawBullet && !defeat) {
 			for (auto it = player->bulletList.begin(); it != player->bulletList.end(); it++) {
@@ -356,11 +390,13 @@ int main()
 			//collision Enemy -> Bullet
 			list<Bullet*>::iterator bullet_it = player->bulletList.begin();
 			bool hascolidWithBullet = false;
-			while (bullet_it != player->bulletList.end() && !hascolidWithBullet) {
+			bool hasColidWithBomb = false;
+			while (bullet_it != player->bulletList.end() && !hascolidWithBullet && !hasColidWithBomb) {
 				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
+				hasColidWithBomb = HasCollidedBonus((*bonus), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius, bombExploding);
 				bullet_it++;
 			}
-			if (hascolidWithBullet && drawBullet && (*it)->GetInvicibleTime() <= 0) {
+			if ((hascolidWithBullet || hasColidWithBomb) && drawBullet && (*it)->GetInvicibleTime() <= 0) {
 				//enemy shield
 				if ((*it)->GetHasShield()) {
 					(*it)->UpdateHasShield();
@@ -485,7 +521,15 @@ int main()
 			window.draw(scoreText);
 
 			if (drawBonus) {
-				window.draw(bonus->shape);
+				if (bonus->bonustype == BonusType::BOMB) {
+					window.draw(bonus->bombShape);
+				}
+				else {
+					window.draw(bonus->shape);
+				}
+			}
+			if (drawBomb) {
+				window.draw(bonus->bombShape);
 			}
 		}
 		else {
@@ -544,4 +588,28 @@ void RainbowEffect(int& r, bool& addR) {
 		}
 	}
 
+}
+
+void BombExpandEffect(float& s, bool& addS) {
+	if (addS) {
+		s += .05;
+		if (s > 2) {
+			addS = false;
+		}
+	}
+	else {
+		s -= .05;
+		if (s <1) {
+			addS = true;
+		}
+	}
+}
+
+void BombExplodEffect(float& s, Bonus* bonus) {
+	bonus->bombShape.setFillColor(Color::Color(255, 188, 0));
+	s += .4;
+	if (s > 7) {
+		s = 7;
+	}
+	bonus->bombShape.setScale(s, s);
 }

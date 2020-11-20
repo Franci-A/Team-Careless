@@ -20,3 +20,15 @@ bool HasCollidedBullet(Bullet bullet, float x, float y, float rayon) {
 
 	return false;
 }
+
+bool HasCollidedBonus(Bonus bonus, float x, float y, float rayon, bool bombIsExploding) {
+	if (bombIsExploding) {
+		float distanceAB = sqrt(powf(x - bonus.bombShape.getPosition().x, 2) + powf(y - bonus.bombShape.getPosition().y, 2));
+
+		if (distanceAB <= rayon + (bonus.bombShape.getRadius())) {
+			return true;
+		}
+	}
+
+	return false;
+}

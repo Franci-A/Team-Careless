@@ -6,7 +6,7 @@
 void SpawnBonus(Bonus* bonus, int width, int height, bool& drawBonus) {
 	int offset = 200;
 	sf::Vector2f spawnPosition;
-	int bonusToSpawn = 3;
+	int bonusToSpawn = rand() % 5;
 	switch (bonusToSpawn)
 	{
 	case 0:
@@ -21,12 +21,16 @@ void SpawnBonus(Bonus* bonus, int width, int height, bool& drawBonus) {
 	case 3:
 		BonusTypeInvincibil(bonus);
 		break;
+	case 4:
+		BonusTypeBomb(bonus);
+		break;
 	}
 	
 
 	spawnPosition.x = offset + rand() % (width - offset*2);
 	spawnPosition.y = offset + rand() % (height - offset*2);
 	bonus->shape.setPosition(spawnPosition);
+	bonus->bombShape.setPosition(spawnPosition);
 	drawBonus = true;
 }
 
@@ -45,11 +49,16 @@ void BonusCollected(Bonus* bonus, Player* player, float elapsedTime) {
 		player->triangle.setOutlineThickness(3);
 		player->triangle.setOutlineColor(sf::Color::Color(252, 255, 51));
 		player->speed += 300;
-		bonus->speedTimer = elapsedTime;
+		bonus->bonusTimer = elapsedTime;
 		break;
 	case BonusType::INVINCIBIL:
-		bonus->invincibleTimer = elapsedTime;
+		bonus->bonusTimer = elapsedTime;
 		player->speed += 200;
+		break;
+	case BonusType::BOMB:
+		bonus->bonusTimer = elapsedTime;
+		player->triangle.setOutlineThickness(3);
+		player->triangle.setOutlineColor(sf::Color::Color(90, 90, 90));
 		break;
 	}
 }
@@ -115,4 +124,18 @@ void BonusTypeInvincibil(Bonus* bonus) {
 	bonus->shape.setOrigin(15, 20);
 	bonus->shape.setScale(1.2, 1.2);
 	bonus->shape.setFillColor(sf::Color::Color(252, 255, 51));
+}
+
+void BonusTypeBomb(Bonus* bonus) {
+	bonus->bonustype = BonusType::BOMB;
+	bonus->bombShape.setRadius(20);
+	bonus->bombShape.setOrigin(20, 20);
+	bonus->bombShape.setScale(1.2, 1.2);
+	bonus->bombShape.setFillColor(sf::Color::Color(90, 90, 90));
+}
+
+void PlaceBomb(sf::Vector2f localPosition, Bonus* bonus, bool& drawBomb , Player* player) {
+	bonus->bombShape.setPosition(localPosition);
+	drawBomb = true;
+	player->triangle.setOutlineThickness(0);
 }
