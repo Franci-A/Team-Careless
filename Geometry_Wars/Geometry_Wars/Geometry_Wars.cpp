@@ -186,14 +186,14 @@ int main()
 	sf::Music music;
 	music.openFromFile(getAssetsPath() + "battle.wav");
 	music.setLoop(true);
-	music.setVolume(0.1f);
+	music.setVolume(0.5f);
 	music.play();
 
 	sf::SoundBuffer hit;
 	hit.loadFromFile(getAssetsPath() + "hit.wav");
 	sf::Sound sound;
 	sound.setBuffer(hit);
-	sound.setVolume(0.1f);
+	sound.setVolume(0.5f);
 #pragma endregion
 
 #pragma region Game Manager
@@ -251,6 +251,7 @@ int main()
 		}
 		else if (Mouse::isButtonPressed(Mouse::Left) && !drawBullet && !pause) {
 			PlayerShot(drawBullet, localPosition, (*player));
+			sound.play();
 		}
 
 		//Collision bullet -> player : Pickup bullet
