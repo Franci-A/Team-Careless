@@ -7,7 +7,7 @@ struct Player {
 	float speed = 650.0f;
 	sf::CircleShape triangle;
 	bool hasBullet = true;
-	int life = 100;
+	int life = 10;
 	float invicibleTime = 0.0f;
 	BALL_TYPE bulletType = BALL_TYPE::DEFAULT;
 	std::list<Bullet*> bulletList;

@@ -381,6 +381,7 @@ int main()
 					scoreText.setString("0");
 					comboText.setString("x0");
 					player->life = 5;
+					clockWave.restart();
 					defeat = false;
 				}
 			}
