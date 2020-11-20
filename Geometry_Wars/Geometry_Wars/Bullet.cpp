@@ -27,18 +27,29 @@ void UpdatePosition(Bullet* ball, float deltaTime)
 
 void Check_Wall_Collision(Bullet* ball, int width, int height)
 {
-	if (ball->visual.getPosition().x + ball->visual.getRadius() >= width || ball->visual.getPosition().x - ball->visual.getRadius() <= 0)
+	if (ball->visual.getPosition().x + ball->visual.getRadius() > width || ball->visual.getPosition().x - ball->visual.getRadius() < 0)
 	{
 		ball->X_offset = -ball->X_offset;
-
+		if (ball->X_offset < 0) {
+			ball->visual.setPosition(width - ball->visual.getRadius() *2, ball->visual.getPosition().y);
+		}
+		else {
+			ball->visual.setPosition(ball->visual.getRadius() *2, ball->visual.getPosition().y);
+		}
 		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 275) {
 			ball->speed += 10;
 		}
 	}
-	if (ball->visual.getPosition().y + ball->visual.getRadius() >= height || ball->visual.getPosition().y - ball->visual.getRadius() <= 0)
+	if (ball->visual.getPosition().y + ball->visual.getRadius() > height || ball->visual.getPosition().y - ball->visual.getRadius() < 0)
 	{
-		ball->Y_offset = -ball->Y_offset;
 
+		ball->Y_offset = -ball->Y_offset;
+		if (ball->Y_offset < 0) {
+			ball->visual.setPosition(ball->visual.getPosition().x, height - ball->visual.getRadius());
+		}
+		else {
+			ball->visual.setPosition(ball->visual.getPosition().x, ball->visual.getRadius() *2);
+		}
 		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 275) {
 			ball->speed += 10;
 		}
