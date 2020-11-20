@@ -16,6 +16,7 @@
 #include "Collision.h"
 #include "Bonus.h"
 #include "Score.h"
+#include "Health.h"
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
@@ -42,6 +43,14 @@ int main()
 	settings.antialiasingLevel = 8;
 #pragma endregion
 
+	Font font;
+	string fontPath = getAssetsPath() + "mago2.ttf";
+	if (!font.loadFromFile(fontPath))
+	{
+		std::cout << "Error Load font" << endl;
+		std::cout << "AppPATH " << endl << getAppPath << endl;
+		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
+	}
 #pragma region RNG
 	srand(time(NULL));
 #pragma endregion
@@ -67,7 +76,11 @@ int main()
 	player->triangle.setOrigin(20, 20);
 	player->triangle.setScale(1.0f, 1.5f);
 
+	int maxHealth = 5;
+	HealthIcon* healthIcon = new HealthIcon;
+	InstantiateHealth(healthIcon, maxHealth, width, font);
 	bool defeat = false;
+
 #pragma endregion
 #pragma region Bullet
 	bool drawBullet = false;
@@ -76,9 +89,9 @@ int main()
 	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
 	InitializeBulletpedia(bulletpedia);
 
-	PowerupSwap(player, BALL_TYPE::SNAKE, bulletpedia);
+	PowerupSwap(player, bulletpedia);
 #pragma endregion
-
+#pragma region Bonus
 	Bonus* bonus = new Bonus;
 	bool drawBonus = false;
 	bool speedBonus = false;
@@ -94,6 +107,7 @@ int main()
 	bool addB = false;
 	float s = 1.2f;
 	bool addS = true;
+#pragma endregion
 
 #pragma region Enemy
 	list<Enemy*> enemyList;
@@ -103,14 +117,7 @@ int main()
 #pragma endregion
 
 #pragma region CANVAS
-	Font font;
-	string fontPath = getAssetsPath() + "mago2.ttf";
-	if (!font.loadFromFile(fontPath))
-	{
-		std::cout << "Error Load font" << endl;
-		std::cout << "AppPATH " << endl << getAppPath << endl;
-		std::cout << "AssetPATH " << endl << getAssetsPath() << endl;
-	}
+
 
 	Text gameover;
 	gameover.setFont(font);
@@ -250,7 +257,7 @@ int main()
 		//Collision player -> bonus
 		if (drawBonus && HasCollided((*player), bonus->shape.getPosition().x, bonus->shape.getPosition().y, 20.0f)) {
 			drawBonus = false;
-			BonusCollected(bonus, player, clockBonus.getElapsedTime().asSeconds());
+			BonusCollected(bonus, player, clockBonus.getElapsedTime().asSeconds(), bulletpedia);
 			if (bonus->bonustype == BonusType::SPEED) {
 				speedBonus = true;
 			}
@@ -259,6 +266,9 @@ int main()
 			}
 			else if (bonus->bonustype == BonusType::BOMB) {
 				canPlaceBomb = true;
+			}
+			else if (bonus->bonustype == BonusType::BULLETSWAP) {
+				drawBullet = false;
 			}
 		}
 
@@ -298,6 +308,7 @@ int main()
 
 		if (canPlaceBomb) {
 			bonus->timer = clockBonus.getElapsedTime().asSeconds();
+			bonus->bonusTimer = clockBonus.getElapsedTime().asSeconds();
 		}
 		//Update bullet
 		if (drawBullet && !defeat) {
@@ -441,6 +452,8 @@ int main()
 		EnemyDestroy(enemyList, countEnemy, sound);
 #pragma endregion
 
+		//update health text
+		UpdateHealthText((*player), healthIcon, width);
 		window.clear();
 
 		if (!defeat) {
@@ -462,9 +475,10 @@ int main()
 				}
 			}
 			window.draw(scoreText);
-
+			window.draw(healthIcon->shape);
+			//window.draw(healthIcon->healthCount);
 			if (drawBonus) {
-				if (bonus->bonustype == BonusType::BOMB) {
+				if (bonus->bonustype == BonusType::BOMB || bonus->bonustype == BonusType::BULLETSWAP) {
 					window.draw(bonus->bombShape);
 				}
 				else {

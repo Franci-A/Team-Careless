@@ -122,8 +122,9 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 	return bullet;
 }
 
-void PowerupSwap(Player* player, BALL_TYPE type, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
+void PowerupSwap(Player* player, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
 {
+	BALL_TYPE type = BALL_TYPE(rand() % 5);
 	player->bulletList.clear();
 	for (int i = 0; i < bulletpedia[type].ammo; i++) {
 		player->bulletList.push_back(AddNewBullet(bulletpedia[type]));

@@ -20,4 +20,4 @@ void PlayerRotation(Player& player, sf::Vector2f localPosition);
 void PlayerShot(bool& drawBullet, sf::Vector2f localPosition, Player player);
 
 Bullet* AddNewBullet(Bullet_Powerup powerup);
-void PowerupSwap(Player* player, BALL_TYPE type, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia);
+void PowerupSwap(Player* player, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia);

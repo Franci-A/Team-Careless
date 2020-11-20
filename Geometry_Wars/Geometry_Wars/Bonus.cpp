@@ -6,7 +6,7 @@
 void SpawnBonus(Bonus* bonus, int width, int height, bool& drawBonus) {
 	int offset = 200;
 	sf::Vector2f spawnPosition;
-	int bonusToSpawn = rand() % 5;
+	int bonusToSpawn = rand() % 6;
 	switch (bonusToSpawn)
 	{
 	case 0:
@@ -24,6 +24,9 @@ void SpawnBonus(Bonus* bonus, int width, int height, bool& drawBonus) {
 	case 4:
 		BonusTypeBomb(bonus);
 		break;
+	case 5:
+		BonusTypeBulletSwap(bonus);
+		break;
 	}
 	
 
@@ -34,7 +37,7 @@ void SpawnBonus(Bonus* bonus, int width, int height, bool& drawBonus) {
 	drawBonus = true;
 }
 
-void BonusCollected(Bonus* bonus, Player* player, float elapsedTime) {
+void BonusCollected(Bonus* bonus, Player* player, float elapsedTime, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia) {
 	bonus->timer = elapsedTime;
 	switch (bonus->bonustype) {
 	case BonusType::SHEILD:
@@ -59,6 +62,9 @@ void BonusCollected(Bonus* bonus, Player* player, float elapsedTime) {
 		bonus->bonusTimer = elapsedTime;
 		player->triangle.setOutlineThickness(3);
 		player->triangle.setOutlineColor(sf::Color::Color(90, 90, 90));
+		break;
+	case BonusType::BULLETSWAP:
+		PowerupSwap(player, bulletpedia);
 		break;
 	}
 }
@@ -132,10 +138,21 @@ void BonusTypeBomb(Bonus* bonus) {
 	bonus->bombShape.setOrigin(20, 20);
 	bonus->bombShape.setScale(1.2, 1.2);
 	bonus->bombShape.setFillColor(sf::Color::Color(90, 90, 90));
+	bonus->bombShape.setOutlineThickness(0);
 }
 
 void PlaceBomb(sf::Vector2f localPosition, Bonus* bonus, bool& drawBomb , Player* player) {
 	bonus->bombShape.setPosition(localPosition);
 	drawBomb = true;
 	player->triangle.setOutlineThickness(0);
+}
+
+void BonusTypeBulletSwap(Bonus* bonus) {
+	bonus->bonustype = BonusType::BULLETSWAP;
+	bonus->bombShape.setFillColor(sf::Color::Transparent);
+	bonus->bombShape.setRadius(15);
+	bonus->bombShape.setOrigin(15, 15);
+	bonus->bombShape.setScale(1.2, 1.2);
+	bonus->bombShape.setOutlineColor(sf::Color::Green);
+	bonus->bombShape.setOutlineThickness(7);
 }

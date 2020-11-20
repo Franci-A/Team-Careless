@@ -25,7 +25,7 @@ bool HasCollidedBonus(Bonus bonus, float x, float y, float rayon, bool bombIsExp
 	if (bombIsExploding) {
 		float distanceAB = sqrt(powf(x - bonus.bombShape.getPosition().x, 2) + powf(y - bonus.bombShape.getPosition().y, 2));
 
-		if (distanceAB <= rayon + (bonus.bombShape.getRadius())) {
+		if (distanceAB <= rayon + (bonus.bombShape.getRadius() * 7)) {
 			return true;
 		}
 	}

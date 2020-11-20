@@ -164,6 +164,7 @@
     <ClCompile Include="EnemyClass.cpp" />
     <ClCompile Include="Geometry_Wars.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Health.cpp" />
     <ClCompile Include="ScreenResolution.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="AssetsUtils.h" />
     <ClInclude Include="EnemyClass.h" />
+    <ClInclude Include="Health.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="PlayerController.h" />
