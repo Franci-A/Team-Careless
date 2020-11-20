@@ -459,7 +459,7 @@ void Snake::SetShape() {
 	int minPointCount = 4;
 	int maxPointCount = 20;
 	int rngPointCount = rand() % (maxPointCount - minPointCount) + minPointCount;
-	Color color(rand() % 50, rand() % 255 + 200, rand() % 50);
+	Color color(0, rand() % (255 - 200) + 200, 0);
 
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(rngPointCount);
