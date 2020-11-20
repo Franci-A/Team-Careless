@@ -15,6 +15,7 @@
 #include "Bullet.h"
 #include "Collision.h"
 #include "Bonus.h"
+#include "Score.h"
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
@@ -68,13 +69,6 @@ int main()
 
 	bool defeat = false;
 #pragma endregion
-	////test
-	//CircleShape test;
-	//test.setPointCount(4);
-	//test.setRadius(40);
-	//test.setRotation(90);
-	//test.setScale(1, .5f);
-	//test.setPosition(width / 2, height / 2);
 #pragma region Bullet
 	bool drawBullet = false;
 	//Bullet* bullet = new Bullet; // � remplacer par ~~ player->bulletList.bullet
@@ -182,8 +176,6 @@ int main()
 	bool pause = false;
 #pragma endregion
 #pragma region TEST	
-	//float snakeX = 800;
-	//float snakeY = sin(snakeX);
 #pragma endregion TEST
 
 	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Default, settings); //, Style::Fullscreen
@@ -353,14 +345,7 @@ int main()
 
 		//ENEMY
 #pragma region Create Enemy
-		elapsedTimeSpawn = clockSpawn.getElapsedTime();
-		if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
-		{
-			Enemy* enemy = new Enemy(width, height);
-			enemyList.push_back(enemy);
-			clockSpawn.restart();
-			countEnemy++;
-		}
+		EnemyCreate(enemyList, countEnemy, maxEnemy, pause, elapsedTimeSpawn, clockSpawn, spawnTime, width, height);
 #pragma endregion
 #pragma region Update Enemy
 		//Move pattern
@@ -407,6 +392,10 @@ int main()
 					(*it)->UpdateHasShield();
 					(*it)->SetInvicibleTime(0.2f);
 				}
+				//life divider type
+				else if ((*it)->type == EnemyType::LIFEDIVIDER) {
+					(*it)->isAlive = false;
+				}
 				//enemy life
 				else if ((*it)->GetLife() > 1) {
 					(*it)->UpdateLife();
@@ -415,44 +404,7 @@ int main()
 				//enemy Death
 				else {
 					(*it)->isAlive = false;
-					//Update score
-					switch ((*it)->type)
-					{
-					case EnemyType::BASIC:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::MINI:
-						score += 100 * comboCount;
-						break;
-					case EnemyType::TELEPORTER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::SNAKE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::KAMIKAZE:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::FOLLOWER:
-						score += 20 * comboCount;
-						break;
-					case EnemyType::DIVIDER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::SUB:
-						score += 10 * comboCount;
-						break;
-					case EnemyType::LIFER:
-						score += 30 * comboCount;
-						break;
-					case EnemyType::LIFEDIVIDER:
-						score += 40 * comboCount;
-						break;
-					default:
-						score += 10 * comboCount;
-						break;
-					}
-					scoreText.setString(to_string(score));
+					ScoreUpdate((*it)->type, score, comboCount, scoreText);
 				}
 			}
 		}
@@ -484,23 +436,7 @@ int main()
 
 #pragma endregion
 #pragma region Destroy ENEMY
-		if (!enemyList.empty()) {
-			auto it = enemyList.begin();
-
-			while (it != enemyList.end()) {
-
-				if (!(*it)->isAlive) {
-
-					sound.play();
-					delete (*it);
-					it = enemyList.erase(it);
-					countEnemy--;
-				}
-				else {
-					it++;
-				}
-			}
-		}
+		EnemyDestroy(enemyList, countEnemy, sound);
 #pragma endregion
 
 		window.clear();
