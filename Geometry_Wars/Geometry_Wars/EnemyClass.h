@@ -52,13 +52,12 @@ public:
 	virtual void SetShape(float radius, int pointCount, int life, int index, Vector2f parentPos);	//for lifedivider
 	void SetShield();																				//Enemy can have an outline as a shield
 	virtual void SetSpawnPoint(int width, int height);
-	virtual void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index);
+	virtual void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index);   //set speed, direction, spawn point etc...
 	virtual void SetRotation();
 	void SetDirection(int width, int height);
 	void SetDirectionX(int width, int height);
 	void SetDirectionY(int width, int height);
 	virtual void SetSpeed();
-	virtual void Move(float deltaTime);
 	virtual void SetFollow();
 	virtual void SetFollow(EnemyType type);
 	void SetInvicibleTime(float value);
@@ -66,6 +65,7 @@ public:
 	//update
 	void FollowPlayer(Player* pPlayer, float deltaTime);
 	void LoopOnMap(int width, int height);
+	virtual void Move(float deltaTime);
 	virtual void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer);
 	
 	//getter
@@ -154,6 +154,7 @@ public:
 
 	//method
 	void SetShape() override;
+	void SetSpawnPoint(int width, int height) override;
 	void Move(float deltaTime) override;
 
 };

@@ -312,14 +312,12 @@ void Teleporter::SetShape() {
 	SetShield();
 	SetFollow();
 }
-
 void Teleporter::SetSpeed() {
 	int minSpeed = 50;
 	int maxSpeed = 100;
 	this->speed = rand() % (maxSpeed - minSpeed) + minSpeed;
 	this->saveSpeed = this->speed;
 }
-
 #pragma endregion
 #pragma region Getter
 CircleShape* Teleporter::GetTeleportCircle() { return teleportCircle; }
@@ -443,6 +441,15 @@ void Mini::SetShape() {
 }
 #pragma endregion Mini
 #pragma region Method Snake
+void Snake::SetSpawnPoint(int width, int height) {
+	int minHeight = 50;
+	int maxHeight = height - 50;
+	float rngHeight = static_cast<float>(rand() % (maxHeight - minHeight) + minHeight);
+	//left wall
+	this->spawnPoint = Vector2f(0, rngHeight);
+	this->shape->setPosition(spawnPoint);
+	cout << this->spawnPoint.y << endl;
+}
 void Snake::SetShape() {
 	int minRadius = 20;
 	int maxRadius = 40;
@@ -450,8 +457,7 @@ void Snake::SetShape() {
 	int minPointCount = 4;
 	int maxPointCount = 20;
 	int rngPointCount = rand() % (maxPointCount - minPointCount) + minPointCount;
-	Color color(rand() % 50, rand() % 255 + 200, rand() % 50);
-
+	Color color(0, rand() % (200 - 150) + 150, 0);
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(rngPointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
@@ -459,7 +465,6 @@ void Snake::SetShape() {
 
 	SetShield();
 }
-
 void Snake::Move(float deltaTime) {
 	int speedX = 20;
 	int speedY = 400;
@@ -487,9 +492,10 @@ void Follower::SetShape() {
 }
 
 void Follower::SetSpeed() {
-	int minSpeed = 200;
-	int maxSpeed = 300;
+	int minSpeed = 270;
+	int maxSpeed = 350;
 	this->speed = rand() % (maxSpeed - minSpeed) + minSpeed;
+	this->rotation = 135;
 }
 
 void Follower::SetFollow() {
