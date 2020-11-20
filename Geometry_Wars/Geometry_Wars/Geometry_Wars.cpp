@@ -171,8 +171,8 @@ int main()
 	Text comboText;
 	comboText.setString("x0");
 	comboText.setCharacterSize(charSizeCombo);
-	comboText.setPosition(width - 100, -charSizeCombo/2);
-	comboText.setFillColor(Color::Red);
+	comboText.setPosition(width /2 - 100, -charSizeCombo/2);
+	comboText.setFillColor(Color::Green);
 	comboText.setFont(font);
 #pragma endregion Combo
 #pragma region Sound
