@@ -4,7 +4,7 @@ void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause
 	elapsedTimeSpawn = clockSpawn.getElapsedTime();
 	if (elapsedTimeSpawn.asSeconds() > spawnTime && countEnemy < maxEnemy && !pause)
 	{
-		Enemy* enemy = new Enemy(width, height, EnemyType::LIFER);
+		Enemy* enemy = new Enemy(width, height, EnemyType::LIFEDIVIDER);
 		enemyList.push_back(enemy);
 		clockSpawn.restart();
 		countEnemy++;
@@ -12,11 +12,19 @@ void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause
 }
 
 void EnemyDivide(Enemy* pEnemy, list<Enemy*>& pEnemyList) {
-
-	for (int count = 0; count < pEnemy->GetDivideNumber(); count++) {
-		Enemy* divide = new Enemy(pEnemy->GetRadius(), pEnemy->GetPointCount(), pEnemy->GetDivideNumber(), pEnemy->GetPosition(), count, EnemyType::SUB, pEnemy->type);
-		pEnemyList.push_back(divide);
+	if (pEnemy->type == EnemyType::LIFEDIVIDER && pEnemy->GetLife() == 3) {
+		for (int count = 0; count < 2; count++) {
+			Enemy* divide = new Enemy(pEnemy, count);
+			pEnemyList.push_back(divide);
+		}
 	}
+	else {
+		for (int count = 0; count < pEnemy->GetDivideNumber(); count++) {
+			Enemy* divide = new Enemy(pEnemy->GetRadius(), pEnemy->GetPointCount(), pEnemy->GetDivideNumber(), pEnemy->GetPosition(), count, EnemyType::SUB, pEnemy->type);
+			pEnemyList.push_back(divide);
+		}
+	}
+
 }
 
 void EnemyDestroy(list<Enemy*> &enemyList, int &countEnemy, Sound sound) {

@@ -162,7 +162,7 @@ int main()
 
 #pragma endregion Test
 
-	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Fullscreen, settings); //, Style::Fullscreen
+	sf::RenderWindow window(sf::VideoMode(width, height), "SFML Window", sf::Style::Default, settings); //, Style::Fullscreen
 	window.setFramerateLimit(60);
 
 	// Game loop
@@ -343,6 +343,10 @@ int main()
 					(*it)->UpdateHasShield();
 					(*it)->SetInvicibleTime(0.2f);
 				}
+				//life divider type
+				else if((*it)->type == EnemyType::LIFEDIVIDER) {
+						(*it)->isAlive = false;
+				}
 				//enemy life
 				else if ((*it)->GetLife() > 1) {
 					(*it)->UpdateLife();
@@ -375,11 +379,14 @@ int main()
 		}
 
 		//remove enemy invicibility
-		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
-			if ((*it)->GetInvicibleTime() > 0) {
-				(*it)->UpdateInvicibleTime(deltaTime);
+		if (!enemyList.empty()) {
+			for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
+				if ((*it)->GetInvicibleTime() > 0) {
+					(*it)->UpdateInvicibleTime(deltaTime);
+				}
 			}
 		}
+
 
 		//destroy
 		EnemyDestroy(enemyList, countEnemy, sound);

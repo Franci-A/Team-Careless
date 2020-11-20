@@ -48,7 +48,8 @@ public:
 	//method
 	//Setter
 	virtual void SetShape();																		//Default shape
-	virtual void SetShape(float radius, int pointCount);
+	virtual void SetShape(float radius, int pointCount);											//for sub, divider, lifedivider
+	virtual void SetShape(float radius, int pointCount, int life, int index, Vector2f parentPos);	//for lifedivider
 	void SetShield();																				//Enemy can have an outline as a shield
 	virtual void SetSpawnPoint(int width, int height);
 	virtual void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index);
@@ -233,10 +234,9 @@ public:
 	//method
 	//setter
 	void SetShape() override;
+	void SetShape(float radius, int pointCount, int life, int index, Vector2f parentPos) override;
 	void SetDivideNumber();
 	void SetLife();
-
-	//getter
 };
 //INTERFACE
 class Enemy {
@@ -248,6 +248,7 @@ public:
 	bool isAlive = true;
 
 	//constructor & deconstructor
+	Enemy(Enemy* pEnemy, int index);
 	Enemy(int width, int height);
 	Enemy(int width, int height, EnemyType type);
 	Enemy(float radius, int pointCount, int divideNumber, Vector2f parentPos, int index, EnemyType type, EnemyType parentType);
@@ -259,6 +260,7 @@ public:
 	void SetSubClass();
 	void SetShape();
 	void SetShape(float radius, int pointCount);
+	void SetShape(float radius, int pointCount, int life, int index, Vector2f parentPos);
 	void SetSpawnPoint(int widht, int height);
 	void SetSubParameters(float radius, int divideNumber, Vector2f parentPos, int index);
 	void SetSpeed();
@@ -284,5 +286,4 @@ public:
 	void UpdateInvicibleTime(float deltaTime);
 	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer);
 };
-
 
