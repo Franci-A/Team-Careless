@@ -387,13 +387,13 @@ int main()
 					}
 				}
 			}
-			//collision Enemy -> Bullet
+			//collision Enemy -> Bullet + bomb bonus
 			list<Bullet*>::iterator bullet_it = player->bulletList.begin();
 			bool hascolidWithBullet = false;
 			bool hasColidWithBomb = false;
 			while (bullet_it != player->bulletList.end() && !hascolidWithBullet && !hasColidWithBomb) {
 				hascolidWithBullet = HasCollidedBullet((*(*bullet_it)), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
-				hasColidWithBomb = HasCollidedBonus((*bonus), (*it)->shape.getPosition().x, (*it)->shape.getPosition().y, (*it)->radius, bombExploding);
+				hasColidWithBomb = HasCollidedBonus((*bonus), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius(), bombExploding);
 				bullet_it++;
 			}
 			if ((hascolidWithBullet || hasColidWithBomb) && drawBullet && (*it)->GetInvicibleTime() <= 0) {
