@@ -641,7 +641,7 @@ void LifeDivider::SetShape(float radius, int pointCount, int life, int index, Ve
 	this->shape->setOrigin(radius / 2, radius / 2);
 	this->shape->setFillColor(color);
 	this->life = life - 1;
-	this->divideNumber = 2;
+	this->divideNumber = 4;
 
 	float alpha = 360.0f / divideNumber * index;			//Alpha = 360 degree / (number of enemy to spawn) * index of enemy
 	float posX = radius * cos(ConvertDegToRad(alpha));		//Spawn point X = radius * cos(alpha)
@@ -661,10 +661,10 @@ void LifeDivider::SetDivideNumber() {
 				this->divideNumber = 9;
 			}
 			else */if (radius >= 60) {
-				this->divideNumber = 6;
+				this->divideNumber = 4;
 			}
 			else if (radius >= 40) {
-				this->divideNumber = 3;
+				this->divideNumber = 2;
 			}
 }
 void LifeDivider::SetLife() {
