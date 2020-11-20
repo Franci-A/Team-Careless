@@ -375,11 +375,16 @@ int main()
 			bool hascolidWithplayer = HasCollided((*player), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
-					if (player->life > 1) {
+					if (player->life > 1 && !player->hasShield) {
 						player->life--;
 						player->invicibleTime = 3.0f;
 
 						(*it)->isAlive = false;
+					}
+					else if (player->hasShield) {
+						(*it)->isAlive = false;
+						player->triangle.setOutlineThickness(0);
+						player->hasShield = false;
 					}
 					else {
 						defeat = true;
