@@ -380,8 +380,9 @@ int main()
 					score = 0;
 					scoreText.setString("0");
 					comboText.setString("x0");
-					player->life = 5;
+					player->life = 10;
 					clockWave.restart();
+					spawnTime = 2.f;
 					defeat = false;
 				}
 			}
@@ -402,6 +403,20 @@ int main()
 		for (auto it = enemyList.begin(); it != enemyList.end(); it++) {
 			//collision Enemy -> Player 
 			bool hascolidWithplayer = HasCollided((*player), (*it)->GetPosition().x, (*it)->GetPosition().y, (*it)->GetRadius());
+
+			// collision Snake::Tail -> Player
+			if ((*it)->type == EnemyType::SNAKE) {
+				if ((*it)->GetTail() != nullptr) {
+					if (!(*it)->GetTail()->empty()) {
+						for (auto tail_it = (*it)->GetTail()->begin(); tail_it != (*it)->GetTail()->end(); tail_it++) {
+							if (!hascolidWithplayer) {
+								hascolidWithplayer = HasCollided((*player), (*tail_it)->getPosition().x, (*tail_it)->getPosition().y, (*tail_it)->getRadius());
+							}
+						}
+					}
+				}
+			}
+
 			if (hascolidWithplayer) {
 				if (player->invicibleTime <= 0) {
 					if (invicibleBonus) {
@@ -508,6 +523,16 @@ int main()
 				window.draw((*it)->GetShape());
 				if ((*it)->type == EnemyType::TELEPORTER) {
 					window.draw((*it)->GetTeleportCircle());
+				}
+
+				if ((*it)->type == EnemyType::SNAKE) {
+					if ((*it)->GetTail() != nullptr) {
+						if (!(*it)->GetTail()->empty()) {
+							for (auto tail_it = (*it)->GetTail()->begin(); tail_it != (*it)->GetTail()->end(); tail_it++) {
+								window.draw(*(*tail_it));
+							}
+						}
+					}
 				}
 			}
 

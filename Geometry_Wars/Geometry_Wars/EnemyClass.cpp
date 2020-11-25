@@ -8,7 +8,7 @@ Teleporter::Teleporter() {}
 Kamikaze::Kamikaze() {}
 Mini::Mini() {}
 Snake::Snake() {}
-Tail::Tail() {}
+//Tail::Tail() {}
 Follower::Follower() {}
 Divider::Divider() {}
 Sub::Sub() {}
@@ -61,8 +61,11 @@ Basic::~Basic() {}
 Teleporter::~Teleporter() { delete (this->teleportCircle); }
 Kamikaze::~Kamikaze() {}
 Mini::~Mini() {}
-Snake::~Snake() {}
-Tail::~Tail() {}
+Snake::~Snake() {
+	DestroyTail();
+	delete this->tail;
+}
+//Tail::~Tail() {}
 Follower::~Follower() {}
 Divider::~Divider() {}
 Sub::~Sub() {}
@@ -228,6 +231,7 @@ float EnemySubClass::GetInvicibleTime() { return this->invicibleTime; }
 bool EnemySubClass::GetHasShield() { return this->hasShield; }
 bool EnemySubClass::GetHasExplode() { return this->hasExplode; }
 CircleShape* EnemySubClass::GetTeleportCircle() { return nullptr; }
+list <CircleShape*>* EnemySubClass::GetTail() { return nullptr; }
 int EnemySubClass::GetDivideNumber() { return this->divideNumber; }
 #pragma endregion
 #pragma region Update
@@ -449,6 +453,21 @@ void Snake::SetSpawnPoint(int width, int height) {
 	this->spawnPoint = Vector2f(0, rngHeight);
 	this->shape->setPosition(spawnPoint);
 }
+void Snake::SetTail() {
+	// new Tail
+	CircleShape* newTail = new CircleShape;
+	// set shape
+	newTail->setPointCount(this->shape->getPointCount());
+	newTail->setFillColor(this->shape->getFillColor()/*Color::White*/);
+	newTail->setRadius(this->shape->getRadius()*0.75f);
+	// spawn at spawnpoint
+	newTail->setPosition(this->spawnPoint);
+	// ajouter à list 'tail'
+	this->tail->push_back(newTail);
+
+	this->tailX.push_back(800.f);
+	this->tailY.push_back(0.f);
+}
 void Snake::SetShape() {
 	int minRadius = 20;
 	int maxRadius = 40;
@@ -464,6 +483,14 @@ void Snake::SetShape() {
 
 	SetShield();
 }
+void Snake::update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) {
+	Move(deltaTime);
+
+	if (this->tailSpawnTimer.getElapsedTime().asSeconds() >= 0.1f && this->tail->size() < this->snakeLength) {
+		SetTail();
+		this->tailSpawnTimer.restart();
+	}
+}
 void Snake::Move(float deltaTime) {
 	int speedX = 20;
 	int speedY = 400;
@@ -471,10 +498,39 @@ void Snake::Move(float deltaTime) {
 	this->snakeX--;
 	this->snakeY = sin(ConvertDegToRad(this->snakeX * phi));
 	this->shape->move(ConvertDegToRad(this->snakeX) * speedX * deltaTime, this->snakeY * speedY * deltaTime);
+
+	if (!this->tail->empty()) {
+		auto it = this->tail->begin();
+		auto it_tailX = this->tailX.begin();
+		auto it_tailY = this->tailY.begin();
+		while (it != this->tail->end()) {
+			(*it_tailX)--;
+			(*it_tailY) = sin(ConvertDegToRad((*it_tailX) * phi));
+			(*it)->move(ConvertDegToRad((*it_tailX)) * speedX * deltaTime, (*it_tailY) * speedY * deltaTime);
+
+			it++;
+			it_tailX++;
+			it_tailY++;
+		}
+	}
+}
+list <CircleShape*>* Snake::GetTail() {
+	return (this->tail);
+}
+void Snake::DestroyTail() {
+	if (!this->tail->empty()) {
+		auto it = this->tail->begin();
+		while (it != this->tail->end()) {
+			delete (*it);
+			it = this->tail->erase(it);
+		}
+		this->tail->clear();
+		//delete &(this->tail);
+	}
 }
 #pragma endregion Snake
 #pragma region Method Tail
-void Tail::SetShape() {}
+//void Tail::SetShape() {}
 #pragma endregion Tail
 #pragma region Method Follower
 void Follower::SetShape() {
@@ -727,9 +783,9 @@ void Enemy::SetSubClass() {
 	case EnemyType::SNAKE:
 		this->subClass = new Snake;
 		break;
-	case EnemyType::TAIL:
+	/*case EnemyType::TAIL:
 		this->subClass = new Tail;
-		break;
+		break;*/
 	case EnemyType::KAMIKAZE:
 		this->subClass = new Kamikaze;
 		break;
@@ -766,6 +822,7 @@ void Enemy::SetInvicibleTime(float value) { this->subClass->SetInvicibleTime(val
 #pragma region Getter
 CircleShape Enemy::GetShape() { return *(this->subClass->shape); }
 CircleShape Enemy::GetTeleportCircle() { return *(this->subClass->GetTeleportCircle()); }
+list <CircleShape*>* Enemy::GetTail() { return (this->subClass->GetTail()); }
 int Enemy::GetDivideNumber() { return this->subClass->GetDivideNumber(); }
 float Enemy::GetRadius() { return this->subClass->shape->getRadius(); }
 int Enemy::GetPointCount() { return this->subClass->shape->getPointCount(); }

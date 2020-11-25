@@ -70,6 +70,7 @@ public:
 	
 	//getter
 	virtual CircleShape* GetTeleportCircle();
+	virtual list <CircleShape*>* GetTail();
 	int GetDivideNumber();
 	int GetLife();
 	bool GetIsAlive();
@@ -140,13 +141,27 @@ public:
 	//method
 	void SetShape() override;
 };
+/*class Tail : public EnemySubClass {
+public:
+	//variable 
+
+	//constructor & deconstructor
+	Tail();
+	~Tail();
+
+	//method
+	//void SetShape() override;
+};*/
 class Snake : public EnemySubClass {
 public:
 	//variable
-	float snakeX = 800.0f;
-	float snakeY = .0f;
+	float snakeX = 800.0f; // Direction, pas Position !!!
+	float snakeY = .0f; // Direction, pas Position !!!
 	int snakeLength = 5;
-	list<CircleShape*> tail;
+	list<CircleShape*>* tail = new list<CircleShape*>;
+	list<float> tailX; // Direction, pas Position !!!
+	list<float> tailY; // Direction, pas Position !!!
+	Clock tailSpawnTimer;
 
 	//constructor & deconstructor
 	Snake();
@@ -155,19 +170,12 @@ public:
 	//method
 	void SetShape() override;
 	void SetSpawnPoint(int width, int height) override;
+	void SetTail();
 	void Move(float deltaTime) override;
+	void update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) override;
+	list <CircleShape*>* GetTail() override;
+	void DestroyTail();
 
-};
-class Tail : public EnemySubClass {
-public : 
-	//variable 
-
-	//constructor & deconstructor
-	Tail();
-	~Tail();
-
-	//method
-	void SetShape() override;
 };
 class Follower : public EnemySubClass {
 public:
@@ -272,6 +280,7 @@ public:
 	//Getter
 	CircleShape GetShape();
 	CircleShape GetTeleportCircle();
+	list <CircleShape*>* GetTail();
 	int GetDivideNumber();
 	float GetRadius();
 	int GetPointCount();
