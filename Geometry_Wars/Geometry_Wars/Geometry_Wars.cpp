@@ -268,6 +268,9 @@ int main()
 					else if ((*it)->type == BALL_TYPE::ACCELERATOR) {
 						(*it)->speed = bulletpedia[BALL_TYPE::ACCELERATOR].speed;
 					}
+					else if ((*it)->type == BALL_TYPE::DECELERATOR) {
+						(*it)->speed = bulletpedia[BALL_TYPE::DECELERATOR].speed;
+					}
 				}
 			}
 		}

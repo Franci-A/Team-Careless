@@ -118,13 +118,17 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 		bullet->visual.setFillColor(sf::Color(80, 200, 60, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
+	else if (bullet->type == BALL_TYPE::DECELERATOR) {
+		bullet->visual.setFillColor(sf::Color(20, 10, 160, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
 	
 	return bullet;
 }
 
 void PowerupSwap(Player* player, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
 {
-	BALL_TYPE type = BALL_TYPE(rand() % 5);
+	BALL_TYPE type = BALL_TYPE(rand() % 6);
 	player->bulletList.clear();
 	for (int i = 0; i < bulletpedia[type].ammo; i++) {
 		player->bulletList.push_back(AddNewBullet(bulletpedia[type]));

@@ -306,7 +306,7 @@ void Teleporter::SetShape() {
 	int maxRadius = 80;
 	float rngRadius = static_cast<float>(rand() % (maxRadius - minRadius) + minRadius);
 	int pointCount = 5;
-	Color color(Color::Blue);
+	Color color(Color::Color(rand() % 25, 0, rand() % (255 - 150) + 150));
 
 	this->shape->setRadius(static_cast<float>(rngRadius));
 	this->shape->setPointCount(pointCount);
@@ -376,8 +376,8 @@ void Kamikaze::SetShape() {
 	int maxRadius = 80;
 	float rngRadius = static_cast<float>(rand() % (maxRadius - minRadius) + minRadius);
 	int pointCount = 6;
-	Color color(Color::Magenta);
-	float outlineThickness = 5.f;
+	Color color(Color::Color(rand() % (255 - 200) + 200, rand() % 50, rand() % (255 - 200) + 200));
+	float outlineThickness = 4.f;
 	Color colorOutline(Color::Red);
 
 	this->shape->setRadius(rngRadius);
@@ -437,7 +437,7 @@ void Kamikaze::update(int width, int height, float deltaAngle, float deltaTime, 
 void Mini::SetShape() {
 	float radius = 10.0f;
 	int pointCount = 3;
-	Color color(148, 0, 211);	//dark violet
+	Color color(rand() % (190 - 120) + 120, 0, rand() % (255 - 170) + 170);	//dark violet
 	this->shape->setRadius(radius);
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(radius, radius);
@@ -458,8 +458,8 @@ void Snake::SetTail() {
 	CircleShape* newTail = new CircleShape;
 	// set shape
 	newTail->setPointCount(this->shape->getPointCount());
-	newTail->setFillColor(this->shape->getFillColor()/*Color::White*/);
-	newTail->setRadius(this->shape->getRadius()*0.75f);
+	newTail->setFillColor(/*this->shape->getFillColor()*/Color::Color(45, rand() % (255 - 220) + 220, 45));
+	newTail->setRadius(this->shape->getRadius()*0.7f);
 	// spawn at spawnpoint
 	newTail->setPosition(this->spawnPoint);
 	// ajouter à list 'tail'
@@ -475,7 +475,7 @@ void Snake::SetShape() {
 	int minPointCount = 4;
 	int maxPointCount = 20;
 	int rngPointCount = rand() % (maxPointCount - minPointCount) + minPointCount;
-	Color color(0, rand() % (200 - 150) + 150, 0);
+	Color color(rand() % 20, rand() % (200 - 150) + 150, rand() % 20);
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(rngPointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
@@ -486,7 +486,7 @@ void Snake::SetShape() {
 void Snake::update(int width, int height, float deltaAngle, float deltaTime, Player* pPlayer) {
 	Move(deltaTime);
 
-	if (this->tailSpawnTimer.getElapsedTime().asSeconds() >= 0.1f && this->tail->size() < this->snakeLength) {
+	if (this->tailSpawnTimer.getElapsedTime().asSeconds() >= (0.1f + (this->shape->getRadius() - 20) * 0.5f * 0.01f) && this->tail->size() < this->snakeLength) {
 		SetTail();
 		this->tailSpawnTimer.restart();
 	}
@@ -536,7 +536,7 @@ void Snake::DestroyTail() {
 void Follower::SetShape() {
 	float radius = 40.0f;
 	int pointCount = 4;
-	Color color(139, 0, 0);	//fire brick red
+	Color color(rand() % (165 - 130) + 130, rand() % 10, rand() % 10);	//fire brick red
 	this->shape->setRadius(radius);
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(radius, radius);
@@ -563,8 +563,7 @@ void Divider::SetShape() {
 	int maxRadius = 120;
 	float rngRadius = static_cast<float>(rand() % (maxRadius - minRadius) + minRadius);
 	int pointCount = 6;
-	Color color(255, 195, 11);
-
+	Color color(rand() % (255 - 230) + 230, rand() % (255 - 210) + 210, rand() % 35);
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(pointCount);
 	this->shape->setOrigin(rngRadius, rngRadius);
@@ -591,7 +590,7 @@ void Divider::SetDivideNumber() {
 #pragma region Method Sub
 #pragma region Setter
 void Sub::SetShape(float radius, int pointCount) {
-	Color color(255, 0, 0);
+	Color color(rand() % (255 - 200) + 200, rand() % 15, rand() % 15);
 
 	this->shape->setRadius(radius / 2);
 	this->shape->setPointCount(pointCount);
@@ -646,7 +645,7 @@ void Lifer::SetShape() {
 	int maxRadius = 100;
 	float rngRadius = static_cast<float>(rand() % (maxRadius - minRadius) + minRadius);
 	int pointCount = 7;
-	Color color(11, 102, 35);
+	Color color(rand() % 11, rand() % (155 - 80) + 80, rand() % (40 - 20) + 20);
 
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(pointCount);
@@ -676,7 +675,7 @@ void LifeDivider::SetShape() {
 	int maxRadius = 120;
 	float rngRadius = static_cast<float>(rand() % (maxRadius - minRadius) + minRadius);
 	int pointCount = 8;
-	Color color(0, 52, 145);
+	Color color(rand() % 15, rand() % (70 - 40) + 30, rand() % (200 - 150) + 150);
 
 	this->shape->setRadius(rngRadius);
 	this->shape->setPointCount(pointCount);

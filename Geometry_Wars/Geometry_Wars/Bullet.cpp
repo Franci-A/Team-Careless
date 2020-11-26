@@ -36,8 +36,12 @@ void Check_Wall_Collision(Bullet* ball, int width, int height)
 		else {
 			ball->visual.setPosition(ball->visual.getRadius() *2, ball->visual.getPosition().y);
 		}
-		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 275) {
+
+		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 285) {
 			ball->speed += 10;
+		}
+		else if (ball->type == BALL_TYPE::DECELERATOR && ball->speed >= 100) {
+			ball->speed -= 5;
 		}
 	}
 	if (ball->visual.getPosition().y + ball->visual.getRadius() > height || ball->visual.getPosition().y - ball->visual.getRadius() < 0)
@@ -50,8 +54,12 @@ void Check_Wall_Collision(Bullet* ball, int width, int height)
 		else {
 			ball->visual.setPosition(ball->visual.getPosition().x, ball->visual.getRadius() *2);
 		}
-		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 275) {
+
+		if (ball->type == BALL_TYPE::ACCELERATOR && ball->speed <= 285) {
 			ball->speed += 10;
+		}
+		else if (ball->type == BALL_TYPE::DECELERATOR && ball->speed >= 100) {
+			ball->speed -= 5;
 		}
 	}
 }
@@ -98,4 +106,12 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 		5
 	};
 	bulletpedia[BALL_TYPE::SNAKE] = Snake;
+
+	Bullet_Powerup Decelerator{
+		BALL_TYPE::DECELERATOR,
+		sf::CircleShape::CircleShape(10.0f),
+		290,
+		1
+	};
+	bulletpedia[BALL_TYPE::DECELERATOR] = Decelerator;
 }

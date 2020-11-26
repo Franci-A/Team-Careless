@@ -9,7 +9,8 @@ enum class BALL_TYPE
 	TRIPLE,
 	BIG,
 	ACCELERATOR,
-	SNAKE
+	SNAKE,
+	DECELERATOR
 };
 
 struct Bullet
