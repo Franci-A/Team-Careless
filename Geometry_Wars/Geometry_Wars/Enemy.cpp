@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "VFX.h"
 
 void EnemyCreate(list<Enemy*> &enemyList,int &countEnemy,int maxEnemy,bool pause,Time &elapsedTimeSpawn,Clock &clockSpawn, float& spawnTime, int width, int height, Clock clockWave) {
 	elapsedTimeSpawn = clockSpawn.getElapsedTime();
@@ -75,14 +76,14 @@ void EnemyDivide(Enemy* pEnemy, list<Enemy*>& pEnemyList) {
 
 }
 
-void EnemyDestroy(list<Enemy*> &enemyList, int &countEnemy, Sound sound) {
+void EnemyDestroy(list<Enemy*> &enemyList, int &countEnemy, Sound sound, list<VFX*> &vfxList) {
 	if (!enemyList.empty()) {
 		auto it = enemyList.begin();
 
 		while (it != enemyList.end()) {
 
 			if (!(*it)->isAlive) {
-
+				InstantiateVFX((*it), vfxList);
 				sound.play();
 				delete (*it);
 				it = enemyList.erase(it);

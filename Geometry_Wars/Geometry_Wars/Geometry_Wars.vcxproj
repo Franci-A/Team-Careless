@@ -171,6 +171,8 @@
     <ClCompile Include="AssetsUtils.cpp" />
     <ClCompile Include="MathUtils.cpp" />
     <ClCompile Include="Score.cpp" />
+    <ClCompile Include="VFX.cpp" />
+    <ClCompile Include="VFXClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bonus.h" />
@@ -184,6 +186,8 @@
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="ScreenResolution.h" />
+    <ClInclude Include="VFX.h" />
+    <ClInclude Include="VFXClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
