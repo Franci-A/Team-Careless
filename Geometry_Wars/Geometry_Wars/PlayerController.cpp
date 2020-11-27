@@ -103,7 +103,7 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 		bullet->visual.setOutlineThickness(0);
 	}
 	else if (bullet->type == BALL_TYPE::TRIPLE) {
-		bullet->visual.setFillColor(sf::Color(118, 154, 230, 255));
+		bullet->visual.setFillColor(sf::Color(92, 154, 230, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::BIG) {
@@ -115,11 +115,11 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::SNAKE) {
-		bullet->visual.setFillColor(sf::Color(90, 230, 60, 255));
+		bullet->visual.setFillColor(sf::Color(60, 220, 40, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::DECELERATOR) {
-		bullet->visual.setFillColor(sf::Color(20, 10, 160, 255));
+		bullet->visual.setFillColor(sf::Color(20, 10, 150, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::SPEEDER) {
