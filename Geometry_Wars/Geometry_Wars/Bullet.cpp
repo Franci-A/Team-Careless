@@ -69,7 +69,7 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 {
 	Bullet_Powerup Default{
 		BALL_TYPE::DEFAULT,
-		sf::CircleShape::CircleShape(10.0f),
+		sf::CircleShape::CircleShape(10.f),
 		120,
 		1
 	};
@@ -85,7 +85,7 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 
 	Bullet_Powerup Big{
 		BALL_TYPE::BIG,
-		sf::CircleShape::CircleShape(30.0f),
+		sf::CircleShape::CircleShape(30.f),
 		90,
 		1
 	};
@@ -93,7 +93,7 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 
 	Bullet_Powerup Accelerator{
 		BALL_TYPE::ACCELERATOR,
-		sf::CircleShape::CircleShape(10.0f),
+		sf::CircleShape::CircleShape(10.f, 8),
 		105,
 		1
 	};
@@ -101,7 +101,7 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 
 	Bullet_Powerup Snake{
 		BALL_TYPE::SNAKE,
-		sf::CircleShape::CircleShape(11.0f),
+		sf::CircleShape::CircleShape(11.f),
 		110,
 		5
 	};
@@ -109,9 +109,17 @@ void InitializeBulletpedia(std::map<BALL_TYPE, Bullet_Powerup>& bulletpedia)
 
 	Bullet_Powerup Decelerator{
 		BALL_TYPE::DECELERATOR,
-		sf::CircleShape::CircleShape(10.0f),
+		sf::CircleShape::CircleShape(10.f, 8),
 		290,
 		1
 	};
 	bulletpedia[BALL_TYPE::DECELERATOR] = Decelerator;
+
+	Bullet_Powerup Speeder{
+		BALL_TYPE::SPEEDER,
+		sf::CircleShape::CircleShape(9.f, 8),
+		330,
+		1
+	};
+	bulletpedia[BALL_TYPE::SPEEDER] = Speeder;
 }

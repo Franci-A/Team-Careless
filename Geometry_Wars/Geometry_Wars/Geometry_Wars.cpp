@@ -390,6 +390,7 @@ int main()
 					clockWave.restart();
 					spawnTime = 2.f;
 					defeat = false;
+					PowerupSwap(player, bulletpedia);
 				}
 			}
 		}

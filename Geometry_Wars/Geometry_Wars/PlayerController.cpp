@@ -115,11 +115,15 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::SNAKE) {
-		bullet->visual.setFillColor(sf::Color(80, 200, 60, 255));
+		bullet->visual.setFillColor(sf::Color(90, 230, 60, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	else if (bullet->type == BALL_TYPE::DECELERATOR) {
 		bullet->visual.setFillColor(sf::Color(20, 10, 160, 255));
+		bullet->visual.setOutlineThickness(1.5f);
+	}
+	else if (bullet->type == BALL_TYPE::SPEEDER) {
+		bullet->visual.setFillColor(sf::Color(170, 210, 25, 255));
 		bullet->visual.setOutlineThickness(1.5f);
 	}
 	
@@ -128,7 +132,7 @@ Bullet* AddNewBullet(Bullet_Powerup powerup)
 
 void PowerupSwap(Player* player, std::map<BALL_TYPE, Bullet_Powerup> bulletpedia)
 {
-	BALL_TYPE type = BALL_TYPE(rand() % 6);
+	BALL_TYPE type = BALL_TYPE(rand() % 7);
 	player->bulletList.clear();
 	for (int i = 0; i < bulletpedia[type].ammo; i++) {
 		player->bulletList.push_back(AddNewBullet(bulletpedia[type]));
