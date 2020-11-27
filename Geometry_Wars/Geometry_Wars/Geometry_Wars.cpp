@@ -524,7 +524,7 @@ int main()
 			}
 
 			for (auto it = vfxList.begin(); it != vfxList.end(); it++) {
-				window.draw((*it)->circle);
+				window.draw((*it)->shape);
 			}
 			window.draw(player->triangle);
 			if (drawBullet) {

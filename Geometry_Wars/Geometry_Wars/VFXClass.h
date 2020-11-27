@@ -7,11 +7,11 @@
 class VFX {
 public:
 	//variable
-	CircleShape circle;
-	float speed = 100.0f;
+	CircleShape shape;
+	float speed = 25.0f;
 	int radius = 10;
 	Vector2f direction = Vector2f(0.f, 0.f);
-	float time = 0.2f;
+	float time = (rand() % (13 - 7) + 7) * 0.1f;
 	bool isAlive = true;
 
 	void move(float deltaTime);

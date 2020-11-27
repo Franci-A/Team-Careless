@@ -1,12 +1,12 @@
 #include "VFX.h"
 
 void InstantiateVFX(Enemy* pEnemy, list<VFX*> &vfxList) {
-	int divideNumber = 60;
+	int divideNumber = rand() % (12 - 5) + 5;
 
 	for (int i = 0; i < divideNumber; i++) {
 		VFX* vfx = new VFX(divideNumber, pEnemy, i);
 		//debug
-		cout << vfx->circle.getPosition().x << endl;
+		//cout << vfx->circle.getPosition().x << endl;
 		vfxList.push_back(vfx);
 	}
 }
