@@ -11,6 +11,11 @@ void InstantiateVFX(Enemy* pEnemy, list<VFX*> &vfxList) {
 	}
 }
 
+void InstantiatePlayerVFX(Player* pPlayer, list<VFX*>& vfxList, bool invicibleBonus) {
+	VFX* vfx = new VFX(pPlayer, invicibleBonus);
+	vfxList.push_back(vfx);
+}
+
 void DestroyVFX(list<VFX*>& vfxList, float deltaTime) {
 	if (!vfxList.empty()) {
 		auto it = vfxList.begin();

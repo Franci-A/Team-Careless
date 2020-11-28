@@ -94,8 +94,6 @@ int main()
 #pragma endregion
 #pragma region Bullet
 	bool drawBullet = false;
-	//Bullet* bullet = new Bullet; // � remplacer par ~~ player->bulletList.bullet
-	// Tests Powerups
 	map<BALL_TYPE, Bullet_Powerup> bulletpedia;
 	InitializeBulletpedia(bulletpedia);
 
@@ -235,6 +233,7 @@ int main()
 		if (Mouse::isButtonPressed(Mouse::Right) && (player->triangle.getPosition().x + 20 != localPosition.x || player->triangle.getPosition().y + 20 != localPosition.y) && !defeat)
 		{
 			starsMove = PlayerMove((*player), localPosition, deltaTime, width, height);
+			InstantiatePlayerVFX(player, vfxList, invicibleBonus);
 			//Background parallax
 			stars1.move(-starsMove.x / 2, -starsMove.y / 2);
 			background.move(-starsMove.x / 5, -starsMove.y / 5);
@@ -350,8 +349,6 @@ int main()
 				Check_Wall_Collision((*it), width, height);
 				UpdatePosition((*it), deltaTime);
 			}
-			//Check_Wall_Collision(bullet, width, height);
-			//UpdatePosition(bullet, deltaTime);
 		}
 
 		while (window.pollEvent(event)) {
